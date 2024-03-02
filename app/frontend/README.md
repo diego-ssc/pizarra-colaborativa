@@ -50,3 +50,13 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+### Docker
+
+```sh
+docker build . -t frontend
+```
+
+```sh
+docker run -d -p 8080:80 frontend
+```
