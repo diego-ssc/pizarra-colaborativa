@@ -1,0 +1,18 @@
+version: '3'
+services:
+  frontend:
+    build: ./app/frontend
+    ports:
+      - '8080:80'
+  backend:
+    build: ./app/backend
+    ports:
+      - '3000:3000'
+  db:
+    image: postgres:16-alpine
+    restart: always
+    shm_size: 128mb
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: password
