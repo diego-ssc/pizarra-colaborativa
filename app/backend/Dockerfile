@@ -1,5 +1,5 @@
 # Base image
-FROM node:latest
+FROM node:20-alpine3.19
 
 # Create app directory
 WORKDIR /usr/src/app
