@@ -1,8 +1,8 @@
 # Base image
-FROM node:20-alpine3.19
+FROM node:20-alpine3.19 as base
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
@@ -13,6 +13,10 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+FROM base as dev
+CMD ["npm", "run", "start:dev"]
+
+FROM base as prod
 # Creates a "dist" folder with the production build
 RUN npm run build
 
