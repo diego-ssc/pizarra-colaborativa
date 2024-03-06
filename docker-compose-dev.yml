@@ -1,15 +1,25 @@
 version: '3'
 services:
   frontend:
-    build: ./app/frontend
+    build:
+      context: ./app/frontend
+      target: dev
     ports:
-      - '8080:80'
+      - '8080:5173'
+    volumes:
+      - './app/frontend:/app'
+      - "/app/node_modules"
     depends_on:
       - backend
   backend:
-    build: ./app/backend
+    build:
+      context: ./app/backend
+      target: dev
     ports:
       - '3000:3000'
+    volumes:
+      - './app/backend:/app'
+      - "/app/node_modules"
     depends_on:
       - db
   db:
