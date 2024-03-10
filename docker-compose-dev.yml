@@ -11,6 +11,7 @@ services:
       - "/app/node_modules"
     depends_on:
       - backend
+    pull_policy: build
   backend:
     build:
       context: ./app/backend
@@ -22,6 +23,7 @@ services:
       - "/app/node_modules"
     depends_on:
       - db
+    pull_policy: build
   db:
     image: postgres:16-alpine
     restart: always
@@ -31,6 +33,8 @@ services:
     volumes:
       - "dbdata:/var/lib/postgresql/data"
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: 'app-db'
 volumes:
   dbdata:
