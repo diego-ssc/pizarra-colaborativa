@@ -5,7 +5,7 @@ services:
       context: ./app/frontend
       target: dev
     ports:
-      - '8080:5173'
+      - 8080:5173
     depends_on:
       - backend
     pull_policy: build
@@ -23,7 +23,7 @@ services:
       context: ./app/backend
       target: dev
     ports:
-      - '3000:3000'
+      - 3000:3000
     depends_on:
       - db
     pull_policy: build
@@ -41,12 +41,12 @@ services:
     restart: always
     shm_size: 128mb
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes:
-      - "dbdata:/var/lib/postgresql/data"
+      - dbdata:/var/lib/postgresql/data 
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: 'app-db'
+      POSTGRES_DB: app-db 
 volumes:
   dbdata:
