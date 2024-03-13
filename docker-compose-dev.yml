@@ -6,24 +6,36 @@ services:
       target: dev
     ports:
       - '8080:5173'
-    volumes:
-      - './app/frontend:/app'
-      - "/app/node_modules"
     depends_on:
       - backend
     pull_policy: build
+    develop:
+      watch:
+        - action: sync
+          path: ./app/frontend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./app/frontend/package.json
   backend:
     build:
       context: ./app/backend
       target: dev
     ports:
       - '3000:3000'
-    volumes:
-      - './app/backend:/app'
-      - "/app/node_modules"
     depends_on:
       - db
     pull_policy: build
+    develop:
+      watch:
+        - action: sync
+          path: ./app/backend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./app/backend/package.json
   db:
     image: postgres:16-alpine
     restart: always
