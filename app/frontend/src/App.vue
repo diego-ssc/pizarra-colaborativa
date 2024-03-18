@@ -8,6 +8,6 @@ import LoginView from './views/LoginView.vue';
 
 <template>
 
-  <LoginForm/> 
+  <LoginView/> 
 </template>
 
