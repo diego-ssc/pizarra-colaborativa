@@ -310,3 +310,10 @@ TSWLatexianTemp*
 
 # Mac files
 .DS_store
+
+
+# Secrets
+.env
+.env*
+.secrets
+.secrets*
