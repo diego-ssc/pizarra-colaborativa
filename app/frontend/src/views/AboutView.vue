@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Vamos a hacer una gran aplicación</h1>
   </div>
   <Button>TestButto</Button>
 </template>
