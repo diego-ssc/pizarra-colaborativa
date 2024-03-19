@@ -3,7 +3,7 @@ import { type Endpoint } from './api'
 import type { App } from 'vue'
 
 export type HTTPResponse<ReqT, ResT> = AxiosResponse<ReqT, ResT>
-export type AuthTokenGetter = () => string | null
+export type AuthTokenGetter = () => string
 
 export type APIOptions = {
   baseURL: string
