@@ -2,7 +2,7 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
+import router, { setupRouterAuthGuard } from './router'
 import { createAPIClient } from './lib/api/client'
 import { createPinia, storeToRefs } from 'pinia'
 import { useUserStore } from './stores/user'
@@ -12,6 +12,7 @@ const app = createApp(App)
 
 app.use(pinia)
 app.use(router)
+setupRouterAuthGuard(router)
 
 const userStore = useUserStore()
 const { authToken } = storeToRefs(userStore)
