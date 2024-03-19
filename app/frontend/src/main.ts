@@ -18,7 +18,7 @@ const userStore = useUserStore()
 const { authToken } = storeToRefs(userStore)
 
 const client = createAPIClient({
-  baseURL: 'http://localhost:3000/api/auth/login',
+  baseURL: 'http://localhost:3000/',
   timeoutMillis: 5000,
   getAuthToken: () => {
     return authToken.value

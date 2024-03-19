@@ -8,6 +8,13 @@ import { Button } from '@/components/ui/button'
 import { CardContent, CardFooter } from '@/components/ui/card'
 import AuthCard from '@/components/AuthCard.vue'
 import { Input } from '@/components/ui/input'
+import { useAPIClient } from '@/lib/api/client'
+import { LoginEndpoint, type LoginRequest, type LoginRespone } from '@/lib/api/api'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { AxiosError } from 'axios'
 
 const authCardProps = {
   title: 'Inicia sesión',
@@ -26,8 +33,30 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-const onSubmit = form.handleSubmit((values) => {
+const client = useAPIClient()
+const userStore = useUserStore()
+const router = useRouter()
+
+const errorMessage = ref('')
+
+const onSubmit = form.handleSubmit(async (values) => {
   console.log('Form submitted!', values)
+  try {
+    errorMessage.value = ''
+    const response = await client.post<LoginRequest, LoginRespone>(LoginEndpoint, {
+      email: values.email,
+      password: values.password
+    })
+    userStore.login(response.data.token)
+    router.push({ name: 'home' })
+  } catch (error) {
+    if (error instanceof AxiosError && error.response && error.response.status === 401) {
+      errorMessage.value = 'Usuario o contraseña incorrectos'
+    } else {
+      //TODO: add toast with unknown error
+    }
+  } finally {
+  }
 })
 </script>
 
@@ -35,6 +64,9 @@ const onSubmit = form.handleSubmit((values) => {
   <AuthCard v-bind="authCardProps">
     <form @submit="onSubmit">
       <CardContent class="grid gap-4">
+        <p v-if="errorMessage" class="text-[0.8rem] font-medium text-destructive grid gap-2">
+          {{ errorMessage }}
+        </p>
         <FormField class="grid gap-2" v-slot="{ componentField }" name="email">
           <FormItem>
             <FormLabel>Correo electrónico</FormLabel>

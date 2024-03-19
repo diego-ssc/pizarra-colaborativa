@@ -57,6 +57,6 @@ export function createAPIClient(options: APIOptions): APIClient {
   return new APIClient(options)
 }
 
-export function useAPIClient() {
-  return inject<APIClient>(API_CLIENT_INJECTION_KEY)
+export function useAPIClient(): APIClient {
+  return inject<APIClient>(API_CLIENT_INJECTION_KEY) as APIClient
 }
