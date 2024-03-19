@@ -1,29 +1,34 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
 import { Button } from '../components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card'
 import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
+
+const router = useRouter()
+
+function navToRegister() {
+  router.push({ path: 'register' })
+}
 </script>
+
 <template>
-  <div class="flex justify-center items-center h-screen">
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-      <Card>
+  <div class="flex justify-center h-screen items-start mt-32">
+    <div class="w-full max-w-md p-6 bg-white">
+      <Card class="shadow-lg">
         <CardHeader class="space-y-1">
           <CardTitle class="text-2xl">
-            Iniciar sesión
+            <div class="flow-root">
+              <p class="float-left text-2xl">Inicia sesión</p>
+              <Button class="float-right" variant="link" @click="navToRegister">Regístrate</Button>
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent class="grid gap-4">
           <div class="grid gap-2">
-            <Label for="username">Nombre de usuario o correo electrónico</Label>
-            <Input id="username" type="text" placeholder="" />
+            <Label for="email">Correo electrónico</Label>
+            <Input id="email" type="email" placeholder="usuario@ejemplo.com" />
           </div>
           <div class="grid gap-2">
             <Label for="password">Contraseña</Label>
@@ -31,9 +36,7 @@ import { Input } from '../components/ui/input'
           </div>
         </CardContent>
         <CardFooter>
-          <Button class="w-full">
-            Iniciar sesión
-          </Button>
+          <Button class="w-full"> Iniciar sesión </Button>
         </CardFooter>
       </Card>
     </div>
