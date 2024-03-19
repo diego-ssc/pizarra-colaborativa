@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
 import { type Endpoint } from './api'
-import type { App } from 'vue'
+import { inject, type App } from 'vue'
 
 export type HTTPResponse<ReqT, ResT> = AxiosResponse<ReqT, ResT>
 export type AuthTokenGetter = () => string
@@ -10,6 +10,8 @@ export type APIOptions = {
   timeoutMillis: number
   getAuthToken: AuthTokenGetter
 }
+
+const API_CLIENT_INJECTION_KEY = 'APIClient'
 
 export class APIClient {
   private readonly client: AxiosInstance
@@ -35,7 +37,7 @@ export class APIClient {
   }
 
   install(app: App) {
-    app.provide('APIClient', this)
+    app.provide(API_CLIENT_INJECTION_KEY, this)
   }
 
   private getAuthHeader() {
@@ -53,4 +55,8 @@ export class APIClient {
 
 export function createAPIClient(options: APIOptions): APIClient {
   return new APIClient(options)
+}
+
+export function useAPIClient() {
+  return inject<APIClient>(API_CLIENT_INJECTION_KEY)
 }
