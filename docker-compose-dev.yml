@@ -5,32 +5,48 @@ services:
       context: ./app/frontend
       target: dev
     ports:
-      - '8080:5173'
-    volumes:
-      - './app/frontend:/app'
-      - "/app/node_modules"
+      - 8080:5173
     depends_on:
       - backend
+    pull_policy: build
+    develop:
+      watch:
+        - action: sync
+          path: ./app/frontend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./app/frontend/package.json
   backend:
     build:
       context: ./app/backend
       target: dev
     ports:
-      - '3000:3000'
-    volumes:
-      - './app/backend:/app'
-      - "/app/node_modules"
+      - 3000:3000
     depends_on:
       - db
+    pull_policy: build
+    env_file:
+      - .env.develop.local/db.env
+    develop:
+      watch:
+        - action: sync
+          path: ./app/backend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./app/backend/package.json
   db:
     image: postgres:16-alpine
     restart: always
     shm_size: 128mb
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes:
-      - "dbdata:/var/lib/postgresql/data"
-    environment:
-      POSTGRES_PASSWORD: password
+      - dbdata:/var/lib/postgresql/data 
+    env_file:
+      - .env.develop.local/db.env
 volumes:
   dbdata:
