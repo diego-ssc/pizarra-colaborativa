@@ -4,11 +4,11 @@ import { useRouter } from 'vue-router'
 import { Button } from '../components/ui/button'
 import { Card, CardHeader, CardTitle } from '../components/ui/card'
 
-const props = defineProps({
-  title: String,
-  linkTitle: String,
-  linkName: String
-})
+const props = defineProps<{
+  title: string
+  linkTitle: string
+  linkName: string
+}>()
 
 const router = useRouter()
 function navTo() {

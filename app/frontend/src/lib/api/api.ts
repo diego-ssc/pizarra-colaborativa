@@ -31,3 +31,8 @@ export const CreateAccountEndpoint: Endpoint = {
   url: 'auth/register',
   requiresAuth: false
 }
+
+export const HomeEndpoint: Endpoint = {
+  url: '/',
+  requiresAuth: true
+}
