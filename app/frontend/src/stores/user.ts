@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
-import { useSessionStorage } from '@vueuse/core'
+import { useLocalStorage } from '@vueuse/core'
 
 const STORE_NAME = 'user'
 
 export const useUserStore = defineStore('user', () => {
-  const authToken = useSessionStorage<string>(STORE_NAME, '')
+  const authToken = useLocalStorage<string>(STORE_NAME, '')
 
   const isLoggedIn = computed(() => authToken.value !== '')
 
