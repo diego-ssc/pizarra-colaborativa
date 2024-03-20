@@ -2,12 +2,18 @@
 import { onMounted, ref } from 'vue'
 import { useAPIClient, type HTTPResponse } from '@/lib/api/client'
 import { HomeEndpoint } from '@/lib/api/api'
+import { AxiosError } from 'axios'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { Button } from '@/components/ui/button'
 
 const loading = ref(false)
 const message = ref<HTTPResponse<any, any> | null>(null)
 const error = ref(null)
 
 const client = useAPIClient()
+const router = useRouter()
+const userStore = useUserStore()
 
 async function fetchHello() {
   error.value = message.value = null
@@ -17,10 +23,20 @@ async function fetchHello() {
     const response = await client.get(HomeEndpoint)
     message.value = response.data
   } catch (err: any) {
-    error.value = err.toString()
+    if (err instanceof AxiosError && err.request && err.request.status === 401) {
+      userStore.logout()
+      router.push({ name: 'login' })
+    } else {
+      error.value = err.toString()
+    }
   } finally {
     loading.value = false
   }
+}
+
+function onClick() {
+  userStore.logout()
+  router.push({ name: 'login' })
 }
 
 onMounted(() => {
@@ -40,6 +56,7 @@ onMounted(() => {
       >
         {{ message }}
       </h2>
+      <Button @click="onClick"> Cerrar sesión </Button>
     </div>
   </div>
 </template>
