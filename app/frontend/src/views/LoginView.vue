@@ -2,19 +2,19 @@
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { AxiosError } from 'axios'
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { CardContent, CardFooter } from '@/components/ui/card'
 import AuthCard from '@/components/AuthCard.vue'
-import { Input } from '@/components/ui/input'
 import { useAPIClient } from '@/lib/api/client'
 import { LoginEndpoint, type LoginRequest, type LoginRespone } from '@/lib/api/api'
 import { useUserStore } from '@/stores/user'
 import { Loader2 } from 'lucide-vue-next'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-import { AxiosError } from 'axios'
+import { useToast } from '@/components/ui/toast/use-toast'
+import AuthFormField from '@/components/AuthFormField.vue'
 
 const authCardProps = {
   title: 'Inicia sesión',
@@ -24,8 +24,8 @@ const authCardProps = {
 
 const formSchema = toTypedSchema(
   z.object({
-    email: z.string().email('El correo no es válido'),
-    password: z.string().min(8, { message: 'La contraseña debe tener 8 caracteres mínimo' })
+    email: z.string().min(1, { message: 'Campo requerido' }),
+    password: z.string().min(1, { message: 'Campo requerido' })
   })
 )
 
@@ -33,16 +33,16 @@ const form = useForm({
   validationSchema: formSchema
 })
 
+const { toast } = useToast()
+
 const client = useAPIClient()
 const userStore = useUserStore()
 const router = useRouter()
 
-const errorMessage = ref('')
 const isLoading = ref(false)
 
 const onSubmit = form.handleSubmit(async (values) => {
   try {
-    errorMessage.value = ''
     isLoading.value = true
     const response = await client.post<LoginRequest, LoginRespone>(LoginEndpoint, {
       email: values.email,
@@ -51,11 +51,17 @@ const onSubmit = form.handleSubmit(async (values) => {
     userStore.login(response.data.token)
     router.push({ name: 'home' })
   } catch (error) {
+    let errorMessage = ''
     if (error instanceof AxiosError && error.response && error.response.status === 401) {
-      errorMessage.value = 'Usuario o contraseña incorrectos'
+      errorMessage = 'Usuario o contraseña incorrectos'
     } else {
-      //TODO: add toast with unknown error
+      errorMessage = 'Ha ocurrido un error'
     }
+    form.resetForm()
+    toast({
+      description: errorMessage,
+      variant: 'destructive'
+    })
   } finally {
     isLoading.value = false
   }
@@ -66,27 +72,8 @@ const onSubmit = form.handleSubmit(async (values) => {
   <AuthCard v-bind="authCardProps">
     <form @submit="onSubmit">
       <CardContent class="grid gap-4">
-        <p class="text-[0.8rem] font-medium text-destructive grid gap-2">
-          {{ errorMessage }}
-        </p>
-        <FormField class="grid gap-2" v-slot="{ componentField }" name="email">
-          <FormItem>
-            <FormLabel>Correo electrónico</FormLabel>
-            <FormControl>
-              <Input type="email" placeholder="usuario@ejemplo.com" v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-        <FormField class="grid gap-2" v-slot="{ componentField }" name="password">
-          <FormItem>
-            <FormLabel>Contraseña</FormLabel>
-            <FormControl>
-              <Input type="password" v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
+        <AuthFormField name="email" label="Correo electrónico" type="email" />
+        <AuthFormField name="password" label="Contraseña" type="password" />
       </CardContent>
       <CardFooter>
         <div v-if="isLoading" class="w-full">
