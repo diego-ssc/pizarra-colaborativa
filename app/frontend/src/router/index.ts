@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import LoginView from '@/views/LoginView.vue'
 import CreateAccountView from '@/views/CreateAccountView.vue'
 
+
 const DocumentView = () => import('../views/DocumentView.vue')
 
 const router = createRouter({
