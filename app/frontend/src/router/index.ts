@@ -5,9 +5,8 @@ import { storeToRefs } from 'pinia'
 import LoginView from '@/views/LoginView.vue'
 import CreateAccountView from '@/views/CreateAccountView.vue'
 
-function lazyLoad(component: string) {
-  return () => import(component)
-}
+
+const DocumentView = () => import('../views/DocumentView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,7 +38,7 @@ const router = createRouter({
     {
       path: '/d',
       name: 'document',
-      component: lazyLoad('../views/DocumentView.vue'),
+      component: DocumentView,
       meta: {
         // TODO: Require authentication to access document view
         requiresAuth: false
