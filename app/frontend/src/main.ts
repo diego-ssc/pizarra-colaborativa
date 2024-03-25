@@ -18,7 +18,7 @@ const userStore = useUserStore()
 const { authToken } = storeToRefs(userStore)
 
 const client = createAPIClient({
-  baseURL: 'http://localhost:3000/',
+  baseURL: import.meta.env.VITE_BASE_URL,
   timeoutMillis: 5000,
   getAuthToken: () => {
     return authToken.value
