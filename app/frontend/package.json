@@ -14,6 +14,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@blocksuite/blocks": "^0.14.0-canary-202403231334-cf6d87c",
+    "@blocksuite/presets": "^0.14.0-canary-202403231334-cf6d87c",
+    "@blocksuite/store": "^0.14.0-canary-202403231334-cf6d87c",
     "@radix-icons/vue": "^1.0.0",
     "@vee-validate/zod": "^4.12.6",
     "@vueuse/core": "^10.9.0",
