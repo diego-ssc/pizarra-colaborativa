@@ -4,6 +4,21 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
 </script>
 
 <template>
-  <RouterView />
+  <RouterView class="h-full" />
   <Toaster />
 </template>
+
+<style>
+html,
+body,
+#app {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+</style>
