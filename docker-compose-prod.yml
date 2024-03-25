@@ -10,6 +10,8 @@ services:
     depends_on:
       - db
     pull_policy: build
+    env_file:
+      - ${ENV_PATH}
   db:
     image: postgres:16-alpine
     restart: always
@@ -18,5 +20,7 @@ services:
       - 5432:5432
     volumes:
       - dbdata:/var/lib/postgresql/data 
+    env_file:
+      - ${ENV_PATH}
 volumes:
   dbdata:
