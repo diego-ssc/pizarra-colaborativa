@@ -3,14 +3,14 @@ import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useRouter } from 'vue-router'
 import * as z from 'zod'
-import { ref } from 'vue'
+import { watch, watchEffect } from 'vue'
 
 import { Button } from '../components/ui/button'
 import { CardContent, CardFooter } from '../components/ui/card'
 import AuthCard from '@/components/AuthCard.vue'
 import AuthFormField from '@/components/AuthFormField.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
-import { useAPIClient } from '@/lib/api/client'
+import { usePost } from '@/lib/api/client'
 import { useUserStore } from '@/stores/user'
 import {
   CreateAccountEndpoint,
@@ -44,33 +44,35 @@ const form = useForm({
 
 const { toast } = useToast()
 
-const client = useAPIClient()
 const userStore = useUserStore()
 const router = useRouter()
 
-const isLoading = ref(false)
+const { post, data, error } = usePost<CreateAccountRequest, CreateAccountResponse>(
+  CreateAccountEndpoint
+)
 
 const onSubmit = form.handleSubmit(async (values) => {
-  try {
-    isLoading.value = true
-    const response = await client.post<CreateAccountRequest, CreateAccountResponse>(
-      CreateAccountEndpoint,
-      {
-        username: values.username,
-        email: values.email,
-        password: values.password
-      }
-    )
-    userStore.login(response.data.token)
+  await post({
+    username: values.username,
+    email: values.email,
+    password: values.password
+  })
+})
+
+watch(data, (value) => {
+  if (value) {
+    userStore.login(value.token)
     router.push({ name: 'home' })
-  } catch (error) {
+  }
+})
+
+watch(error, (err) => {
+  if (err) {
     form.resetForm()
     toast({
       description: 'Ha ocurrido un error',
       variant: 'destructive'
     })
-  } finally {
-    isLoading.value = false
   }
 })
 </script>

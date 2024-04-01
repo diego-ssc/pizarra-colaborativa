@@ -3,14 +3,14 @@ import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { watch } from 'vue'
 import { AxiosError } from 'axios'
 
 import { Button } from '@/components/ui/button'
 import { CardContent, CardFooter } from '@/components/ui/card'
 import AuthCard from '@/components/AuthCard.vue'
-import { useAPIClient } from '@/lib/api/client'
-import { LoginEndpoint, type LoginRequest, type LoginRespone } from '@/lib/api/api'
+import { usePost } from '@/lib/api/client'
+import { LoginEndpoint, type LoginRequest, type LoginResponse } from '@/lib/api/api'
 import { useUserStore } from '@/stores/user'
 import { Loader2 } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast/use-toast'
@@ -35,24 +35,29 @@ const form = useForm({
 
 const { toast } = useToast()
 
-const client = useAPIClient()
 const userStore = useUserStore()
 const router = useRouter()
 
-const isLoading = ref(false)
+const { post, data, error, isLoading } = usePost<LoginRequest, LoginResponse>(LoginEndpoint)
 
 const onSubmit = form.handleSubmit(async (values) => {
-  try {
-    isLoading.value = true
-    const response = await client.post<LoginRequest, LoginRespone>(LoginEndpoint, {
-      email: values.email,
-      password: values.password
-    })
-    userStore.login(response.data.token)
+  await post({
+    email: values.email,
+    password: values.password
+  })
+})
+
+watch(data, (value) => {
+  if (value) {
+    userStore.login(value.token)
     router.push({ name: 'home' })
-  } catch (error) {
+  }
+})
+
+watch(error, (err) => {
+  if (err) {
     let errorMessage = ''
-    if (error instanceof AxiosError && error.response && error.response.status === 401) {
+    if (err instanceof AxiosError && err.response && err.response.status === 401) {
       errorMessage = 'Usuario o contraseña incorrectos'
     } else {
       errorMessage = 'Ha ocurrido un error'
@@ -62,8 +67,6 @@ const onSubmit = form.handleSubmit(async (values) => {
       description: errorMessage,
       variant: 'destructive'
     })
-  } finally {
-    isLoading.value = false
   }
 })
 </script>
