@@ -1,15 +1,21 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'whiteBoard' })
-export class WhiteBoard{
+@Entity()
+export class Workspace {
   @PrimaryGeneratedColumn()
-  whiteBoardId: number;
+  workspaceId: number;
 
   @Column()
-  title: string;
+  tittle: string;
 
   @Column()
-  documentBlob: string;
+  description: string;
+
+  @Column()
+  owner: User;
+
+  @Column()
+  members: User[];
 
   @Column({type: 'date', default: () => 'CURRENT_TIMESTAMP'})
   createdAt: Date;
