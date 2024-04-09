@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import User from '../user/user.entity';
 
 @Entity()
 export class Workspace {
@@ -17,9 +18,10 @@ export class Workspace {
   @Column()
   members: User[];
 
-  @Column({type: 'date', default: () => 'CURRENT_TIMESTAMP'})
+  @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({type: 'date', default: () => 'CURRENT_TIMESTAMP'})
+  @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }
+export default Workspace;

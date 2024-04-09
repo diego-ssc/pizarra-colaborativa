@@ -1,4 +1,14 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
+import { CreateWhiteBoardDto } from './dto/createWhiteBoardDto.dto';
+import { WhiteBoard } from './white-board.entity';
+import { WhiteBoardService } from './white-board.service';
 
 @Controller('white-board')
-export class WhiteBoardController {}
+export class WhiteBoardController {
+  constructor(private whiteBoardService: WhiteBoardService) {}
+
+  @Post()
+  createWhiteBoard(@Body() newWhiteBoard: CreateWhiteBoardDto) {
+    return this.whiteBoardService.createWhiteBoard(newWhiteBoard);
+  }
+}

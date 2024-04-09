@@ -8,9 +8,6 @@ import { UsersModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { WhiteBoardModule } from './white-board/white-board.module';
 import { WorkspaceModule } from './workspace/workspace.module';
-import { WorksapceController } from './worksapce/worksapce.controller';
-import { WorksapceService } from './worksapce/worksapce.service';
-import { WorksapceService } from './worksapce/worksapce.service';
 
 @Module({
     imports: [
@@ -30,7 +27,7 @@ import { WorksapceService } from './worksapce/worksapce.service';
         WhiteBoardModule,
         WorkspaceModule,
     ],
-    controllers: [AppController, WorksapceController],
-    providers: [AppService, WorksapceService],
+    controllers: [AppController],
+    providers: [AppService ],
 })
 export class AppModule {}
