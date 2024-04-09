@@ -1,6 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { CreateWhiteBoardDto } from './dto/createWhiteBoardDto.dto';
-import { WhiteBoard } from './white-board.entity';
 import { WhiteBoardService } from './white-board.service';
 
 @Controller('white-board')
