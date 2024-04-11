@@ -14,14 +14,24 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@blocksuite/blocks": "^0.14.0-canary-202403231334-cf6d87c",
+    "@blocksuite/presets": "^0.14.0-canary-202403231334-cf6d87c",
+    "@blocksuite/store": "^0.14.0-canary-202403231334-cf6d87c",
     "@radix-icons/vue": "^1.0.0",
+    "@vee-validate/zod": "^4.12.6",
+    "@vueuse/core": "^10.9.0",
+    "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "lucide-vue-next": "^0.358.0",
+    "pinia": "^2.1.7",
     "radix-vue": "^1.5.2",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
+    "vee-validate": "^4.12.6",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",
@@ -37,6 +47,7 @@
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
     "jsdom": "^24.0.0",
+    "msw": "^2.2.7",
     "npm-run-all2": "^6.1.1",
     "postcss": "^8.4.35",
     "prettier": "^3.0.3",
