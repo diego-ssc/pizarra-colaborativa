@@ -6,8 +6,8 @@ export class Workspace {
   @PrimaryGeneratedColumn()
   workspaceId: number;
 
-  @Column()
-  tittle: string;
+  @Column({ unique: true })
+  title: string;
 
   @Column()
   description: string;

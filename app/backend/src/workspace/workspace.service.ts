@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Workspace } from './workspace.entity';
 import { Repository } from 'typeorm';
@@ -12,7 +12,18 @@ export class WorkspaceService {
     private workspaceRepository: Repository<Workspace>,
   ) {}
 
-  createWorkspace(workspace: CreateWorkspaceDto) {
+  async createWorkspace(workspace: CreateWorkspaceDto) {
+    const workspaceFound = await this.workspaceRepository.findOne({
+      where: {
+        title: workspace.title,
+      },
+    });
+    if (workspaceFound) {
+      return new HttpException(
+        'Whiteboard already exists',
+        HttpStatus.CONFLICT,
+      );
+    }
     const newWorkspace = this.workspaceRepository.create(workspace);
     return this.workspaceRepository.save(newWorkspace);
   }
@@ -40,13 +51,23 @@ export class WorkspaceService {
       },
     });
     if (!workspace) {
-      return null;
+      return new HttpException('Workspace not found', HttpStatus.NOT_FOUND);
     }
     await this.workspaceRepository.remove(workspace);
     return workspace;
   }
 
   async updateWorkspace(id: number, workspace: UpdateWorkspaceDto) {
-    return this.workspaceRepository.update(id, workspace);
+    const workspaceFound = await this.workspaceRepository.findOne({
+      where: {
+        workspaceId: id,
+      },
+    });
+
+    if (!workspaceFound) {
+      return new HttpException('Workspace not found', HttpStatus.NOT_FOUND);
+    }
+    const updateWorkspace = Object.assign(workspaceFound, workspace);
+    return this.workspaceRepository.save(updateWorkspace);
   }
 }

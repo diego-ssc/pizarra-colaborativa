@@ -5,7 +5,7 @@ export class WhiteBoard {
   @PrimaryGeneratedColumn()
   whiteBoardId: number;
 
-  @Column()
+  @Column({ unique: true })
   title: string;
 
   @Column()

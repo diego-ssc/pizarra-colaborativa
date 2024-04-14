@@ -1,4 +1,4 @@
 export class CreateWorkspaceDto {
-  tittle: string;
+  title: string;
   description: string;
 }

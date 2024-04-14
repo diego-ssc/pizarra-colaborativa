@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WhiteBoard } from './white-board.entity';
 import { Repository } from 'typeorm';
@@ -12,7 +12,19 @@ export class WhiteBoardService {
     private whiteBoardRepository: Repository<WhiteBoard>,
   ) {}
 
-  createWhiteBoard(whiteBoard: CreateWhiteBoardDto) {
+  async createWhiteBoard(whiteBoard: CreateWhiteBoardDto) {
+    const whiteBoardFound = await this.whiteBoardRepository.findOne({
+      where: {
+        title: whiteBoard.title,
+      },
+    });
+    if (whiteBoardFound) {
+      return new HttpException(
+        'Whiteboard already exists',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const newWhiteBoard = this.whiteBoardRepository.create(whiteBoard);
     this.whiteBoardRepository.save(newWhiteBoard);
   }
@@ -40,13 +52,23 @@ export class WhiteBoardService {
       },
     });
     if (!whiteboard) {
-      return null;
+      return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
     }
     await this.whiteBoardRepository.remove(whiteboard);
     return whiteboard;
   }
 
   async updateWhiteBoard(id: number, whiteBoard: UpdateWhiteBoardDto) {
-    return this.whiteBoardRepository.update(id, whiteBoard);
+    const whiteboardFound = await this.whiteBoardRepository.findOne({
+      where: {
+        whiteBoardId: id,
+      },
+    });
+
+    if (!whiteboardFound) {
+      return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
+    }
+    const updateWhiteBoard = Object.assign(whiteboardFound, whiteBoard);
+    return this.whiteBoardRepository.save(updateWhiteBoard);
   }
 }

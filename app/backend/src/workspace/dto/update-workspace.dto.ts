@@ -1,4 +1,4 @@
 export class UpdateWorkspaceDto {
-  tittle?: string;
+  title?: string;
   description?: string;
 }
