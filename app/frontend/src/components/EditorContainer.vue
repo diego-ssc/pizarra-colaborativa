@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue'
-import { type AppState } from './EditorProvider.vue'
+import { useEditor } from '@/lib/editor/editor';
+import { onMounted, ref } from 'vue'
 
-const { editor } = inject<AppState>('appState')!
+const { editor } = useEditor();
 const editorContainerRef = ref<HTMLDivElement>()
 
 onMounted(() => {
