@@ -27,4 +27,9 @@ export class WhiteBoardController {
   deleteWhiteBoardById(@Param('id') id: string) {
     this.whiteBoardService.deleteWhiteBoardById(Number(id));
   }
+
+  @Patch(':id')
+  updateWhiteBoard(@Param('id') id: string, @Body() whiteBoard: UpdateWhiteBoardDto) {
+    return this.whiteBoardService.updateWhiteBoard(Number(id), whiteBoard);
+  }
 }
