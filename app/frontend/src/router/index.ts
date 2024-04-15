@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import LoginView from '@/views/LoginView.vue'
+import PageNotFound from '../views/PageNotFound.vue'
 import CreateAccountView from '@/views/CreateAccountView.vue'
 
 const DocumentView = () => import('../views/DocumentView.vue')
@@ -41,6 +42,13 @@ const router = createRouter({
       meta: {
         // TODO: Require authentication to access document view
         requiresAuth: false
+      }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      component: PageNotFound,
+      meta: {
+        requiresAtuh: false
       }
     }
   ]
