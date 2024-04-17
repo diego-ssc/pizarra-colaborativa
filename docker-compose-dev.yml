@@ -9,6 +9,8 @@ services:
     depends_on:
       - backend
     pull_policy: build
+    env_file:
+      - .env.develop.local/frontend.env
     develop:
       watch:
         - action: sync
@@ -27,6 +29,8 @@ services:
     depends_on:
       - db
     pull_policy: build
+    env_file:
+      - .env.develop.local/db.env
     develop:
       watch:
         - action: sync
@@ -44,9 +48,7 @@ services:
       - 5432:5432
     volumes:
       - dbdata:/var/lib/postgresql/data 
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: app-db 
+    env_file:
+      - .env.develop.local/db.env
 volumes:
   dbdata:

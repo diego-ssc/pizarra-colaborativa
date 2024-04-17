@@ -26,6 +26,7 @@ import { WorkspaceModule } from './workspace/workspace.module';
     AuthModule,
     WhiteBoardModule,
     WorkspaceModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
