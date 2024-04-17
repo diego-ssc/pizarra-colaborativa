@@ -6,6 +6,7 @@ import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { RedisService } from './redis/redis.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RedisService],
 })
 export class AppModule {}
