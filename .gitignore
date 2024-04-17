@@ -312,6 +312,9 @@ TSWLatexianTemp*
 .DS_store
 
 
+# npm files
+node_modules/
+
 # Secrets
 .env
 .env*
