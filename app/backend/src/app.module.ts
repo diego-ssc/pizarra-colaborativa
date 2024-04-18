@@ -6,7 +6,8 @@ import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { RedisService } from './redis/redis.service';
+import { BlocksuiteGateway } from './blocksuite/blocksuite.gateway';
+import { BlocksuiteModule } from './blocksuite/blocksuite.module';
 
 @Module({
   imports: [
@@ -23,8 +24,9 @@ import { RedisService } from './redis/redis.service';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    BlocksuiteModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RedisService],
+  providers: [AppService, BlocksuiteGateway],
 })
 export class AppModule {}
