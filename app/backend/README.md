@@ -65,3 +65,28 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+# Redis Setup
+
+Setup redis on your computer. Follow the [official
+documentation](https://redis.io/docs/install/install-redis/). This is
+recommended if you want to debug the redis stream.
+
+Alternatively, simply run redis via docker:
+
+```sh
+# start the official redis docker container on port 6379
+docker run -p 6379:6379 redis
+# or `npm run redis`
+```
+
+#### Start an S3 instance
+
+Setup an S3-compatible store at your favorite cloud provider.
+
+Alternatively, simply run a *minio* store as a docker container:
+
+```sh
+docker run -p 9000:9000 -p 9001:9001 quay.io/minio/minio server /data --console-address \":9001\"
+# or `npm run minio`
+```
