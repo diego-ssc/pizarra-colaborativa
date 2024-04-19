@@ -13,6 +13,21 @@ class User {
 
   @Column()
   password: string;
+
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName1: string;
+
+  @Column()
+  lastmame2: string;
+
+  @Column()
+  profilePic: string;
+
+  @Column()
+  isEmailVerified: boolean;
 }
 
 export default User;
