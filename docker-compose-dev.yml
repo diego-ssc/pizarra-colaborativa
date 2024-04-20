@@ -40,6 +40,10 @@ services:
             - node_modules/
         - action: rebuild
           path: ./app/backend/package.json
+  redis:
+    image: redis:7.2
+    ports:
+      - 6379:6379
   db:
     image: postgres:16-alpine
     restart: always
