@@ -8,3 +8,13 @@ Pizarra colaborativa para proyectos relacionas con las ciencias de la computaci√
 - 2: Instalar docker
 
 - 3: Ejecutar `docker-compose up`
+
+
+# Actualizaciones de subtree
+
+
+Ejecutar en el directorio ra√≠z:
+
+```
+git subtree pull --prefix app/y-redis/ https://github.com/diego-ssc/y-redis.git master --squash
+```
