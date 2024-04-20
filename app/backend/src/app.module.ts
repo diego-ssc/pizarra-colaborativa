@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { WhiteBoardModule } from './white-board/white-board.module';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { UserGroupModule } from './user-group/user-group.module';
+import { HasPermissionModule } from './has-permission/has-permission.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserGroupModule } from './user-group/user-group.module';
     WhiteBoardModule,
     WorkspaceModule,
     UserGroupModule,
+    HasPermissionModule,
 
   ],
   controllers: [AppController],

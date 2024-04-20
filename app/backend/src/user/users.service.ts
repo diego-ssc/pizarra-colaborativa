@@ -18,7 +18,7 @@ export class UsersService {
   async getUserById(id: number) {
     const user = await this.usersRepository.findOne({
       where: {
-        id: id,
+        userId: id,
       },
     });
     if (user) {
@@ -40,7 +40,7 @@ export class UsersService {
   async deleteById(id: number) {
     const user = await this.usersRepository.findOne({
       where: {
-        id: id,
+        userId: id,
       },
     });
     if (!user) {
