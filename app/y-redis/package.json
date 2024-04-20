@@ -1,0 +1,93 @@
+{
+  "name": "@y/redis",
+  "version": "1.5.3",
+  "description": "Scalable websockets provider for Yjs using redis",
+  "sideEffects": false,
+  "type": "module",
+  "funding": {
+    "type": "GitHub Sponsors ❤",
+    "url": "https://github.com/sponsors/dmonad"
+  },
+  "scripts": {
+    "dev": "concurrently -r 'npm run start:server' 'npm run start:worker' 'npm run minio'",
+    "start:server": "node --env-file .env ./bin/server.js",
+    "debug:server": "node --env-file .env --inspect-brk ./bin/worker.js ./bin/server.js",
+    "start:worker": "node --env-file .env ./bin/worker.js",
+    "debug:worker": "node --env-file .env --inspect-brk ./bin/worker.js",
+    "minio": "docker run -p 9000:9000 -p 9001:9001 quay.io/minio/minio server /data --console-address \":9001\"",
+    "redis": "docker run -p 6379:6379 redis",
+    "dist": "rollup -c && tsc",
+    "lint": "standard && tsc",
+    "test": "node --env-file .env tests/index.js",
+    "test-inspect": "node --env-file .env --inspect-brk tests/index.js",
+    "preversion": "npm run lint && npm run dist",
+    "demo": "rollup -c && concurrently -r 'rollup -wc' 'npm start' '0serve -o demo/index.html'"
+  },
+  "bin": {
+    "y-redis-server": "./bin/server.js",
+    "y-redis-worker": "./bin/worker.js"
+  },
+  "files": [
+    "dist/*",
+    "bin/*",
+    "src/*"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "default": "./src/index.js",
+      "types": "./dist/src/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yjs/y-redis.git"
+  },
+  "keywords": [
+    "Yjs"
+  ],
+  "author": "Kevin Jahns <kevin.jahns@protonmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yjs/y-redis/issues"
+  },
+  "homepage": "https://github.com/yjs/y-redis#readme",
+  "standard": {
+    "ignore": [
+      "/dist",
+      "/node_modules"
+    ]
+  },
+  "dependencies": {
+    "lib0": "^0.2.93",
+    "redis": "^4.6.12",
+    "uws": "github:uNetworking/uWebSockets.js#v20.40.0",
+    "yjs": "^13.5.6"
+  },
+  "optionalDependencies": {
+    "postgres": "^3.4.3",
+    "minio": "^7.1.3"
+  },
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.24.1",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@types/node": "^20.11.5",
+    "@types/ws": "^8.5.10",
+    "codemirror": "^6.0.1",
+    "concurrently": "^8.2.2",
+    "rollup": "^4.12.0",
+    "standard": "^17.1.0",
+    "typescript": "^5.3.3",
+    "ws": "^8.16.0",
+    "y-codemirror.next": "^0.3.2",
+    "y-websocket": "^2.0.0",
+    "yjs": "^13.6.12"
+  }
+}
