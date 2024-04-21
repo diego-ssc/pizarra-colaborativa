@@ -36,7 +36,7 @@ export class HasPermissionService {
   async getHasPermissionById(id: number) {
     const hasPermission = await this.hasPermissionRepository.findOne({
       where: {
-        Id: id,
+        idPermission: id,
       },
     });
     if (hasPermission) {
@@ -48,7 +48,7 @@ export class HasPermissionService {
   async deleteHasPermissionById(id: number) {
     const hasPermission = await this.hasPermissionRepository.findOne({
       where: {
-        Id: id,
+        idPermission: id,
       },
     });
     if (!hasPermission) {
@@ -61,7 +61,7 @@ export class HasPermissionService {
   async updateHasPermission(id: number, hasPermission: UpdateHasPermissionDto) {
     const hasPermissionFound = await this.hasPermissionRepository.findOne({
       where: {
-        Id: id,
+        idPermission: id,
       },
     });
 

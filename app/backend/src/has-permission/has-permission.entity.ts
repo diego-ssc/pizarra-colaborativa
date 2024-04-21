@@ -1,10 +1,13 @@
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import User from 'src/user/user.entity';
 import UserGroup from 'src/user-group/user-group.entity';
 import Workspace from 'src/workspace/workspace.entity';
 import WhiteBoard from 'src/white-board/white-board.entity';
 @Entity({ name: 'hasPermission' })
 export class HasPermission {
+  @PrimaryGeneratedColumn()
+  idPermission: number;
+
   @Column()
   action: string;
 
