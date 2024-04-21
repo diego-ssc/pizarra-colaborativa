@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UsePipes,
   ValidationPipe,
@@ -24,5 +25,19 @@ export class AuthController {
   @Post('/login')
   login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
     return this.authService.login(loginDto);
+  }
+
+  @Post('/perm/:docid/:userid')
+  hasPermission(@Param() params: any): {
+    yroom: string;
+    yaccess: string;
+    yuserid: string;
+  } {
+    // TODO: Check if user has permision to access document.
+    return {
+      yroom: params.docid,
+      yaccess: 'rw',
+      yuserid: params.userid,
+    };
   }
 }
