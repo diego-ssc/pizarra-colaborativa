@@ -40,6 +40,31 @@ services:
             - node_modules/
         - action: rebuild
           path: ./app/backend/package.json
+  y-redis-server:
+    build:
+      context: ./app/y-redis
+      target: server
+    ports:
+      - 3002:3002
+    depends_on:
+      - db
+      - redis
+      - backend
+    pull_policy: build
+    env_file:
+      - .env.develop.local/y-redis.env
+  y-redis-worker:
+    build:
+      context: ./app/y-redis
+      target: worker
+    depends_on:
+      - db
+      - redis
+      - backend
+    pull_policy: build
+    env_file:
+      - .env.develop.local/y-redis.env
+
   redis:
     image: redis:7.2
     ports:
