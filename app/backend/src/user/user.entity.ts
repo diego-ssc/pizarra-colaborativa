@@ -1,7 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserGroup } from '../user-group/user-group.entity';
+import HasPermission from 'src/has-permission/has-permission.entity';
 
 @Entity()
-class User {
+export class User {
   @PrimaryGeneratedColumn()
   userId: number;
 
@@ -28,6 +30,14 @@ class User {
 
   @Column()
   isEmailVerified: boolean;
+
+  @ManyToMany(() => UserGroup)
+  @JoinTable()
+  userGroups: UserGroup[];
+
+  @ManyToMany(() => HasPermission)
+  @JoinTable()
+  hasPermissions: HasPermission[];
 }
 
 export default User;
