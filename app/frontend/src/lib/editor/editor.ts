@@ -1,53 +1,17 @@
-//import '@blocksuite/presets/themes/affine.css'
-/*import { AffineEditorContainer } from '@blocksuite/presets'
-import { Doc, Schema } from '@blocksuite/store'
-import { DocCollection } from '@blocksuite/store'
-import { AffineSchemas } from '@blocksuite/blocks'
-
-import { getSpecs } from './specs'
-import { inject, provide } from 'vue'
-
-const EDITOR_INJECTION_KEY = 'editorState'
-
-export function initEditor() {
-  const schema = new Schema().register(AffineSchemas)
-  const collection = new DocCollection({ schema })
-  const doc = collection.createDoc({ id: 'page1' })
-
-  doc.load(() => {
-    const pageBlockId = doc.addBlock('affine:page', {})
-    doc.addBlock('affine:surface', {}, pageBlockId)
-    const noteId = doc.addBlock('affine:note', {}, pageBlockId)
-    doc.addBlock('affine:paragraph', {}, noteId)
-  })
-
-  const specs = getSpecs()
-
-  const editor = new AffineEditorContainer()
-  editor.edgelessSpecs = specs
-
-  editor.doc = doc
-  editor.slots.docLinkClicked.on(({ docId }) => {
-    const target = <Doc>collection.getDoc(docId)
-    editor.doc = target
-  })
-  editor.mode = 'edgeless'
-
-  return { editor, collection }
-}
-
-export interface EditorState {
-  editor: AffineEditorContainer
-  collection: DocCollection
-}
-*/
+import '@blocksuite/presets/themes/affine.css'
 import { AffineSchemas, EdgelessEditorBlockSpecs } from '@blocksuite/blocks'
 import { AffineEditorContainer } from '@blocksuite/presets'
 // eslint-disable-next-line no-unused-vars
 import { Schema, DocCollection, Text, Doc, Slot } from '@blocksuite/store'
 import { inject, provide } from 'vue';
+import { getSpecs } from './specs';
 
-const specs = EdgelessEditorBlockSpecs
+export interface EditorState {
+  editor: AffineEditorContainer
+  collection: DocCollection
+}
+
+const specs = getSpecs()
 const schema = new Schema().register(AffineSchemas)
 export const collection = new DocCollection({ schema })
 export const editor = new AffineEditorContainer()
