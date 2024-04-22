@@ -1,9 +1,9 @@
-import { NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import User from './user.entity';
 import { CreateUserDto } from './dto/user.dto';
-
+import { UpdateUserDto } from './dto/update-userDto.dto';
 export class UsersService {
   constructor(
     @InjectRepository(User)
@@ -49,5 +49,19 @@ export class UsersService {
 
     await this.usersRepository.remove(user);
     return user;
+  }
+
+  async updateUser(id: number, user: UpdateUserDto) {
+    const userFound = await this.usersRepository.findOne({
+      where: {
+        userId: id,
+      },
+    });
+
+    if (!userFound) {
+      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    const updateUser = Object.assign(userFound, user);
+    return this.usersRepository.save(updateUser);
   }
 }
