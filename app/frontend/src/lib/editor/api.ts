@@ -42,8 +42,6 @@ async function getAuthToken () {
   return response.text()
 }
 
-export const authToken = await getAuthToken()
-
 export const api = {
   getDocMetaList,
   addDocMeta,

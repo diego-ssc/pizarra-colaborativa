@@ -19,14 +19,17 @@ import { Public } from './public.decorator';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         return {
-          secret: config.get<string>('JWT_SECRET'),
+          privateKey: config.get<string>('JWT_PRIVATE_KEY'),
+          publicKey: config.get<string>('JWT_PUBLICK_KEY'),
           signOptions: {
+            algorithm: 'ES384',
             expiresIn: config.get<string | number>('JWT_EXPIRES'),
           },
         };
       },
     }),
     TypeOrmModule.forFeature([User]),
+    ConfigModule,
   ],
   controllers: [AuthController],
   providers: [

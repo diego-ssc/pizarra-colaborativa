@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import User from '../user/user.entity';
 import * as bcrypt from 'bcryptjs';
-import { UsersService } from '../user/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
@@ -29,7 +28,7 @@ export class AuthService {
 
     await this.usersRepository.save(user);
 
-    const token = this.jwtService.sign({ id: user.id });
+    const token = this.jwtService.sign({ id: user.id, yuserid: user.id });
 
     return { token };
   }
@@ -51,7 +50,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const token = this.jwtService.sign({ id: user.id });
+    const token = this.jwtService.sign({ id: user.id, yuserid: user.id });
 
     return { token };
   }
