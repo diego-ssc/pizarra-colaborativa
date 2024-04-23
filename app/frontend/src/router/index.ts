@@ -36,6 +36,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/d/:id',
+      name: 'documentID',
+      component: DocumentView,
+      meta: {
+        // TODO: Require authentication to access document view
+        requiresAuth: false
+      }
+    },
+    {
       path: '/d',
       name: 'document',
       component: DocumentView,
