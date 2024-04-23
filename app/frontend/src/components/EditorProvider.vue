@@ -9,7 +9,6 @@ const route = useRoute()
 const room = route.params.id
 
 initEditor()
-//const doc = loadDoc(props.room)
 
 function switchDoc (id: any) {
   let doc = collection.getDoc(id)
