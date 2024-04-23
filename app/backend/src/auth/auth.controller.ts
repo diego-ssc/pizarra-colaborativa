@@ -27,7 +27,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Post('/perm/:docid/:userid')
+  @Get('/perm/:docid/:userid')
   hasPermission(@Param() params: any): {
     yroom: string;
     yaccess: string;
