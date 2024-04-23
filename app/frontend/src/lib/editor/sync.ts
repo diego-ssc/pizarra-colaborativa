@@ -5,7 +5,7 @@ import { editor } from './editor.js'
 import { useUserStore } from '@/stores/user.js'
 import { storeToRefs } from 'pinia'
 
-const endpoint = 'ws://localhost:3002'
+const endpoint = import.meta.env.VITE_BASE_WEBSOCKET_URL
 
 /** @type {WebsocketProvider | null} */
 let currentProvider: WebsocketProvider | null = null
