@@ -1,4 +1,10 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserGroup } from '../user-group/user-group.entity';
 import HasPermission from 'src/has-permission/has-permission.entity';
 
@@ -16,19 +22,19 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   firstName: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastName1: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastmame2: string;
 
-  @Column()
+  @Column({ nullable: true })
   profilePic: string;
 
-  @Column()
+  @Column({ nullable: true })
   isEmailVerified: boolean;
 
   @ManyToMany(() => UserGroup)

@@ -1,43 +1,26 @@
 <script setup lang="ts">
-import { collection, createDoc, provideEditor, loadDoc, initEditor } from '@/lib/editor/editor'
+import { useEditor, } from '@/lib/editor/editor'
 import { sync } from '@/lib/editor/sync'
-import { api } from '@/lib/editor/api'
-import { useRoute, useRouter } from 'vue-router';
 
-const route = useRoute()
+const props = defineProps<{
+  docID: string
+}>()
 
-const room = route.params.id
-
-initEditor()
+const editor = useEditor()
 
 function switchDoc (id: any) {
-  let doc = collection.getDoc(id)
+  let doc = editor.collection.getDoc(id)
   if (!id) {
     console.log('id cant be empty')
   } else {
-    if (!doc) doc = loadDoc(id)
-    sync(doc, id)
+    console.log(doc)
+    if (!doc) doc = editor.loadDoc(id)
+    console.log('loaded doc')
+    sync(editor.editor, doc, id)
   }
 }
 
-const router = useRouter()
-
-
-async function addDoc () {
-  const { id } = await api.addDocMeta()
-  console.log(id)
-  createDoc(id)
-  switchDoc(id)
-  router.push({ path: `/d/${id}` })
-}
-
-if (room) {
-  switchDoc(room)
-} else {
-  addDoc()
-}
-
-provideEditor()
+switchDoc(props.docID)
 </script>
 
 <template>

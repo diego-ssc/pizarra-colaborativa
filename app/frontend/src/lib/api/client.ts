@@ -57,6 +57,10 @@ export function createAPIClient(options: APIOptions): APIClient {
   return new APIClient(options)
 }
 
+export function useAPIClient(): APIClient {
+  return inject<APIClient>(API_CLIENT_INJECTION_KEY) as APIClient
+}
+
 function useFetch<ReqT, ResT>(
   fetchFunc: (client: APIClient, req?: ReqT) => Promise<HTTPResponse<ResT, any>>
 ) {

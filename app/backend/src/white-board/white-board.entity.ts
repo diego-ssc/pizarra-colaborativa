@@ -1,13 +1,21 @@
-import { Column, Entity, JoinColumn, ManyToOne,ManyToMany, PrimaryGeneratedColumn, JoinTable } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  JoinTable,
+} from 'typeorm';
 import Workspace from '../workspace/workspace.entity';
 import HasPermission from 'src/has-permission/has-permission.entity';
 
 @Entity({ name: 'whiteBoard' })
 export class WhiteBoard {
-  @PrimaryGeneratedColumn()
-  whiteBoardId: number;
+  @PrimaryGeneratedColumn('uuid')
+  whiteBoardId: string;
 
-  @Column({ unique: true })
+  @Column()
   title: string;
 
   @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })

@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import LoginView from '@/views/LoginView.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import CreateAccountView from '@/views/CreateAccountView.vue'
+import NewDocumentView from '@/views/NewDocumentView.vue'
 import Landing from '@/views/Landing.vue'
 
 const DocumentView = () => import('../views/DocumentView.vue')
@@ -38,20 +39,18 @@ const router = createRouter({
     },
     {
       path: '/d/:id',
-      name: 'documentID',
-      component: DocumentView,
-      meta: {
-        // TODO: Require authentication to access document view
-        requiresAuth: false
-      }
-    },
-    {
-      path: '/d',
       name: 'document',
       component: DocumentView,
       meta: {
-        // TODO: Require authentication to access document view
-        requiresAuth: false
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/new',
+      name: 'newdoc',
+      component: NewDocumentView,
+      meta: {
+        requiresAuth: true
       }
     },
     {

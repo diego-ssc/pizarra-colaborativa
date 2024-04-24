@@ -6,6 +6,7 @@ import router, { setupRouterAuthGuard } from './router'
 import { createAPIClient } from './lib/api/client'
 import { createPinia, storeToRefs } from 'pinia'
 import { useUserStore } from './stores/user'
+import { createBlocksuiteEditor } from './lib/editor/editor'
 
 const pinia = createPinia()
 const app = createApp(App)
@@ -25,6 +26,9 @@ const client = createAPIClient({
   }
 })
 
+const editor = createBlocksuiteEditor()
+
 app.use(client)
+app.use(editor)
 
 app.mount('#app')

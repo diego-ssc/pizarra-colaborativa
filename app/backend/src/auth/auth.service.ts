@@ -28,7 +28,10 @@ export class AuthService {
 
     await this.usersRepository.save(user);
 
-    const token = this.jwtService.sign({ id: user.id, yuserid: user.id });
+    const token = this.jwtService.sign({
+      id: user.userId,
+      yuserid: user.userId,
+    });
 
     return { token };
   }
@@ -50,7 +53,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const token = this.jwtService.sign({ id: user.id, yuserid: user.id });
+    const token = this.jwtService.sign({
+      id: user.userId,
+      yuserid: user.userId,
+    });
 
     return { token };
   }
