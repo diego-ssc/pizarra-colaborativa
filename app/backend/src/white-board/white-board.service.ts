@@ -13,20 +13,15 @@ export class WhiteBoardService {
   ) {}
 
   async createWhiteBoard(whiteBoard: CreateWhiteBoardDto) {
-    const whiteBoardFound = await this.whiteBoardRepository.findOne({
-      where: {
-        title: whiteBoard.title,
-      },
-    });
-    if (whiteBoardFound) {
+    if (!whiteBoard || !whiteBoard.title) {
       return new HttpException(
-        'Whiteboard already exists',
-        HttpStatus.CONFLICT,
+        'Whiteboard title is required',
+        HttpStatus.BAD_REQUEST,
       );
     }
 
     const newWhiteBoard = this.whiteBoardRepository.create(whiteBoard);
-    this.whiteBoardRepository.save(newWhiteBoard);
+    return await this.whiteBoardRepository.save(newWhiteBoard);
   }
 
   async getWhiteBoards() {

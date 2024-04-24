@@ -1,10 +1,18 @@
-import { Controller, Post, Body, Get, Param, Delete, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { CreateWhiteBoardDto } from './dto/createWhiteBoardDto.dto';
 import { WhiteBoardService } from './white-board.service';
 import WhiteBoard from './white-board.entity';
 import { UpdateWhiteBoardDto } from './dto/update-whiteboard.dto';
 
-@Controller('white-board')
+@Controller('whiteboard')
 export class WhiteBoardController {
   constructor(private whiteBoardService: WhiteBoardService) {}
 
@@ -14,7 +22,7 @@ export class WhiteBoardController {
   }
 
   @Get(':id')
-  getWhiteBoardById(@Param() id: string): Promise<WhiteBoard> {
+  getWhiteBoardById(@Param('id') id: string): Promise<WhiteBoard> {
     return this.whiteBoardService.getWhiteBoardById(Number(id));
   }
 
@@ -29,7 +37,10 @@ export class WhiteBoardController {
   }
 
   @Patch(':id')
-  updateWhiteBoard(@Param('id') id: string, @Body() whiteBoard: UpdateWhiteBoardDto) {
+  updateWhiteBoard(
+    @Param('id') id: string,
+    @Body() whiteBoard: UpdateWhiteBoardDto,
+  ) {
     return this.whiteBoardService.updateWhiteBoard(Number(id), whiteBoard);
   }
 }
