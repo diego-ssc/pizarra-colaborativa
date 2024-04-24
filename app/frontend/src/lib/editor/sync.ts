@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import { Doc } from '@blocksuite/store'
 import { WebsocketProvider } from 'y-websocket'
-import { editor } from './editor.js'
 import { useUserStore } from '@/stores/user.js'
 import { storeToRefs } from 'pinia'
+import type { AffineEditorContainer } from '@blocksuite/presets'
 
 const endpoint = import.meta.env.VITE_BASE_WEBSOCKET_URL
 
@@ -12,7 +12,7 @@ let currentProvider: WebsocketProvider | null = null
 let currentDoc: Doc | null = null
 
 /** @param {Doc} doc */
-export function sync (doc: Doc, room: string) {
+export function sync (editor: AffineEditorContainer, doc: Doc, room: string) {
   if (doc === currentDoc) return
   if (currentProvider) currentProvider.destroy()
 
