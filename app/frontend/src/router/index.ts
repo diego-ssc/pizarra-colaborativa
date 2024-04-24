@@ -41,8 +41,7 @@ const router = createRouter({
       name: 'document',
       component: DocumentView,
       meta: {
-        // TODO: Require authentication to access document view
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
@@ -50,8 +49,7 @@ const router = createRouter({
       name: 'newdoc',
       component: NewDocumentView,
       meta: {
-        // TODO: Require authentication to access document view
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
