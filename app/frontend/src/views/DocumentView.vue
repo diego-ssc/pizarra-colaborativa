@@ -11,7 +11,7 @@ const docID = route.params.id as string
 <template>
   <EditorProvider :docID="docID">
     <div class="h-full">
-      <UndoRedoButton class="fixed top-2 left-2 z-[1001]"/>
+      <UndoRedoButton class="absolute bottom-6 right-6 z-[1001]"/>
       <EditorContainer class="h-full" />
     </div>
   </EditorProvider>
