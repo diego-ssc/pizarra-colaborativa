@@ -1,10 +1,23 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { Button } from '../components/ui/button'
 import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
+import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 
 
+const userStore = useUserStore()
+const { isLoggedIn } = storeToRefs(userStore)
+
+const router = useRouter()
+
+onMounted(() => {
+    if (isLoggedIn.value) {
+        router.push({ name: 'home' })
+    }
+})
 
 </script>
 
@@ -13,10 +26,10 @@ import CardContent from '@/components/ui/card/CardContent.vue';
             <table style="float: right;">
                 <tr>
                     <th> 
-                        <a href="/login"> <Button> Iniciar sesión </Button> </a>
+                        <RouterLink to="/login"> <Button> Iniciar sesión </Button> </RouterLink>
                     </th>
                     <th>
-                        <a href="/register"> <Button> Regístrate </Button> </a>
+                        <RouterLink to="/register"> <Button> Regístrate </Button> </RouterLink>
                     </th>
                 </tr>
             </table>
