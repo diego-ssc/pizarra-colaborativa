@@ -1,23 +1,38 @@
 <script setup lang="ts">
-import { Button } from '../components/ui/button' 
-import CardFooter from '@/components/ui/card/CardFooter.vue';
-import CardContent from '@/components/ui/card/CardContent.vue';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router'
-const showSidebar = ref(false);
-const userName = 'John Doe'; // nombre del usuario
+import { Button } from '@/components/ui/button'
+import { GetWhiteboardsResponse, WhiteboardEndpoint } from '@/lib/api/api';
+import { useGet } from '@/lib/api/client';
+import { useUserStore } from '@/stores/user';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const isSidebarOpen = ref(false)
+
+const userStore = useUserStore()
+const router = useRouter()
+
+function logout() {
+  userStore.logout()
+  router.push({ path: '/' })
+}
+
+const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
+
+onMounted(() => {
+  get()
+})
+
 </script>
 
 
 <template>
+<div>
   
     <header style="background-color:#ffffff; padding: 15px;">
             <table style="float: right;">
                 <tr>
                     <th> 
-                        <a href="/login"> <Button> Cerrar sesión </Button> </a>
+                        <Button @click="logout"> Cerrar sesión </Button>
                     </th>
                 </tr>
             </table>
@@ -101,32 +116,25 @@ const isSidebarOpen = ref(false)
 
           <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
+              <RouterLink to="/new">
               <div class="flex items-center justify-center mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="20" height="20" class="flex-1">
                   <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
                 </svg>
               </div>
-              <h2 class="text-sm font-italic text-black text-center">New board</h2>
+              <h2 class="text-sm font-italic text-black text-center">Nueva pizarra</h2>
+              </RouterLink>
             </div>
           </div>
 
-          <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+          <div v-for="board in data" class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                <RouterLink :to="{ path: 'd/' + board.whiteBoardId }">
             <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
-              <p class="text-gray-200">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.</p>       
-              <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">ICC</h2>
+              <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">{{ board.title }}</h2>
+              <h6 class="text-sm font-italic text-black text-center border-b-2 mb-0">Fecha creación: {{ board.createdAt }}</h6>
             </div>
+            </RouterLink>
           </div>
-
-          <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
-              <p class="text-gray-200">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.</p>
-              <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">EDD</h2>
-            </div>
-          </div>
-
-
-  
-
         </div>
       </div>
 
@@ -139,5 +147,6 @@ const isSidebarOpen = ref(false)
     <footer style="background-color:black; position: absolute; bottom: 0px; width: 100%;">
         <p style=" color:white;font-size: xx-small;">Proyecto desarrollado por el equipo 1</p>
     </footer>
+</div>
 </template>
 
