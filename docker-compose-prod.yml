@@ -12,6 +12,36 @@ services:
     pull_policy: build
     env_file:
       - ${ENV_PATH}
+  y-redis-server:
+    build:
+      context: ./app/y-redis
+      target: server
+    restart: always
+    ports:
+      - 3002:3002
+    depends_on:
+      - db
+      - redis
+      - backend
+    pull_policy: build
+    env_file:
+      - ${ENV_PATH}
+  y-redis-worker:
+    build:
+      context: ./app/y-redis
+      target: worker
+    restart: always
+    depends_on:
+      - db
+      - redis
+      - backend
+    pull_policy: build
+    env_file:
+      - ${ENV_PATH}
+  redis:
+    image: redis:7.2
+    ports:
+      - 6379:6379
   db:
     image: postgres:16-alpine
     restart: always
