@@ -13,7 +13,7 @@ import HasPermission from 'src/has-permission/has-permission.entity';
 @Entity({ name: 'whiteBoard' })
 export class WhiteBoard {
   @PrimaryGeneratedColumn('uuid')
-  whiteBoardId: number;
+  whiteBoardId: string;
 
   @Column()
   title: string;

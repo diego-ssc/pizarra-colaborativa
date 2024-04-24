@@ -22,8 +22,8 @@ export class WhiteBoardController {
   }
 
   @Get(':id')
-  getWhiteBoardById(@Param('id') id: string): Promise<WhiteBoard> {
-    return this.whiteBoardService.getWhiteBoardById(Number(id));
+  getWhiteBoardById(@Param('id') id: string) {
+    return this.whiteBoardService.getWhiteBoardById(id);
   }
 
   @Post()
@@ -33,7 +33,7 @@ export class WhiteBoardController {
 
   @Delete(':id')
   deleteWhiteBoardById(@Param('id') id: string) {
-    this.whiteBoardService.deleteWhiteBoardById(Number(id));
+    this.whiteBoardService.deleteWhiteBoardById(id);
   }
 
   @Patch(':id')
@@ -41,6 +41,6 @@ export class WhiteBoardController {
     @Param('id') id: string,
     @Body() whiteBoard: UpdateWhiteBoardDto,
   ) {
-    return this.whiteBoardService.updateWhiteBoard(Number(id), whiteBoard);
+    return this.whiteBoardService.updateWhiteBoard(id, whiteBoard);
   }
 }

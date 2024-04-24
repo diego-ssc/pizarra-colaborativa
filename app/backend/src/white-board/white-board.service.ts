@@ -1,10 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WhiteBoard } from './white-board.entity';
 import { Repository } from 'typeorm';
 import { CreateWhiteBoardDto } from './dto/createWhiteBoardDto.dto';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateWhiteBoardDto } from './dto/update-whiteboard.dto';
+import { isUUID } from 'class-validator';
 @Injectable()
 export class WhiteBoardService {
   constructor(
@@ -28,7 +34,10 @@ export class WhiteBoardService {
     return this.whiteBoardRepository.find();
   }
 
-  async getWhiteBoardById(id: number) {
+  async getWhiteBoardById(id: string) {
+    if (!isUUID(id)) {
+      throw new BadRequestException('invalida id format');
+    }
     const whiteboard = await this.whiteBoardRepository.findOne({
       where: {
         whiteBoardId: id,
@@ -37,10 +46,13 @@ export class WhiteBoardService {
     if (whiteboard) {
       return whiteboard;
     }
-    throw new NotFoundException('Could not find the whiteboard');
+    throw new NotFoundException('whiteboard not found');
   }
 
-  async deleteWhiteBoardById(id: number) {
+  async deleteWhiteBoardById(id: string) {
+    if (!isUUID(id)) {
+      throw new BadRequestException('invalida id format');
+    }
     const whiteboard = await this.whiteBoardRepository.findOne({
       where: {
         whiteBoardId: id,
@@ -53,7 +65,10 @@ export class WhiteBoardService {
     return whiteboard;
   }
 
-  async updateWhiteBoard(id: number, whiteBoard: UpdateWhiteBoardDto) {
+  async updateWhiteBoard(id: string, whiteBoard: UpdateWhiteBoardDto) {
+    if (!isUUID(id)) {
+      return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
+    }
     const whiteboardFound = await this.whiteBoardRepository.findOne({
       where: {
         whiteBoardId: id,
