@@ -6,6 +6,7 @@ import LoginView from '@/views/LoginView.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import CreateAccountView from '@/views/CreateAccountView.vue'
 import NewDocumentView from '@/views/NewDocumentView.vue'
+import Landing from '@/views/Landing.vue'
 
 const DocumentView = () => import('../views/DocumentView.vue')
 
@@ -14,10 +15,10 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'landing',
+      component: Landing,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
