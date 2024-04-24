@@ -5,7 +5,8 @@ import HomeView from './views/HomeView.vue';
 </script>
 
 <template>
-  <HomeView/>
+  <RouterView class="h-full" />
+  <Toaster />
 </template>
 
 <style>
