@@ -2,15 +2,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HasPermission } from './has-permission.entity';
 import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { CreateHasPermissionDto } from './dto/create-has-permissionDto.dto';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateHasPermissionDto } from './dto/update-has-permissionDto.dto';
+
 @Injectable()
 export class HasPermissionService {
   constructor(
     @InjectRepository(HasPermission)
     private hasPermissionRepository: Repository<HasPermission>,
-  ) {}
+    private datasource: DataSource
+  ) { }
 
   async createHasPermission(hasPermission: CreateHasPermissionDto) {
     const hasPermissionFound = await this.hasPermissionRepository.findOne({
@@ -68,7 +71,7 @@ export class HasPermissionService {
     if (!hasPermissionFound) {
       return new HttpException('Permission not found', HttpStatus.NOT_FOUND);
     }
-    const updateHasPermission = Object.assign(hasPermissionFound,hasPermission,);
+    const updateHasPermission = Object.assign(hasPermissionFound, hasPermission,);
     return this.hasPermissionRepository.save(updateHasPermission);
   }
 }

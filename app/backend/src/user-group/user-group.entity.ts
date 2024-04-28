@@ -1,4 +1,6 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn
+} from 'typeorm';
 import { User } from 'src/user/user.entity';
 import HasPermission from 'src/has-permission/has-permission.entity';
 
@@ -14,8 +16,7 @@ export class UserGroup {
   @JoinTable()
   users: User[];
 
-  @ManyToMany(() => HasPermission)
-  @JoinTable()
-  hasPermissions: HasPermission[];
+  @ManyToOne(() => HasPermission, (hasPermissions) => hasPermissions.userGroups)
+  hasPermissions: HasPermission;
 }
 export default UserGroup;
