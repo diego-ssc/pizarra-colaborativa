@@ -11,6 +11,8 @@ import { CreateWhiteBoardDto } from './dto/createWhiteBoardDto.dto';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateWhiteBoardDto } from './dto/update-whiteboard.dto';
 import { isUUID } from 'class-validator';
+import { OrderByOption, WhiteBoardQuery } from './dto/white-board-query';
+
 @Injectable()
 export class WhiteBoardService {
   constructor(
@@ -30,8 +32,36 @@ export class WhiteBoardService {
     return await this.whiteBoardRepository.save(newWhiteBoard);
   }
 
-  async getWhiteBoards() {
-    return this.whiteBoardRepository.find();
+  async getWhiteBoards(query: WhiteBoardQuery) {
+    const queryBuilder =
+      this.whiteBoardRepository.createQueryBuilder('whiteboard');
+
+    if (query.title) {
+      queryBuilder.andWhere('whiteboard.whiteBoardId ILIKE :title', {
+        title: `%${query.title}%`,
+      });
+    }
+
+    if (query.orderBy) {
+      switch (query.orderBy) {
+        case OrderByOption.Title:
+          queryBuilder.orderBy('whiteboard.title', 'ASC');
+          break;
+        case OrderByOption.LastUpdated:
+          queryBuilder.orderBy('whiteboard.updatedAt', 'DESC');
+          break;
+      }
+    }
+
+    if (query.workspace) {
+      queryBuilder.andWhere('whiteboard.workspace = :workspace', {
+        workspace: query.workspace,
+      });
+    }
+
+    // TODO: Filter by access type (owner or shared)
+
+    return await queryBuilder.getMany();
   }
 
   async getWhiteBoardById(id: string) {
