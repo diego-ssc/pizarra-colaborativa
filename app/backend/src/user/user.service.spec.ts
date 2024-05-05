@@ -1,13 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { TestingDatabaseModule } from 'src/test-utils/test-utils.module';
-import { USER_1, seedTestDataset } from 'src/test-utils/test-dataset.seed';
+import { seedTestDataset } from 'src/test-utils/test-dataset.seed';
 import { DataSource } from 'typeorm';
-import User from './user.entity';
 import { BadRequestException } from '@nestjs/common';
+import User from './user.entity';
 
 describe('UserService', () => {
   let service: UsersService;
+  let user: User;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -17,7 +18,8 @@ describe('UserService', () => {
 
     service = module.get<UsersService>(UsersService);
     const dataSource = module.get<DataSource>(DataSource);
-    await seedTestDataset(dataSource);
+    const { user1 } = await seedTestDataset(dataSource);
+    user = user1;
   });
 
   it('should be defined', () => {
@@ -27,7 +29,7 @@ describe('UserService', () => {
   it('should get all the users', async () => {
     const users = await service.getAllUsers();
 
-    expect(users).toEqual([USER_1]);
+    expect(users).toEqual([user]);
   });
 
   it('should create a user', async () => {
@@ -44,7 +46,7 @@ describe('UserService', () => {
   });
 
   it('fails to create a user that already exists', async () => {
-    expect(service.createUser(USER_1)).rejects.toMatchObject(
+    expect(service.createUser(user)).rejects.toMatchObject(
       new BadRequestException('email already exists'),
     );
   });

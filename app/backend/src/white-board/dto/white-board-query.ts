@@ -3,6 +3,11 @@ export enum OrderByOption {
   LastUpdated = 'lastUpdated',
 }
 
+export enum OrderOption {
+  Ascending = 'ASC',
+  Descending = 'DESC',
+}
+
 export enum AccessFilterOption {
   Owned = 'owned',
   NotOwned = 'notOwned',
@@ -11,6 +16,7 @@ export enum AccessFilterOption {
 export class WhiteBoardQuery {
   title?: string;
   orderBy?: OrderByOption;
-  workspace?: string;
+  order?: OrderOption;
+  workspace?: number;
   accessFilter?: AccessFilterOption;
 }
