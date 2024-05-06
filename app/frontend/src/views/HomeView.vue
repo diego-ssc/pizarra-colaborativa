@@ -30,6 +30,10 @@ function deleteWhiteboard() {
   console.log('Borrar pizarra')
 }
 
+function favouriteWhiteboard() {
+  console.log('Favorito')
+}
+
 const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 
 onMounted(() => {
@@ -142,30 +146,27 @@ onMounted(() => {
           </div>
 
           <div v-for="board in data" class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+              
+            <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
               <RouterLink :to="{ path: 'd/' + board.whiteBoardId }">
-              <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
                 <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">{{ board.title }}</h2>
                 <h6 class="text-sm font-italic text-black text-center border-b-2 mb-0">Fecha creación: {{ board.createdAt }}</h6>
+              </RouterLink>   
+              <div class="text-right mt-1"> 
 
-                <div class="text-right mt-2"> <!-- Contenedor del botón con alineación a la derecha -->
-                    <button style=" background-color:  yellow ; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" @click="favouriteWhiteboard" >
-                      <img src="../../public/favouriteWhiteboard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
-                    </button>
-                    <button style="background-color:  #d9005f ; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" @click="confirmDeleteWhiteboard" onmouseover="this.style.backgroundColor='#ff0055';" onmouseout="this.style.backgroundColor='#d9005f';">
-                      <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
-                    </button>
-                </div>
-            
+                <button class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="editWhiteboard">
+                  <img src="../../public/editBoard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
+                </button>
+
+                <button class="border border-black p-0.5 rounded hover:bg-yellow-400 mr-1" @click="favouriteWhiteboard">
+                  <img src="../../public/favouriteWhiteboard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
+                </button>
+
+                <button class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard" >
+                  <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
+                </button>
               </div>
-            </RouterLink>
-              
-
-           
-
-
-            
-            
-      
+            </div>
           </div>
         </div>
       </div>
