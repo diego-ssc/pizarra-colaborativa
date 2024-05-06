@@ -6,11 +6,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WhiteBoard } from './white-board.entity';
-import { Repository } from 'typeorm';
+import { QueryBuilder, Repository } from 'typeorm';
 import { CreateWhiteBoardDto } from './dto/createWhiteBoardDto.dto';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateWhiteBoardDto } from './dto/update-whiteboard.dto';
 import { isUUID } from 'class-validator';
+import { OrderByOption, WhiteBoardQuery } from './dto/white-board-query';
+
 @Injectable()
 export class WhiteBoardService {
   constructor(
@@ -30,8 +32,38 @@ export class WhiteBoardService {
     return await this.whiteBoardRepository.save(newWhiteBoard);
   }
 
-  async getWhiteBoards() {
-    return this.whiteBoardRepository.find();
+  async getWhiteBoards(query: WhiteBoardQuery) {
+    const queryBuilder = this.whiteBoardRepository
+      .createQueryBuilder('whiteboard')
+      .leftJoinAndSelect('whiteboard.workspace', 'workspace');
+
+    if (query.title) {
+      queryBuilder.andWhere('whiteboard.title like :title', {
+        title: `%${query.title}%`,
+      });
+    }
+
+    if (query.orderBy) {
+      const order = query.order ? query.order : 'ASC';
+      switch (query.orderBy) {
+        case OrderByOption.Title:
+          queryBuilder.orderBy('whiteboard.title', order);
+          break;
+        case OrderByOption.LastUpdated:
+          queryBuilder.orderBy('whiteboard.updatedAt', order);
+          break;
+      }
+    }
+
+    if (query.workspace) {
+      queryBuilder.andWhere('whiteboard.workspace = :workspace', {
+        workspace: query.workspace,
+      });
+    }
+
+    // TODO: Filter by access type (owner or shared)
+    console.log(queryBuilder.getQueryAndParameters());
+    return await queryBuilder.getMany();
   }
 
   async getWhiteBoardById(id: string) {

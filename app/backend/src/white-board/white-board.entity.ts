@@ -3,9 +3,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  ManyToMany,
   PrimaryGeneratedColumn,
-  JoinTable,
 } from 'typeorm';
 import Workspace from '../workspace/workspace.entity';
 import HasPermission from 'src/has-permission/has-permission.entity';
@@ -28,8 +26,7 @@ export class WhiteBoard {
   @JoinColumn()
   workspace: Workspace;
 
-  @ManyToMany(() => HasPermission)
-  @JoinTable()
-  hasPermissions: HasPermission[];
+  @ManyToOne(() => HasPermission, (hasPermissions) => hasPermissions.whiteBoards)
+  hasPermissions: HasPermission;
 }
 export default WhiteBoard;

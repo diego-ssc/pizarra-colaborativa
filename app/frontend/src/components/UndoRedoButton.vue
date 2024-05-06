@@ -3,8 +3,8 @@ import { useEditor } from '@/lib/editor/editor'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ref } from 'vue';
-import IconUndo from '@/components/icons/IconUndo.vue';
-import IconRedo from '@/components/icons/IconRedo.vue';
+import UndoIcon from '@/components/icons/UndoIcon.vue';
+import RedoIcon from '@/components/icons/RedoIcon.vue';
 
 
 const { editor } = useEditor()
@@ -21,11 +21,11 @@ editor.doc.slots.historyUpdated.on(() => {
 <template>
   <div class="flex justify-center items-center w-fit rounded-xl border bg-card shadow">
     <Button variant="ghost" :disabled="!canUndo" @click="editor.doc.undo()">
-      <IconUndo />
+      <UndoIcon />
     </Button>
     <Separator orientation="vertical"/>
     <Button variant="ghost" :disabled="!canRedo" @click="editor.doc.redo()">
-      <IconRedo />
+      <RedoIcon />
     </Button>
   </div>
 </template>

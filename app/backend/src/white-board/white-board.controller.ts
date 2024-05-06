@@ -6,19 +6,21 @@ import {
   Param,
   Delete,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { CreateWhiteBoardDto } from './dto/createWhiteBoardDto.dto';
 import { WhiteBoardService } from './white-board.service';
 import WhiteBoard from './white-board.entity';
 import { UpdateWhiteBoardDto } from './dto/update-whiteboard.dto';
+import { WhiteBoardQuery } from './dto/white-board-query';
 
 @Controller('whiteboard')
 export class WhiteBoardController {
   constructor(private whiteBoardService: WhiteBoardService) {}
 
   @Get()
-  getWhiteBoards(): Promise<WhiteBoard[]> {
-    return this.whiteBoardService.getWhiteBoards();
+  getWhiteBoards(@Query() query: WhiteBoardQuery): Promise<WhiteBoard[]> {
+    return this.whiteBoardService.getWhiteBoards(query);
   }
 
   @Get(':id')
