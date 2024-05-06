@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TopBar from '@/components/TopBar.vue';
 import { Button } from '@/components/ui/button'
 import { type GetWhiteboardsResponse, WhiteboardEndpoint } from '@/lib/api/api';
 import { useGet } from '@/lib/api/client';
@@ -27,28 +28,16 @@ onMounted(() => {
 
 <template>
 <div>
-  
-    <header style="background-color:#ffffff; padding: 15px;">
-            <table style="float: right;">
-                <tr>
-                    <th> 
-                        <Button @click="logout"> Cerrar sesión </Button>
-                    </th>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th>
-                        <img src="../../public/pizarra.png" style="height: 40px; margin-left: 20px; float: left;">
-                    </th>
-                    <a href="/">
-                        <th>
-                            <img src="../../public/logo.png" alt="Logo de Pizarro" style="height: 40px; align-items:right;">
-                        </th>
-                    </a>
-                </tr>
-            </table>
-    </header>
+  <TopBar>
+    <table style="float: right;">
+      <tr>
+        <th> 
+          <Button @click="logout"> Cerrar sesión </Button>
+        </th>
+      </tr>
+    </table>
+  </TopBar>
+
  <!-- Linea negra -->
  <div class="flex flex-col h-screen" :style="{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }">
     <div style="background-color:black; text-align:center; padding: 2px;">

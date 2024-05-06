@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { RouterLink, useRouter } from 'vue-router'
 import { Button } from '../components/ui/button'
-import CardFooter from '@/components/ui/card/CardFooter.vue';
-import CardContent from '@/components/ui/card/CardContent.vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
+import TopBar from '@/components/TopBar.vue';
 
 
 const userStore = useUserStore()
@@ -22,30 +21,18 @@ onMounted(() => {
 </script>
 
 <template>
-    <header style="background-color:#ffffff; padding: 15px;">
-            <table style="float: right;">
-                <tr>
-                    <th> 
-                        <RouterLink to="/login"> <Button> Iniciar sesión </Button> </RouterLink>
-                    </th>
-                    <th>
-                        <RouterLink to="/register"> <Button> Regístrate </Button> </RouterLink>
-                    </th>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th>
-                        <img src="../../public/pizarra.png" style="height: 60px; margin-left: 20px; float: left;">
-                    </th>
-                    <a href="/">
-                        <th>
-                            <img src="../../public/logo.png" alt="Logo de Pizarro" style="height: 50px; align-items:right;">
-                        </th>
-                    </a>
-                </tr>
-            </table>
-    </header>
+    <TopBar>
+        <table style="float: right;">
+            <tr>
+                <th> 
+                    <RouterLink to="/login"> <Button> Iniciar sesión </Button> </RouterLink>
+                </th>
+                <th>
+                    <RouterLink to="/register"> <Button> Regístrate </Button> </RouterLink>
+                </th>
+             </tr>
+        </table>
+    </TopBar>
 
     <div style="background-color:black; text-align:center; padding: 8px;">
         <h1 style="color: white;"> 
