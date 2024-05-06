@@ -109,7 +109,7 @@ export function useGet<ResT>(e: Endpoint) {
   const fetchClient = useFetch<any, ResT>(e)
 
   return {
-    get: () => fetchClient.fetch({ method: 'GET' }),
+    get: (params?: any) => fetchClient.fetch({ method: 'GET', params: params}),
     data: fetchClient.data,
     error: fetchClient.error,
     isLoading: fetchClient.isLoading

@@ -13,6 +13,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ShareIcon from '@/components/icons/ShareIcon.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
+import { Input } from '@/components/ui/input'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -24,10 +25,21 @@ function logout() {
 
 const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 
+const searchQuery = ref<string | number>('');
+
 onMounted(() => {
   get()
 })
 
+function onEnter() {
+  if (searchQuery.value === '') {
+    get()
+  } else {
+    get({title: searchQuery.value })
+  }
+  console.log('enter pressed')
+  console.log(searchQuery.value)
+}
 </script>
 
 
@@ -36,7 +48,7 @@ onMounted(() => {
   <TopBar>
     <div class="flex grow justify-end">
       <div class="flex grow justify-center">
-        <SearchBar/>
+        <Input v-model="searchQuery" v-on:keyup.enter="onEnter" type="search" placeholder="Buscar..." class="md:w-[250px] lg:w-[450px]"/>
       </div>
       <Button class="justify-self-end mr-5" @click="logout"> Cerrar sesión </Button>
     </div>
