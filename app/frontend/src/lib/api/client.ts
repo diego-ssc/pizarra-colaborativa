@@ -47,6 +47,10 @@ export class APIClient {
     return await this.client.patch(e.url, data, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
   }
 
+  async delete<ReqT, ResT>(e: Endpoint): Promise<HTTPResponse<ResT, ReqT>> {
+    return await this.client.delete(e.url, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
+  }
+
   async fetch<ReqT, ResT>(e: Endpoint, config: RequestConfig<ReqT>): Promise<HTTPResponse<ResT, ReqT>> {
     return await this.client({
       url: e.url,

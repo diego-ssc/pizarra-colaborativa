@@ -55,18 +55,19 @@ function logout() {
 }
 
 
-function confirmDeleteWhiteboard() {
+async function confirmDeleteWhiteboard(boardId: string) {
   if (confirm('¿Estás seguro de que quieres borrar esta pizarra?')) {
-    deleteWhiteboard()
-  }else{
-
+    await deleteWhiteboard(boardId)
   }
-
-  
 }
 
-function deleteWhiteboard() {
-  console.log('Borrar pizarra')
+async function deleteWhiteboard(boardId: string) {
+  try {
+    await client.delete(WhiteboardByIDEndpoint({ id: boardId }))
+    get()
+  } catch (error) {
+    console.error('Error al guardar el nuevo nombre:', error)
+  }
 }
 
 function favouriteWhiteboard() {
@@ -86,8 +87,6 @@ function onEnter() {
   } else {
     get({title: searchQuery.value })
   }
-  console.log('enter pressed')
-  console.log(searchQuery.value)
 }
 </script>
 
@@ -176,7 +175,7 @@ function onEnter() {
                   <img src="../../public/favouriteWhiteboard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
                 </button>
 
-                <button class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard" >
+                <button class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard(board.whiteBoardId)" >
                   <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
                 </button>
               </div>
