@@ -11,10 +11,32 @@ const isSidebarOpen = ref(false)
 const userStore = useUserStore()
 const router = useRouter()
 
+const showModal = ref(false);
+const newName = ref('');
+
+function toggleModal(): void {
+  showModal.value = !showModal.value;
+}
+
+function saveNewName(): void {
+    console.log('Nuevo nombre guardado:', newName.value);
+}
+
+function saveAndCloseModal(): void {
+  saveNewName();
+  toggleModal();
+}
+
+
+
+
+
+
 function logout() {
   userStore.logout()
   router.push({ path: '/' })
 }
+
 
 function confirmDeleteWhiteboard() {
   if (confirm('¿Estás seguro de que quieres borrar esta pizarra?')) {
@@ -39,6 +61,9 @@ const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 onMounted(() => {
   get()
 })
+
+
+
 
 </script>
 
@@ -154,8 +179,8 @@ onMounted(() => {
               </RouterLink>   
               <div class="text-right mt-1"> 
 
-                <button class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="editWhiteboard">
-                  <img src="../../public/editBoard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
+                <button class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="toggleModal">
+                  <img src="../../public/editBoard.png" alt="editWhiteboard" style="width: 20px; height: auto;">
                 </button>
 
                 <button class="border border-black p-0.5 rounded hover:bg-yellow-400 mr-1" @click="favouriteWhiteboard">
@@ -168,6 +193,19 @@ onMounted(() => {
               </div>
             </div>
           </div>
+
+          <transition>
+            <div class="modal" v-if="showModal">
+              <h1>Nuevo nombre de la pizarra: </h1>
+                <input class="border border-black rounded m-2" type="text" v-model="newName">
+                  <button class="border border-black p-1 rounded hover:bg-green-400"@click="saveAndCloseModal"> Guardar</button>
+            </div>
+                
+          </transition>
+
+
+
+          
         </div>
       </div>
 
@@ -182,4 +220,22 @@ onMounted(() => {
     </footer>
 </div>
 </template>
+
+<style>
+.modal{
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
+  z-index: 98;
+}
+</style>
+
+
+
+
 
