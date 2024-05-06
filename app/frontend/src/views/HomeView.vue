@@ -10,6 +10,9 @@ import { useGet } from '@/lib/api/client';
 import { useUserStore } from '@/stores/user';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import ShareIcon from '@/components/icons/ShareIcon.vue';
+import PlusIcon from '@/components/icons/PlusIcon.vue';
+import BarsIcon from '@/components/icons/BarsIcon.vue';
 
 const isSidebarOpen = ref(false)
 
@@ -50,19 +53,15 @@ onMounted(() => {
 
  <!-- centrar  -->
     <div class="flex flex-col h-screen">
-      <div class="flex items-center">
-    </div>
-
 
     <div class="flex flex-row h-full">
       <div class="bg-black w-50 overflow-hidden transition-all duration-300" :class="{ 'w-64': isSidebarOpen }">
         <div class="p-3">
-           <!-- icono bonito -->
           <button class="text-white hover:text-white focus:outline-none ml-4" @click="isSidebarOpen = !isSidebarOpen">
-          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M4 5h12v2H4V5zm0 7h12v2H4v-2zm0 7h12v2H4v-2z"/></svg>
-        </button>
-
+            <BarsIcon class="fill-current"/>
+          </button>
         </div>
+
         <div class="px-4 py-0" v-if="isSidebarOpen">
           <ul>
             <li class="mb-2">
@@ -85,9 +84,7 @@ onMounted(() => {
             </li>
             <li class="mb-2">
               <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" class=" w-10" >
-                  <path fill="#ffffff" d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/>
-                </svg>
+                <ShareIcon/>
                 <span class="block text-sm">Pizarras compartidas</span>
               </a>
             </li>
@@ -104,9 +101,7 @@ onMounted(() => {
             <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
               <RouterLink to="/new">
               <div class="flex items-center justify-center mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="20" height="20" class="flex-1">
-                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
-                </svg>
+                <PlusIcon/>
               </div>
               <h2 class="text-sm font-italic text-black text-center">Nueva pizarra</h2>
               </RouterLink>
