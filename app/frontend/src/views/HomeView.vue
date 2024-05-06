@@ -5,6 +5,7 @@ import { useGet } from '@/lib/api/client';
 import { useUserStore } from '@/stores/user';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const isSidebarOpen = ref(false)
 
@@ -14,22 +15,28 @@ const router = useRouter()
 const showModal = ref(false);
 const newName = ref('');
 
-function toggleModal(): void {
-  showModal.value = !showModal.value;
+const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
+
+async function saveNewName(boardId: string) {
+  try {
+    await axios.patch('http://localhost:3000/api/Whiteboard/${boardId}', { title: newName.value });
+    get();
+    closeModal();
+  } catch (error) {
+    console.error('Error al guardar el nuevo nombre:', error);
+  }
 }
 
-function saveNewName(): void {
-    console.log('Nuevo nombre guardado:', newName.value);
+
+
+function openModal(boardId: string): void {
+  showModal.value = true;
+  newName.value = data.find(board => board.whiteBoardId === boardId)?.title || '';
 }
 
-function saveAndCloseModal(): void {
-  saveNewName();
-  toggleModal();
+function closeModal(): void {
+  showModal.value = false;
 }
-
-
-
-
 
 
 function logout() {
@@ -56,7 +63,6 @@ function favouriteWhiteboard() {
   console.log('Favorito')
 }
 
-const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 
 onMounted(() => {
   get()
@@ -179,7 +185,7 @@ onMounted(() => {
               </RouterLink>   
               <div class="text-right mt-1"> 
 
-                <button class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="toggleModal">
+                <button class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="openModal(board.whiteBoardId)">
                   <img src="../../public/editBoard.png" alt="editWhiteboard" style="width: 20px; height: auto;">
                 </button>
 
@@ -198,7 +204,8 @@ onMounted(() => {
             <div class="modal" v-if="showModal">
               <h1>Nuevo nombre de la pizarra: </h1>
                 <input class="border border-black rounded m-2" type="text" v-model="newName">
-                  <button class="border border-black p-1 rounded hover:bg-green-400"@click="saveAndCloseModal"> Guardar</button>
+                  <button class="border border-black p-1 rounded hover:bg-green-400"@click="saveNewName(boardId)"> Guardar</button>
+                  <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
             </div>
                 
           </transition>
