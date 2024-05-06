@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SearchBar from '@/components/SearchBar.vue';
 import TopBar from '@/components/TopBar.vue';
+import SideBar from '@/components/SideBar.vue';
 import ClockIcon from '@/components/icons/ClockIcon.vue';
 import WorldIcon from '@/components/icons/WorldIcon.vue';
 import StarIcon from '@/components/icons/StarIcon.vue';
@@ -12,9 +13,6 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ShareIcon from '@/components/icons/ShareIcon.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
-import BarsIcon from '@/components/icons/BarsIcon.vue';
-
-const isSidebarOpen = ref(false)
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -55,42 +53,34 @@ onMounted(() => {
     <div class="flex flex-col h-screen">
 
     <div class="flex flex-row h-full">
-      <div class="bg-black w-50 overflow-hidden transition-all duration-300" :class="{ 'w-64': isSidebarOpen }">
-        <div class="p-3">
-          <button class="text-white hover:text-white focus:outline-none ml-4" @click="isSidebarOpen = !isSidebarOpen">
-            <BarsIcon class="fill-current"/>
-          </button>
-        </div>
-
-        <div class="px-4 py-0" v-if="isSidebarOpen">
-          <ul>
-            <li class="mb-2">
-              <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-               <WorldIcon/>
-               <span class="block text-sm">Todas las pizarras</span>
-              </a>
-            </li>
-            <li class="mb-2">
-              <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-                <ClockIcon/>
-                <span class="text-sm">Pizarras recientes</span>
-              </a>
-            </li>
-            <li class="mb-2">
-              <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-                <StarIcon/>
-                <span class="block text-sm">Pizarras favoritas</span>
-              </a>
-            </li>
-            <li class="mb-2">
-              <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-                <ShareIcon/>
-                <span class="block text-sm">Pizarras compartidas</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <SideBar>
+        <ul>
+          <li class="mb-2">
+            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
+              <WorldIcon/>
+              <span class="block text-sm">Todas las pizarras</span>
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
+              <ClockIcon/>
+              <span class="text-sm">Pizarras recientes</span>
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
+              <StarIcon/>
+              <span class="block text-sm">Pizarras favoritas</span>
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
+              <ShareIcon/>
+              <span class="block text-sm">Pizarras compartidas</span>
+            </a>
+          </li>
+        </ul>
+      </SideBar>
 
 
       
