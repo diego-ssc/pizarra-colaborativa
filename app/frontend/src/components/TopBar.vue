@@ -2,19 +2,13 @@
 </script>
 
 <template>
-  <header style="background-color:#ffffff; padding: 15px;">
+  <header class="p-3 flex"> 
+    <div>
+      <a class="flex h-10 ml-5 mr-5" href="/">
+        <img src="../../public/pizarra.png">
+        <img src="../../public/logo.png" alt="Logo de Pizarro">
+      </a>
+    </div>
     <slot></slot>
-    <table>
-      <tr>
-        <th>
-          <img src="../../public/pizarra.png" style="height: 40px; margin-left: 20px; float: left;">
-        </th>
-        <a href="/">
-          <th>
-            <img src="../../public/logo.png" alt="Logo de Pizarro" style="height: 40px; align-items:right;">
-          </th>
-        </a>
-      </tr>
-    </table>
   </header>
 </template>

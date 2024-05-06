@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SearchBar from '@/components/SearchBar.vue';
 import TopBar from '@/components/TopBar.vue';
 import { Button } from '@/components/ui/button'
 import { type GetWhiteboardsResponse, WhiteboardEndpoint } from '@/lib/api/api';
@@ -29,13 +30,12 @@ onMounted(() => {
 <template>
 <div>
   <TopBar>
-    <table style="float: right;">
-      <tr>
-        <th> 
-          <Button @click="logout"> Cerrar sesión </Button>
-        </th>
-      </tr>
-    </table>
+    <div class="flex grow justify-end">
+      <div class="flex grow justify-center">
+        <SearchBar/>
+      </div>
+      <Button class="justify-self-end mr-5" @click="logout"> Cerrar sesión </Button>
+    </div>
   </TopBar>
 
  <!-- Linea negra -->

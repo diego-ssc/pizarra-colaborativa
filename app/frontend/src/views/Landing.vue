@@ -22,16 +22,14 @@ onMounted(() => {
 
 <template>
     <TopBar>
-        <table style="float: right;">
-            <tr>
-                <th> 
-                    <RouterLink to="/login"> <Button> Iniciar sesión </Button> </RouterLink>
-                </th>
-                <th>
-                    <RouterLink to="/register"> <Button> Regístrate </Button> </RouterLink>
-                </th>
-             </tr>
-        </table>
+        <div class="flex grow justify-end">
+            <RouterLink to="/login" class="mr-3">
+                <Button> Iniciar sesión </Button>
+            </RouterLink>
+            <RouterLink to="/register" class="mr-5">
+                <Button> Regístrate </Button>
+            </RouterLink>
+        </div>
     </TopBar>
 
     <div style="background-color:black; text-align:center; padding: 8px;">
