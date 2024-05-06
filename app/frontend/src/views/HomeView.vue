@@ -16,6 +16,20 @@ function logout() {
   router.push({ path: '/' })
 }
 
+function confirmDeleteWhiteboard() {
+  if (confirm('¿Estás seguro de que quieres borrar esta pizarra?')) {
+    deleteWhiteboard()
+  }else{
+
+  }
+
+  
+}
+
+function deleteWhiteboard() {
+  console.log('Borrar pizarra')
+}
+
 const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 
 onMounted(() => {
@@ -128,12 +142,30 @@ onMounted(() => {
           </div>
 
           <div v-for="board in data" class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                <RouterLink :to="{ path: 'd/' + board.whiteBoardId }">
-            <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
-              <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">{{ board.title }}</h2>
-              <h6 class="text-sm font-italic text-black text-center border-b-2 mb-0">Fecha creación: {{ board.createdAt }}</h6>
-            </div>
+              <RouterLink :to="{ path: 'd/' + board.whiteBoardId }">
+              <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
+                <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">{{ board.title }}</h2>
+                <h6 class="text-sm font-italic text-black text-center border-b-2 mb-0">Fecha creación: {{ board.createdAt }}</h6>
+
+                <div class="text-right mt-2"> <!-- Contenedor del botón con alineación a la derecha -->
+                    <button style=" background-color:  yellow ; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" @click="favouriteWhiteboard" >
+                      <img src="../../public/favouriteWhiteboard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
+                    </button>
+                    <button style="background-color:  #d9005f ; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" @click="confirmDeleteWhiteboard" onmouseover="this.style.backgroundColor='#ff0055';" onmouseout="this.style.backgroundColor='#d9005f';">
+                      <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
+                    </button>
+                </div>
+            
+              </div>
             </RouterLink>
+              
+
+           
+
+
+            
+            
+      
           </div>
         </div>
       </div>
