@@ -43,6 +43,10 @@ export class APIClient {
     return await this.client.post(e.url, data, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
   }
 
+  async patch<ReqT, ResT>(e: Endpoint, data?: ReqT): Promise<HTTPResponse<ResT, ReqT>> {
+    return await this.client.patch(e.url, data, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
+  }
+
   async fetch<ReqT, ResT>(e: Endpoint, config: RequestConfig<ReqT>): Promise<HTTPResponse<ResT, ReqT>> {
     return await this.client({
       url: e.url,
@@ -121,6 +125,17 @@ export function usePost<ReqT, ResT>(e: Endpoint) {
 
   return {
     post: (data?: ReqT) => fetchClient.fetch({method: 'POST', data: data}),
+    data: fetchClient.data,
+    error: fetchClient.error,
+    isLoading: fetchClient.isLoading
+  }
+}
+
+export function usePatch<ReqT, ResT>(e: Endpoint) {
+  const fetchClient = useFetch<ReqT, ResT>(e)
+
+  return {
+    patch: (data?: ReqT) => fetchClient.fetch({method: 'PATCH', data: data}),
     data: fetchClient.data,
     error: fetchClient.error,
     isLoading: fetchClient.isLoading
