@@ -6,24 +6,73 @@ import ClockIcon from '@/components/icons/ClockIcon.vue';
 import WorldIcon from '@/components/icons/WorldIcon.vue';
 import StarIcon from '@/components/icons/StarIcon.vue';
 import { Button } from '@/components/ui/button'
-import { type GetWhiteboardsResponse, WhiteboardEndpoint } from '@/lib/api/api';
-import { useGet } from '@/lib/api/client';
+import { type GetWhiteboardsResponse, WhiteboardEndpoint, WhiteboardByIDEndpoint, } from '@/lib/api/api';
+import { useAPIClient, useGet, usePatch } from '@/lib/api/client';
 import { useUserStore } from '@/stores/user';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ShareIcon from '@/components/icons/ShareIcon.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 import { Input } from '@/components/ui/input'
+import axios from 'axios';
 
 const userStore = useUserStore()
 const router = useRouter()
+
+const showModal = ref(false)
+const newName = ref('')
+const selectedBoardID = ref('')
+
+const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
+const client = useAPIClient()
+
+async function saveNewName(boardId: string) {
+  try {
+    await client.patch(WhiteboardByIDEndpoint({ id: boardId }), { title: newName.value })
+    get()
+    closeModal()
+  } catch (error) {
+    console.error('Error al guardar el nuevo nombre:', error)
+  }
+}
+
+
+
+function openModal(boardId: string): void {
+  showModal.value = true;
+  newName.value = data.value!.find(board => board.whiteBoardId === boardId)?.title || ''
+  selectedBoardID.value = boardId
+}
+
+function closeModal(): void {
+  showModal.value = false;
+}
+
 
 function logout() {
   userStore.logout()
   router.push({ path: '/' })
 }
 
-const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
+
+function confirmDeleteWhiteboard() {
+  if (confirm('¿Estás seguro de que quieres borrar esta pizarra?')) {
+    deleteWhiteboard()
+  }else{
+
+  }
+
+  
+}
+
+function deleteWhiteboard() {
+  console.log('Borrar pizarra')
+}
+
+function favouriteWhiteboard() {
+  console.log('Favorito')
+}
+
 
 const searchQuery = ref<string | number>('');
 
@@ -111,13 +160,42 @@ function onEnter() {
           </div>
 
           <div v-for="board in data" class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                <RouterLink :to="{ path: 'd/' + board.whiteBoardId }">
+              
             <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
-              <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">{{ board.title }}</h2>
-              <h6 class="text-sm font-italic text-black text-center border-b-2 mb-0">Fecha creación: {{ board.createdAt }}</h6>
+              <RouterLink :to="{ path: 'd/' + board.whiteBoardId }">
+                <h2 class="text-sm font-italic text-black text-center border-b-2 mb-0">{{ board.title }}</h2>
+                <h6 class="text-sm font-italic text-black text-center border-b-2 mb-0">Fecha creación: {{ board.createdAt }}</h6>
+              </RouterLink>   
+              <div class="text-right mt-1"> 
+
+                <button class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="openModal(board.whiteBoardId)">
+                  <img src="../../public/editBoard.png" alt="editWhiteboard" style="width: 20px; height: auto;">
+                </button>
+
+                <button class="border border-black p-0.5 rounded hover:bg-yellow-400 mr-1" @click="favouriteWhiteboard">
+                  <img src="../../public/favouriteWhiteboard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
+                </button>
+
+                <button class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard" >
+                  <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
+                </button>
+              </div>
             </div>
-            </RouterLink>
           </div>
+
+          <transition>
+            <div class="modal" v-if="showModal">
+              <h1>Nuevo nombre de la pizarra: </h1>
+                <input class="border border-black rounded m-2" type="text" v-model="newName">
+                  <button class="border border-black p-1 rounded hover:bg-green-400"@click="saveNewName(selectedBoardID)"> Guardar</button>
+                  <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
+            </div>
+                
+          </transition>
+
+
+
+          
         </div>
       </div>
 
@@ -132,4 +210,22 @@ function onEnter() {
     </footer>
 </div>
 </template>
+
+<style>
+.modal{
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
+  z-index: 98;
+}
+</style>
+
+
+
+
 
