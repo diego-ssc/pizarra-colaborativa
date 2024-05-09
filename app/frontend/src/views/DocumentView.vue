@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router';
 import { useGet } from '@/lib/api/client';
 import { WhiteboardByIDEndpoint } from '@/lib/api/api';
 import { onMounted } from 'vue';
+import EditorTopBar from '@/components/EditorTopBar.vue';
 
 const route = useRoute()
 const docID = route.params.id as string
@@ -20,6 +21,7 @@ onMounted(() => get())
   <div v-else-if="error">El documento no existe</div>
   <EditorProvider v-else :docID="docID">
     <div class="h-full">
+      <EditorTopBar class="absolute top-1 right-6 z-[1001]"/>
       <UndoRedoButton class="absolute bottom-6 right-6 z-[1001]"/>
       <EditorContainer class="h-full" />
     </div>
