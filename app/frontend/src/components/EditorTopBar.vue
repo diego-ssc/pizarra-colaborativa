@@ -6,6 +6,7 @@ import { useAPIClient, useGet, usePatch } from '@/lib/api/client';
 const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 const client = useAPIClient()
 const newName = ref('')
+const editing = ref(false)
 
 
 async function editTitle(boardId: string) {
@@ -15,6 +16,18 @@ async function editTitle(boardId: string) {
     } catch (error) {
         console.error('Error al guardar el nuevo nombre:', error)
     }
+}
+
+function start_editing() {
+    editing.value = true
+}
+
+function saveTitle(){
+
+}
+
+function toggleEditing() {
+    editing.value = !editing.value;
 }
 </script>
 
@@ -27,18 +40,15 @@ async function editTitle(boardId: string) {
         </div>
         <router-link to="/home">
             <div class="left-content"> 
-                <button class="px-3 py-2 bg-cyan-500 m-4 text-white rounded-xl shadow hover:bg-cyan-600">Mis pizarras</button>
+                <button class="px-3 py-2 bg-cyan-500 m-4 text-black font-bold rounded-xl shadow hover:bg-cyan-600">Mis pizarras</button>
             </div>
         </router-link>
         
-        <div>
-            <input class="border border-black rounded m-2 mt-6" type="text" v-model="newName">
+        <div v-if="!editing" @click="startEditing">{{ newName }}</div>
+        <input class="border border-black rounded-xl m-2 mt-6 ml-10" type="text" v-model="newName">
             
-        </div>
 
-        <div class=""> 
-            <button class="px-3 py-2 bg-amber-400 m-4 text-white rounded-xl shadow hover:bg-amber-600 ">Compartir</button>
-        </div>
+        <button class="px-3 py-2 bg-amber-400 m-4 text-black font-bold rounded-xl shadow hover:bg-amber-600 ml-auto">Compartir</button>
 
     </div>
 </template>
