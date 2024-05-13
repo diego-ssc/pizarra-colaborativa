@@ -4,6 +4,7 @@ import { WebsocketProvider } from 'y-websocket'
 import { useUserStore } from '@/stores/user.js'
 import { storeToRefs } from 'pinia'
 import type { AffineEditorContainer } from '@blocksuite/presets'
+import type { Awareness } from 'y-protocols/awareness.js'
 
 const endpoint = import.meta.env.VITE_BASE_WEBSOCKET_URL
 
@@ -12,7 +13,7 @@ let currentProvider: WebsocketProvider | null = null
 let currentDoc: Doc | null = null
 
 /** @param {Doc} doc */
-export function sync (editor: AffineEditorContainer, doc: Doc, room: string, cb: () => void) {
+export function sync (editor: AffineEditorContainer, doc: Doc, room: string, cb: () => void, awareness?: Awareness) {
   if (doc === currentDoc) {
     cb()
     return
@@ -21,10 +22,10 @@ export function sync (editor: AffineEditorContainer, doc: Doc, room: string, cb:
   if (currentProvider) currentProvider.destroy()
 
   const userStore = useUserStore()
-  const { authToken } = storeToRefs(userStore)
+  const { user } = storeToRefs(userStore)
 
-  const params = { yauth: authToken.value }
-  const provider = new WebsocketProvider(endpoint, room, doc.spaceDoc, { params })
+  const params = { yauth: user.value ? user.value.token : '' }
+  const provider = new WebsocketProvider(endpoint, room, doc.spaceDoc, { awareness, params })
   currentProvider = provider
   currentDoc = doc
 
