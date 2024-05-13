@@ -2,7 +2,7 @@
 import { useEditor } from '@/lib/editor/editor'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import UndoIcon from '@/components/icons/UndoIcon.vue';
 import RedoIcon from '@/components/icons/RedoIcon.vue';
 
@@ -12,9 +12,11 @@ const { editor } = useEditor()
 const canUndo = ref(false)
 const canRedo = ref(false)
 
-editor.doc.slots.historyUpdated.on(() => {
-  canUndo.value = editor.doc.canUndo
-  canRedo.value = editor.doc.canRedo
+onBeforeMount(() => {
+  editor.doc.slots.historyUpdated.on(() => {
+    canUndo.value = editor.doc.canUndo
+    canRedo.value = editor.doc.canRedo
+  })
 })
 </script>
 

@@ -14,7 +14,6 @@ import { useRouter } from 'vue-router';
 import ShareIcon from '@/components/icons/ShareIcon.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 import { Input } from '@/components/ui/input'
-import axios from 'axios';
 
 const userStore = useUserStore()
 const router = useRouter()

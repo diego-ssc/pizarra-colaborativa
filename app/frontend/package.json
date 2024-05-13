@@ -31,6 +31,7 @@
     "vee-validate": "^4.12.6",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
+    "y-protocols": "^1.0.6",
     "y-websocket": "^2.0.2",
     "zod": "^3.22.4"
   },

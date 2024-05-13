@@ -16,13 +16,13 @@ app.use(router)
 setupRouterAuthGuard(router)
 
 const userStore = useUserStore()
-const { authToken } = storeToRefs(userStore)
+const { user } = storeToRefs(userStore)
 
 const client = createAPIClient({
   baseURL: import.meta.env.VITE_BASE_URL,
   timeoutMillis: 5000,
   getAuthToken: () => {
-    return authToken.value
+    return user.value ? user.value.token : ''
   }
 })
 
