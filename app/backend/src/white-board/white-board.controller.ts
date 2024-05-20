@@ -14,7 +14,7 @@ import { UpdateWhiteBoardDto } from './dto/update-whiteboard.dto';
 
 @Controller('whiteboard')
 export class WhiteBoardController {
-  constructor(private whiteBoardService: WhiteBoardService) {}
+  constructor(private whiteBoardService: WhiteBoardService) { }
 
   @Get()
   getWhiteBoards(): Promise<WhiteBoard[]> {
@@ -22,7 +22,7 @@ export class WhiteBoardController {
   }
 
   @Get(':id')
-  getWhiteBoardById(@Param('id') id: string) {
+  getWhiteBoardById(@Param('id') id: number) {
     return this.whiteBoardService.getWhiteBoardById(id);
   }
 
@@ -32,13 +32,13 @@ export class WhiteBoardController {
   }
 
   @Delete(':id')
-  deleteWhiteBoardById(@Param('id') id: string) {
+  deleteWhiteBoardById(@Param('id') id: number) {
     this.whiteBoardService.deleteWhiteBoardById(id);
   }
 
   @Patch(':id')
   updateWhiteBoard(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() whiteBoard: UpdateWhiteBoardDto,
   ) {
     return this.whiteBoardService.updateWhiteBoard(id, whiteBoard);

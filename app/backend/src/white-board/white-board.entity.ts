@@ -4,17 +4,25 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
-import Workspace from '../workspace/workspace.entity';
+import Workspace from 'src/workspace/workspace.entity';
 import HasPermission from 'src/has-permission/has-permission.entity';
+import { WhiteboardPublicAccess } from 'src/whiteboard-public-access/whiteboard-public-access.entity'
 
 @Entity({ name: 'whiteBoard' })
 export class WhiteBoard {
-  @PrimaryGeneratedColumn('uuid')
-  whiteBoardId: string;
+  @PrimaryGeneratedColumn()
+  whiteBoardId: number;
 
   @Column()
   title: string;
+
+  @OneToOne(() => WhiteboardPublicAccess, (publicAccess) => publicAccess.whiteboard)
+  publicAccess?: WhiteboardPublicAccess;
+
+  @Column()
+  isPublic: boolean;
 
   @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

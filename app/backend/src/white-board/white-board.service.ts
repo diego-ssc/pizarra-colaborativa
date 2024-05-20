@@ -16,7 +16,7 @@ export class WhiteBoardService {
   constructor(
     @InjectRepository(WhiteBoard)
     private whiteBoardRepository: Repository<WhiteBoard>,
-  ) {}
+  ) { }
 
   async createWhiteBoard(whiteBoard: CreateWhiteBoardDto) {
     if (!whiteBoard || !whiteBoard.title) {
@@ -27,6 +27,7 @@ export class WhiteBoardService {
     }
 
     const newWhiteBoard = this.whiteBoardRepository.create(whiteBoard);
+    newWhiteBoard.isPublic = true;
     return await this.whiteBoardRepository.save(newWhiteBoard);
   }
 
@@ -34,7 +35,7 @@ export class WhiteBoardService {
     return this.whiteBoardRepository.find();
   }
 
-  async getWhiteBoardById(id: string) {
+  async getWhiteBoardById(id: number) {
     if (!isUUID(id)) {
       throw new BadRequestException('invalida id format');
     }
@@ -49,7 +50,7 @@ export class WhiteBoardService {
     throw new NotFoundException('whiteboard not found');
   }
 
-  async deleteWhiteBoardById(id: string) {
+  async deleteWhiteBoardById(id: number) {
     if (!isUUID(id)) {
       throw new BadRequestException('invalida id format');
     }
@@ -65,7 +66,7 @@ export class WhiteBoardService {
     return whiteboard;
   }
 
-  async updateWhiteBoard(id: string, whiteBoard: UpdateWhiteBoardDto) {
+  async updateWhiteBoard(id: number, whiteBoard: UpdateWhiteBoardDto) {
     if (!isUUID(id)) {
       return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
     }
