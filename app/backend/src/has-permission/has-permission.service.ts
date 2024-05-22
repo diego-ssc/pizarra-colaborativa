@@ -7,8 +7,8 @@ import { CreateHasPermissionDto } from './dto/create-has-permissionDto.dto';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateHasPermissionDto } from './dto/update-has-permissionDto.dto';
 import { User } from '../user/user.entity';
-import WhiteBoard from 'src/white-board/white-board.entity';
-import Workspace from 'src/workspace/workspace.entity';
+import WhiteBoard from '../white-board/white-board.entity';
+import Workspace from '../workspace/workspace.entity';
 
 @Injectable()
 export class HasPermissionService {
@@ -79,47 +79,75 @@ export class HasPermissionService {
   }
 
   /**
-   *
+   * Returns true if the user has access to the whiteboard; false, otherwise.
+   * @param {number} userId - The id of the user.
+   * @param {string} whiteBoardId - The id of the the whiteboard.
    */
-  async hasUserAccessToWhiteboard(userId: number, whiteBoardId: number): Promise<boolean> {
+  async hasUserAccessToWhiteboard(userId: number, whiteBoardId: string): Promise<boolean> {
+    /* Find the whiteboard by id. */
     const whiteboard = await this.datasource
       .getRepository(WhiteBoard)
       .findOne({
         where: {
           whiteBoardId: whiteBoardId,
         },
+        relations: ['hasPermissions'],
       });
 
+    /* Whiteboard not found. */
+    if (!whiteboard)
+      return false;
+
+    /* Public Access. */
     if (whiteboard.isPublic)
       return true;
 
+    /* Find the user and their associated permissions */
     const user = await this.datasource
       .getRepository(User)
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.hasPermissions', 'hasPermission')
-      .where('user.userId = :userId', { userId })
-      .andWhere('hasPermission.whiteBoards.whireBoardId IN (:...whiteboardIds)', { whiteboardIds: [whiteBoardId] })
-      .getOne();
+      .findOne({
+        where: {
+          userId: userId,
+        },
+        relations: ['hasPermissions'],
+      });
 
-    return !!user; // Check if user exists
+    /* User not found. */
+    if (!user)
+      return false;
+
+    /* User has no permissions. */
+    if (!user.hasPermissions)
+      return false;
+
+    /* Check if the user's permissions include access to the specified
+       whiteboard.
+       whiteboard.hasPermission.users.some... is needed too. */
+    const hasAccess = user.hasPermissions.whiteBoards &&
+      user.hasPermissions.whiteBoards.some(board => board.whiteBoardId === whiteBoardId);
+
+    return hasAccess;
   }
 
   /**
    *
    */
   async hasUserAccessToWorkspace(userId: number, workspaceId: number): Promise<boolean> {
+    const workspaceIds: number[] = [workspaceId];
+
     const user = await this.datasource
       .getRepository(User)
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.hasPermissions', 'hasPermission')
       .where('user.userId = :userId', { userId })
-      .andWhere('hasPermission.workspaces.workspaceId IN (:...workspaceIds)', { workspaceIds: [workspaceId] })
+      .andWhere('workspace.workspaceId IN (:...workspaceIds)', { workspaceIds })
+      /* .andWhere('hasPermission.workspaces.workspaceId IN (:...workspaceIds)', { workspaceIds: [workspaceId] }) */
       .getOne();
 
     return !!user; // Check if user exists
   }
 
-  async addUserPermissionToWhiteboard(userId: number, whiteBoardId: number, action: HasPermission.Action) {
+  async addUserPermissionToWhiteboard(userId: number, whiteBoardId: string, action: HasPermission.Action) {
     const user = await this.datasource
       .getRepository(User)
       .findOne({
@@ -127,7 +155,6 @@ export class HasPermissionService {
           userId: userId,
         },
       });
-
 
     const whiteboard = await this.datasource
       .getRepository(WhiteBoard)
@@ -162,7 +189,7 @@ export class HasPermissionService {
   /**
    * Deletes the permission
    */
-  async deleteUserPermissionFromWhiteboard(userId: number, whiteboardId: number) {
+  async deleteUserPermissionFromWhiteboard(userId: number, whiteboardId: string) {
     const hasPermission = await this.hasPermissionRepository.findOne({
       where: {
         users: { userId: userId },
@@ -231,7 +258,7 @@ export class HasPermissionService {
     }
   }
 
-  async changeWhiteboardDefaultPermission(whiteBoardId: number, isPublic: boolean) {
+  async changeWhiteboardDefaultPermission(whiteBoardId: string, isPublic: boolean) {
     const whiteboard = await this.datasource
       .getRepository(WhiteBoard)
       .findOne({

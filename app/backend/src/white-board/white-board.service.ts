@@ -35,7 +35,7 @@ export class WhiteBoardService {
     return this.whiteBoardRepository.find();
   }
 
-  async getWhiteBoardById(id: number) {
+  async getWhiteBoardById(id: string) {
     if (!isUUID(id)) {
       throw new BadRequestException('invalida id format');
     }
@@ -50,7 +50,7 @@ export class WhiteBoardService {
     throw new NotFoundException('whiteboard not found');
   }
 
-  async deleteWhiteBoardById(id: number) {
+  async deleteWhiteBoardById(id: string) {
     if (!isUUID(id)) {
       throw new BadRequestException('invalida id format');
     }
@@ -66,7 +66,7 @@ export class WhiteBoardService {
     return whiteboard;
   }
 
-  async updateWhiteBoard(id: number, whiteBoard: UpdateWhiteBoardDto) {
+  async updateWhiteBoard(id: string, whiteBoard: UpdateWhiteBoardDto) {
     if (!isUUID(id)) {
       return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
     }

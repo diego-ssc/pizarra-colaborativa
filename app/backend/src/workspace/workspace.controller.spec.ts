@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkspaceController } from './workspace.controller';
+import { WorkspaceService } from './workspace.service';
+import { TestingDatabaseModule } from '../test-utils/test-utils.module';
 
 describe('WorkspaceController', () => {
   let controller: WorkspaceController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [...TestingDatabaseModule()],
+      providers: [WorkspaceService],
       controllers: [WorkspaceController],
     }).compile();
 

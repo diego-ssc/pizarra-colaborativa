@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserGroup } from '../user-group/user-group.entity';
-import HasPermission from 'src/has-permission/has-permission.entity';
+import HasPermission from '../has-permission/has-permission.entity';
 
 @Entity()
 export class User {

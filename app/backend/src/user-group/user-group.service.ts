@@ -5,12 +5,13 @@ import { Repository } from 'typeorm';
 import { CreateUserGroupDto } from './dto/create-user-groupDto.dto';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateUserGroupDto } from './dto/update-user-groupDto.dto';
+
 @Injectable()
 export class UserGroupService {
   constructor(
     @InjectRepository(UserGroup)
     private userGroupRepository: Repository<UserGroup>,
-  ) {}
+  ) { }
 
   async createUserGroup(userGroup: CreateUserGroupDto) {
     const userGroupFound = await this.userGroupRepository.findOne({

@@ -1,8 +1,8 @@
 import {
   Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn
 } from 'typeorm';
-import { User } from 'src/user/user.entity';
-import HasPermission from 'src/has-permission/has-permission.entity';
+import { User } from '../user/user.entity';
+import HasPermission from '../has-permission/has-permission.entity';
 
 @Entity({ name: 'userGroup' })
 export class UserGroup {

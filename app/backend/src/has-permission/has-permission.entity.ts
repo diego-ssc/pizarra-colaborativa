@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import User from 'src/user/user.entity';
-import UserGroup from 'src/user-group/user-group.entity';
-import Workspace from 'src/workspace/workspace.entity';
-import WhiteBoard from 'src/white-board/white-board.entity';
+import User from '../user/user.entity';
+import UserGroup from '../user-group/user-group.entity';
+import Workspace from '../workspace/workspace.entity';
+import WhiteBoard from '../white-board/white-board.entity';
 
 /**
  * The HasPermission class. it defines the permission relation between

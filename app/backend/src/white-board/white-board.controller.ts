@@ -22,7 +22,7 @@ export class WhiteBoardController {
   }
 
   @Get(':id')
-  getWhiteBoardById(@Param('id') id: number) {
+  getWhiteBoardById(@Param('id') id: string) {
     return this.whiteBoardService.getWhiteBoardById(id);
   }
 
@@ -32,13 +32,13 @@ export class WhiteBoardController {
   }
 
   @Delete(':id')
-  deleteWhiteBoardById(@Param('id') id: number) {
+  deleteWhiteBoardById(@Param('id') id: string) {
     this.whiteBoardService.deleteWhiteBoardById(id);
   }
 
   @Patch(':id')
   updateWhiteBoard(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() whiteBoard: UpdateWhiteBoardDto,
   ) {
     return this.whiteBoardService.updateWhiteBoard(id, whiteBoard);

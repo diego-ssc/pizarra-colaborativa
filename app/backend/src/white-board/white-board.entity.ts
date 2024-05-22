@@ -6,20 +6,16 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
 } from 'typeorm';
-import Workspace from 'src/workspace/workspace.entity';
-import HasPermission from 'src/has-permission/has-permission.entity';
-import { WhiteboardPublicAccess } from 'src/whiteboard-public-access/whiteboard-public-access.entity'
+import Workspace from '../workspace/workspace.entity';
+import HasPermission from '../has-permission/has-permission.entity';
 
 @Entity({ name: 'whiteBoard' })
 export class WhiteBoard {
-  @PrimaryGeneratedColumn()
-  whiteBoardId: number;
+  @PrimaryGeneratedColumn('uuid')
+  whiteBoardId: string;
 
   @Column()
   title: string;
-
-  @OneToOne(() => WhiteboardPublicAccess, (publicAccess) => publicAccess.whiteboard)
-  publicAccess?: WhiteboardPublicAccess;
 
   @Column()
   isPublic: boolean;
