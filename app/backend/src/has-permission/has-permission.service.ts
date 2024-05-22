@@ -133,18 +133,45 @@ export class HasPermissionService {
    *
    */
   async hasUserAccessToWorkspace(userId: number, workspaceId: number): Promise<boolean> {
-    const workspaceIds: number[] = [workspaceId];
+    /* Find the workspace by id. */
+    const workspace = await this.datasource
+      .getRepository(Workspace)
+      .findOne({
+        where: {
+          workspaceId: workspaceId,
+        },
+        relations: ['hasPermissions'],
+      });
 
+    /* Whiteboard not found. */
+    if (!workspace)
+      return false;
+
+    /* Find the user and their associated permissions */
     const user = await this.datasource
       .getRepository(User)
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.hasPermissions', 'hasPermission')
-      .where('user.userId = :userId', { userId })
-      .andWhere('workspace.workspaceId IN (:...workspaceIds)', { workspaceIds })
-      /* .andWhere('hasPermission.workspaces.workspaceId IN (:...workspaceIds)', { workspaceIds: [workspaceId] }) */
-      .getOne();
+      .findOne({
+        where: {
+          userId: userId,
+        },
+        relations: ['hasPermissions'],
+      });
 
-    return !!user; // Check if user exists
+    /* User not found. */
+    if (!user)
+      return false;
+
+    /* User has no permissions. */
+    if (!user.hasPermissions)
+      return false;
+
+    /* Check if the user's permissions include access to the specified
+       workspace.
+       workspace.hasPermission.users.some... is needed too. */
+    const hasAccess = user.hasPermissions.workspaces &&
+      user.hasPermissions.workspaces.some(workspace => workspace.workspaceId === workspaceId);
+
+    return hasAccess;
   }
 
   async addUserPermissionToWhiteboard(userId: number, whiteBoardId: string, action: HasPermission.Action) {
