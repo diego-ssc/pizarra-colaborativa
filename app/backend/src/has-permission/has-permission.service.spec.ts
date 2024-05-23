@@ -380,4 +380,32 @@ describe('HasPermissionService', () => {
 
   });
 
+  describe('checkDefaultWhiteboardPermission', () => {
+    it('should set the new default permission to the whiteboard', async () => {
+      const whiteBoardId = "1";
+
+      const hasPermission = new HasPermission();
+      hasPermission.action = HasPermission.Action.READ;
+
+      const whiteboard = new WhiteBoard();
+      whiteboard.whiteBoardId = whiteBoardId;
+      whiteboard.hasPermissions = hasPermission;
+      whiteboard.isPublic = true;
+
+      hasPermission.whiteBoards = [whiteboard];
+
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+
+      expect(whiteboard.isPublic).toBe(true);
+
+      await service.changeWhiteboardDefaultPermission(whiteBoardId, false);
+
+      expect(whiteboard.isPublic).toBe(false);
+
+      await service.changeWhiteboardDefaultPermission("2", false);
+    });
+
+  });
+
 });

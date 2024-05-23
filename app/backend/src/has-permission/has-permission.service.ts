@@ -272,7 +272,7 @@ export class HasPermissionService {
           .filter(board => board.whiteBoardId !== whiteboardId);
 
     /* If there is not another permission associated to other whiteboard, remove
-    it from the hasPermission instance. */
+       it from the hasPermission instance. */
     if (user.hasPermissions.whiteBoards.some(board => board.whiteBoardId ===
       whiteboardId))
       return;
@@ -335,11 +335,11 @@ export class HasPermissionService {
   }
 
   /**
-     * Deletes the permission of the user with id userId to the workspace with id
-     * workspaceId.
-     * @param {number} userId - The id of the user.
-     * @param {number} workspaceId - The id of the workspace.
-     */
+   * Deletes the permission of the user with id userId to the workspace with id
+   * workspaceId.
+   * @param {number} userId - The id of the user.
+   * @param {number} workspaceId - The id of the workspace.
+   */
   async deleteUserPermissionFromWorkspace(userId: number, workspaceId: number) {
     const hasPermission = await this.datasource
       .getRepository(HasPermission)
@@ -379,7 +379,7 @@ export class HasPermissionService {
           .filter(workspace => workspace.workspaceId !== workspaceId);
 
     /* If there is not another permission associated to other workspace, remove
-    it from the hasPermission instance. */
+       it from the hasPermission instance. */
     if (user.hasPermissions.workspaces.some(workspace => workspace.workspaceId ===
       workspaceId))
       return;
@@ -390,6 +390,11 @@ export class HasPermissionService {
 
   }
 
+  /**
+   * Changes the default permission (public or private) of the whiteboard.
+   * @param {string} whiteBoardId - the id of the whiteboard.
+   * @param {boolean} isPublic - the new default permission.
+   */
   async changeWhiteboardDefaultPermission(whiteBoardId: string, isPublic: boolean) {
     const whiteboard = await this.datasource
       .getRepository(WhiteBoard)
@@ -399,14 +404,10 @@ export class HasPermissionService {
         },
       });
 
-    if (whiteboard) {
+    if (whiteboard)
       whiteboard.isPublic = isPublic;
-      await this.datasource
-        .getRepository(WhiteBoard)
-        .save(whiteboard);
-    } else {
+    else
       return new HttpException('Invalid whiteboard ID', HttpStatus.NOT_FOUND);
-    }
   }
 
 }
