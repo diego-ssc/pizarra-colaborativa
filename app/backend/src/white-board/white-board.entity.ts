@@ -26,11 +26,12 @@ export class WhiteBoard {
   @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @ManyToOne(() => Workspace)
+  @ManyToOne(() => Workspace, { cascade: true, onDelete: "CASCADE" })
   @JoinColumn()
   workspace: Workspace;
 
-  @ManyToOne(() => HasPermission, (hasPermissions) => hasPermissions.whiteBoards)
+  @ManyToOne(() => HasPermission, (hasPermissions) =>
+    hasPermissions.whiteBoards, { cascade: true, onDelete: "CASCADE" })
   hasPermissions: HasPermission;
 }
 export default WhiteBoard;

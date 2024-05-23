@@ -42,7 +42,9 @@ export class User {
   @JoinTable()
   userGroups: UserGroup[];
 
-  @ManyToOne(() => HasPermission, (hasPermission) => hasPermission.users)
+  @ManyToOne(() => HasPermission, (hasPermission) => hasPermission.users, {
+    cascade: true, onDelete: "CASCADE"
+  })
   hasPermissions: HasPermission;
 }
 

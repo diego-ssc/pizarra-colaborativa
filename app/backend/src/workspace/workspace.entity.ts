@@ -19,7 +19,8 @@ export class Workspace {
   @OneToMany(() => WhiteBoard, (WhiteBoard) => WhiteBoard.whiteBoardId)
   whiteBoards: WhiteBoard[];
 
-  @ManyToOne(() => HasPermission, (hasPermissions) => hasPermissions.workspaces)
+  @ManyToOne(() => HasPermission, (hasPermissions) => hasPermissions.workspaces,
+    { cascade: true, onDelete: "CASCADE" })
   hasPermissions: HasPermission;
 }
 export default Workspace;
