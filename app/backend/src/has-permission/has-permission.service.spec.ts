@@ -243,7 +243,7 @@ describe('HasPermissionService', () => {
 
       const whiteboard2 = new WhiteBoard();
       whiteboard2.whiteBoardId = "2";
-      whiteboard.hasPermissions = hasPermission;
+      whiteboard2.hasPermissions = hasPermission;
 
       hasPermission.users = [user];
       hasPermission.whiteBoards = [whiteboard2];
@@ -256,6 +256,125 @@ describe('HasPermissionService', () => {
 
       expect(user.hasPermissions.whiteBoards.length).toBe(1);
       expect(user.hasPermissions.whiteBoards[0].whiteBoardId).toBe("2");
+      expect(hasPermission).not.toBeNull();
+    });
+
+  });
+
+  describe('checkUserPermissiontoWorkspace', () => {
+    it('should set the new action to the user permission', async () => {
+      const userId = 1;
+      const workspaceId = 1;
+
+      const hasPermission = new HasPermission();
+      hasPermission.action = HasPermission.Action.READ;
+
+      const user = new User();
+      user.userId = userId;
+      user.hasPermissions = hasPermission;
+
+      const workspace = new Workspace();
+      workspace.workspaceId = workspaceId;
+      workspace.hasPermissions = hasPermission;
+
+      hasPermission.users = [user];
+      hasPermission.workspaces = [workspace];
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+
+      await service.addUserPermissionToWorkspace(userId,
+        workspaceId, HasPermission.Action.WRITE);
+
+      expect(user.hasPermissions.action).toBe(HasPermission.Action.WRITE);
+      expect(hasPermission.action).toBe(HasPermission.Action.WRITE);
+    });
+
+    it('should set the new action to the not yet created user permission', async () => {
+      const userId = 1;
+      const workspaceId = 1;
+
+      const user = new User();
+      user.userId = userId;
+
+      const workspace = new Workspace();
+      workspace.workspaceId = workspaceId;
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+
+      await service.addUserPermissionToWorkspace(userId,
+        workspaceId, HasPermission.Action.WRITE);
+
+      expect(user.hasPermissions.action).toBe(HasPermission.Action.WRITE);
+    });
+
+  });
+
+
+  describe('checkUserPermissionToWorskpaceDeleted', () => {
+    it('should delete the user permission', async () => {
+      const userId = 1;
+      const workspaceId = 1;
+
+      const hasPermission = new HasPermission();
+      hasPermission.action = HasPermission.Action.READ;
+      hasPermission.idPermission = 1;
+
+      const user = new User();
+      user.userId = userId;
+      user.hasPermissions = hasPermission;
+
+      const workspace = new Workspace();
+      workspace.workspaceId = workspaceId;
+      workspace.hasPermissions = hasPermission;
+
+      hasPermission.users = [user];
+      hasPermission.workspaces = [workspace];
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      jest.spyOn(mockHasPermissionRepository, 'remove').mockResolvedValueOnce(null);
+
+      await service.deleteUserPermissionFromWorkspace(userId, workspaceId);
+
+      expect(user.hasPermissions.workspaces).not.toContain(workspace);
+      expect(hasPermission.workspaces.length).toBe(0);
+      expect(workspace.hasPermissions.users).not.toContain(user);
+    });
+
+    it('should not delete the user permission', async () => {
+      const userId = 1;
+      const workspaceId = 1;
+
+      const hasPermission = new HasPermission();
+      hasPermission.action = HasPermission.Action.READ;
+      hasPermission.idPermission = 1;
+
+      const user = new User();
+      user.userId = userId;
+      user.hasPermissions = hasPermission;
+
+      const workspace = new Workspace();
+      workspace.workspaceId = workspaceId;
+
+      const workspace2 = new Workspace();
+      workspace2.workspaceId = 2;
+      workspace2.hasPermissions = hasPermission;
+
+      hasPermission.users = [user];
+      hasPermission.workspaces = [workspace2];
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+
+      await service.deleteUserPermissionFromWorkspace(userId, workspaceId);
+
+      expect(user.hasPermissions.workspaces.length).toBe(1);
+      expect(user.hasPermissions.workspaces[0].workspaceId).toBe(2);
       expect(hasPermission).not.toBeNull();
     });
 

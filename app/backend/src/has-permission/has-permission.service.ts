@@ -177,7 +177,7 @@ export class HasPermissionService {
   }
 
   /**
-   * Adds an user permission to a certain whiteboard.
+   * Adds a user permission to a certain whiteboard.
    * @param {number} userId - The id of the user.
    * @param {string} whiteBoardId - The id of the whiteboard.
    * @param {HasPermission.Acion} action - The permission action.
@@ -234,6 +234,20 @@ export class HasPermissionService {
    * @param {string} whiteboardId - The id of the whiteboard.
    */
   async deleteUserPermissionFromWhiteboard(userId: number, whiteboardId: string) {
+    const hasPermission = await this.datasource
+      .getRepository(HasPermission)
+      .findOne({
+        where: {
+          users: { userId: userId },
+          whiteBoards: { whiteBoardId: whiteboardId }
+        }
+      });
+
+    if (hasPermission)
+      await this.datasource
+        .getRepository(HasPermission)
+        .remove(hasPermission);
+
     const user = await this.datasource
       .getRepository(User)
       .findOne({
@@ -263,11 +277,18 @@ export class HasPermissionService {
       whiteboardId))
       return;
     else
-      whiteboard.hasPermissions.users = whiteboard.hasPermissions.users
-        .filter(user => user.userId !== userId);
+      if (whiteboard.hasPermissions && whiteboard.hasPermissions.users)
+        whiteboard.hasPermissions.users = whiteboard.hasPermissions.users
+          .filter(user => user.userId !== userId);
 
   }
 
+  /**
+   * Adds a user permission to a certain workspace.
+   * @param {number} userId - The id of the user.
+   * @param {string} workspaceId - The id of the workspace.
+   * @param {HasPermission.Acion} action - The permission action.
+   */
   async addUserPermissionToWorkspace(userId: number, workspaceId: number, action: HasPermission.Action) {
     const user = await this.datasource
       .getRepository(User)
@@ -286,14 +307,16 @@ export class HasPermissionService {
       });
 
     if (!user || !workspace)
-      return new HttpException('Invalid user or whiteboard ID', HttpStatus.NOT_FOUND);
+      return new HttpException('Invalid user or workspace ID', HttpStatus.NOT_FOUND);
 
-    let hasPermission = await this.hasPermissionRepository.findOne({
-      where: {
-        users: user,
-        workspaces: workspace,
-      },
-    });
+    let hasPermission = await this.datasource
+      .getRepository(HasPermission)
+      .findOne({
+        where: {
+          users: user,
+          workspaces: workspace,
+        },
+      });
 
     if (hasPermission) {
       hasPermission.action = action;
@@ -302,25 +325,69 @@ export class HasPermissionService {
       hasPermission.action = action;
       hasPermission.users = [user];
       hasPermission.workspaces = [workspace];
+      user.hasPermissions = hasPermission;
+      workspace.hasPermissions = hasPermission;
     }
 
-    await this.hasPermissionRepository.save(hasPermission);
+    await this.datasource
+      .getRepository(HasPermission)
+      .save(hasPermission);
   }
 
   /**
-   * Deletes the permission
-   */
+     * Deletes the permission of the user with id userId to the workspace with id
+     * workspaceId.
+     * @param {number} userId - The id of the user.
+     * @param {number} workspaceId - The id of the workspace.
+     */
   async deleteUserPermissionFromWorkspace(userId: number, workspaceId: number) {
-    const hasPermission = await this.hasPermissionRepository.findOne({
-      where: {
-        users: { userId: userId },
-        workspaces: { workspaceId: workspaceId },
-      },
-    });
+    const hasPermission = await this.datasource
+      .getRepository(HasPermission)
+      .findOne({
+        where: {
+          users: { userId: userId },
+          workspaces: { workspaceId: workspaceId }
+        }
+      });
 
-    if (hasPermission) {
-      await this.hasPermissionRepository.delete(hasPermission);
-    }
+    if (hasPermission)
+      await this.datasource
+        .getRepository(HasPermission)
+        .remove(hasPermission);
+
+    const user = await this.datasource
+      .getRepository(User)
+      .findOne({
+        where: {
+          userId: userId
+        }
+      });
+
+    const workspace = await this.datasource
+      .getRepository(Workspace)
+      .findOne({
+        where: {
+          workspaceId: workspaceId
+        }
+      });
+
+    if (user && user.hasPermissions)
+      /* Check if the workspaceId matches the associated workspace */
+      if (user.hasPermissions.workspaces.some(workspace => workspace.workspaceId === workspaceId))
+        /* Remove the association between user and the specific workspace */
+        user.hasPermissions.workspaces = user.hasPermissions.workspaces
+          .filter(workspace => workspace.workspaceId !== workspaceId);
+
+    /* If there is not another permission associated to other workspace, remove
+    it from the hasPermission instance. */
+    if (user.hasPermissions.workspaces.some(workspace => workspace.workspaceId ===
+      workspaceId))
+      return;
+    else
+      if (workspace.hasPermissions && workspace.hasPermissions.users)
+        workspace.hasPermissions.users = workspace.hasPermissions.users
+          .filter(user => user.userId !== userId);
+
   }
 
   async changeWhiteboardDefaultPermission(whiteBoardId: string, isPublic: boolean) {
