@@ -408,4 +408,133 @@ describe('HasPermissionService', () => {
 
   });
 
+  describe('checkAllWhiteboardFunctions', () => {
+    it('should not fail if all of the whiteboard functions are well defined', async () => {
+      const userId = 1;
+      const whiteboardId = "1";
+
+      const hasPermission = new HasPermission();
+      hasPermission.action = HasPermission.Action.READ;
+      hasPermission.idPermission = 1;
+
+      const user = new User();
+      user.userId = userId;
+
+      const whiteboard = new WhiteBoard();
+      whiteboard.whiteBoardId = whiteboardId;
+
+      user.hasPermissions = hasPermission;
+      whiteboard.hasPermissions = hasPermission;
+      hasPermission.users = [user];
+      hasPermission.whiteBoards = [whiteboard];
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessPrev = await service.hasUserAccessToWhiteboard(userId, whiteboardId);
+      expect(hasAccessPrev).toBe(true);
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      await service.deleteUserPermissionFromWhiteboard(userId, whiteboardId);
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository,
+        'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessDelete = await service.hasUserAccessToWhiteboard(userId, whiteboardId);
+      expect(hasAccessDelete).toBe(false);
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      await service.addUserPermissionToWhiteboard(userId, whiteboardId, HasPermission.Action.WRITE);
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessPost = await service.hasUserAccessToWhiteboard(userId, whiteboardId);
+      expect(hasAccessPost).toBe(true);
+      expect(user.hasPermissions.action).toBe(HasPermission.Action.WRITE);
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      await service.deleteUserPermissionFromWhiteboard(userId, whiteboardId);
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessPostDelete = await service.hasUserAccessToWhiteboard(userId, whiteboardId);
+      expect(hasAccessPostDelete).toBe(false);
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      await service.changeWhiteboardDefaultPermission(whiteboardId, true);
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWhiteboardRepository, 'findOne').mockResolvedValueOnce(whiteboard);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessPostChangeDefaultPermission = await
+        service.hasUserAccessToWhiteboard(userId, whiteboardId);
+      expect(hasAccessPostChangeDefaultPermission).toBe(true);
+    });
+
+    it('should not fail if all of the workspace functions are well defined', async () => {
+      const userId = 1;
+      const workspaceId = 1;
+
+      const hasPermission = new HasPermission();
+      hasPermission.action = HasPermission.Action.READ;
+      hasPermission.idPermission = 1;
+
+      const user = new User();
+      user.userId = userId;
+
+      const workspace = new Workspace();
+      workspace.workspaceId = workspaceId;
+
+      user.hasPermissions = hasPermission;
+      workspace.hasPermissions = hasPermission;
+      hasPermission.users = [user];
+      hasPermission.workspaces = [workspace];
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessPrev = await service.hasUserAccessToWorkspace(userId, workspaceId);
+      expect(hasAccessPrev).toBe(true);
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      await service.deleteUserPermissionFromWorkspace(userId, workspaceId);
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository,
+        'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessDelete = await service.hasUserAccessToWorkspace(userId, workspaceId);
+      expect(hasAccessDelete).toBe(false);
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      await service.addUserPermissionToWorkspace(userId, workspaceId, HasPermission.Action.WRITE);
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessPost = await service.hasUserAccessToWorkspace(userId, workspaceId);
+      expect(hasAccessPost).toBe(true);
+      expect(user.hasPermissions.action).toBe(HasPermission.Action.WRITE);
+
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      await service.deleteUserPermissionFromWorkspace(userId, workspaceId);
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockWorkspaceRepository, 'findOne').mockResolvedValueOnce(workspace);
+      jest.spyOn(mockHasPermissionRepository, 'findOne').mockResolvedValueOnce(hasPermission);
+      const hasAccessPostDelete = await service.hasUserAccessToWorkspace(userId, workspaceId);
+      expect(hasAccessPostDelete).toBe(false);
+    });
+  });
+
 });

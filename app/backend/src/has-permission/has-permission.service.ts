@@ -211,20 +211,22 @@ export class HasPermissionService {
         },
       });
 
-    if (hasPermission) {
+    if (hasPermission && hasPermission.users.length !== 0 &&
+      hasPermission.whiteBoards.length !== 0) {
       hasPermission.action = action;
     } else {
-      hasPermission = new HasPermission();
+      hasPermission = this.datasource
+        .getRepository(HasPermission)
+        .create();
       hasPermission.action = action;
       hasPermission.users = [user];
       hasPermission.whiteBoards = [whiteboard];
       user.hasPermissions = hasPermission;
       whiteboard.hasPermissions = hasPermission;
+      await this.datasource
+        .getRepository(HasPermission)
+        .save(hasPermission);
     }
-
-    await this.datasource
-      .getRepository(HasPermission)
-      .save(hasPermission);
   }
 
   /**
@@ -234,20 +236,6 @@ export class HasPermissionService {
    * @param {string} whiteboardId - The id of the whiteboard.
    */
   async deleteUserPermissionFromWhiteboard(userId: number, whiteboardId: string) {
-    const hasPermission = await this.datasource
-      .getRepository(HasPermission)
-      .findOne({
-        where: {
-          users: { userId: userId },
-          whiteBoards: { whiteBoardId: whiteboardId }
-        }
-      });
-
-    if (hasPermission)
-      await this.datasource
-        .getRepository(HasPermission)
-        .remove(hasPermission);
-
     const user = await this.datasource
       .getRepository(User)
       .findOne({
@@ -273,14 +261,36 @@ export class HasPermissionService {
 
     /* If there is not another permission associated to other whiteboard, remove
        it from the hasPermission instance. */
-    if (user.hasPermissions.whiteBoards.some(board => board.whiteBoardId ===
-      whiteboardId))
-      return;
-    else
-      if (whiteboard.hasPermissions && whiteboard.hasPermissions.users)
-        whiteboard.hasPermissions.users = whiteboard.hasPermissions.users
-          .filter(user => user.userId !== userId);
+    if (user && user.hasPermissions) {
+      if (user.hasPermissions.whiteBoards.some(board => board.whiteBoardId ===
+        whiteboardId))
+        return;
+      else
+        if (whiteboard.hasPermissions && whiteboard.hasPermissions.users)
+          whiteboard.hasPermissions.users = whiteboard.hasPermissions.users
+            .filter(user => user.userId !== userId);
+    }
 
+    const hasPermission = await this.datasource
+      .getRepository(HasPermission)
+      .findOne({
+        where: {
+          users: { userId: userId },
+          whiteBoards: { whiteBoardId: whiteboardId }
+        }
+      });
+
+    if (hasPermission) {
+      hasPermission.whiteBoards = hasPermission.whiteBoards
+        .filter(board => board.whiteBoardId !== whiteboardId);
+      hasPermission.users = hasPermission.users
+        .filter(user => user.userId !== userId);
+      if (hasPermission.users.length === 0 && hasPermission.whiteBoards.length
+        === 0 && hasPermission.idPermission !== undefined)
+        await this.datasource
+          .getRepository(HasPermission)
+          .remove(hasPermission);
+    }
   }
 
   /**
@@ -318,20 +328,22 @@ export class HasPermissionService {
         },
       });
 
-    if (hasPermission) {
+    if (hasPermission && hasPermission.users.length !== 0 &&
+      hasPermission.workspaces.length !== 0) {
       hasPermission.action = action;
     } else {
-      hasPermission = new HasPermission();
+      hasPermission = this.datasource
+        .getRepository(HasPermission)
+        .create();
       hasPermission.action = action;
       hasPermission.users = [user];
       hasPermission.workspaces = [workspace];
       user.hasPermissions = hasPermission;
       workspace.hasPermissions = hasPermission;
+      await this.datasource
+        .getRepository(HasPermission)
+        .save(hasPermission);
     }
-
-    await this.datasource
-      .getRepository(HasPermission)
-      .save(hasPermission);
   }
 
   /**
@@ -341,20 +353,6 @@ export class HasPermissionService {
    * @param {number} workspaceId - The id of the workspace.
    */
   async deleteUserPermissionFromWorkspace(userId: number, workspaceId: number) {
-    const hasPermission = await this.datasource
-      .getRepository(HasPermission)
-      .findOne({
-        where: {
-          users: { userId: userId },
-          workspaces: { workspaceId: workspaceId }
-        }
-      });
-
-    if (hasPermission)
-      await this.datasource
-        .getRepository(HasPermission)
-        .remove(hasPermission);
-
     const user = await this.datasource
       .getRepository(User)
       .findOne({
@@ -380,14 +378,37 @@ export class HasPermissionService {
 
     /* If there is not another permission associated to other workspace, remove
        it from the hasPermission instance. */
-    if (user.hasPermissions.workspaces.some(workspace => workspace.workspaceId ===
-      workspaceId))
-      return;
-    else
-      if (workspace.hasPermissions && workspace.hasPermissions.users)
-        workspace.hasPermissions.users = workspace.hasPermissions.users
-          .filter(user => user.userId !== userId);
+    if (user && user.hasPermissions) {
+      if (user.hasPermissions.workspaces.some(workspace => workspace.workspaceId ===
+        workspaceId))
+        return;
+      else
+        if (workspace.hasPermissions && workspace.hasPermissions.users)
+          workspace.hasPermissions.users = workspace.hasPermissions.users
+            .filter(user => user.userId !== userId);
+    }
 
+    const hasPermission = await this.datasource
+      .getRepository(HasPermission)
+      .findOne({
+        where: {
+          users: { userId: userId },
+          workspaces: { workspaceId: workspaceId }
+        }
+      });
+
+
+    if (hasPermission) {
+      hasPermission.workspaces = hasPermission.workspaces
+        .filter(workspace => workspace.workspaceId !== workspaceId);
+      hasPermission.users = hasPermission.users
+        .filter(user => user.userId !== userId);
+      if (hasPermission.users.length === 0 && hasPermission.workspaces.length
+        === 0 && hasPermission.idPermission !== undefined)
+        await this.datasource
+          .getRepository(HasPermission)
+          .remove(hasPermission);
+    }
   }
 
   /**
