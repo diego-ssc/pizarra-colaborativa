@@ -3,8 +3,8 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
-  OneToOne,
 } from 'typeorm';
 import Workspace from '../workspace/workspace.entity';
 import HasPermission from '../has-permission/has-permission.entity';
@@ -30,8 +30,8 @@ export class WhiteBoard {
   @JoinColumn()
   workspace: Workspace;
 
-  @ManyToOne(() => HasPermission, (hasPermissions) =>
-    hasPermissions.whiteBoards, { cascade: true, onDelete: "CASCADE" })
-  hasPermissions: HasPermission;
+  @OneToMany(() => HasPermission, (hasPermissions) =>
+    hasPermissions.whiteBoard)
+  hasPermissions: HasPermission[];
 }
 export default WhiteBoard;

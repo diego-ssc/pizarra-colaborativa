@@ -27,7 +27,7 @@ export class WhiteBoardService {
     }
 
     const newWhiteBoard = this.whiteBoardRepository.create(whiteBoard);
-    newWhiteBoard.isPublic = true;
+    newWhiteBoard.isPublic = false;
     return await this.whiteBoardRepository.save(newWhiteBoard);
   }
 

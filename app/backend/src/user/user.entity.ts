@@ -3,7 +3,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserGroup } from '../user-group/user-group.entity';
@@ -42,10 +42,8 @@ export class User {
   @JoinTable()
   userGroups: UserGroup[];
 
-  @ManyToOne(() => HasPermission, (hasPermission) => hasPermission.users, {
-    cascade: true, onDelete: "CASCADE"
-  })
-  hasPermissions: HasPermission;
+  @OneToMany(() => HasPermission, (hasPermission) => hasPermission.user)
+  hasPermissions: HasPermission[];
 }
 
 export default User;

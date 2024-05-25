@@ -91,7 +91,6 @@ export class HasPermissionService {
         where: {
           whiteBoardId: whiteBoardId,
         },
-        relations: ['hasPermissions'],
       });
 
     /* Whiteboard not found. */
@@ -109,7 +108,7 @@ export class HasPermissionService {
         where: {
           userId: userId,
         },
-        relations: ['hasPermissions'],
+        relations: { hasPermissions: { whiteBoard: true } },
       });
 
     /* User not found. */
@@ -123,8 +122,8 @@ export class HasPermissionService {
     /* Check if the user's permissions include access to the specified
        whiteboard.
        whiteboard.hasPermission.users.some... is needed too. */
-    const hasAccess = user.hasPermissions.whiteBoards &&
-      user.hasPermissions.whiteBoards.some(board => board.whiteBoardId === whiteBoardId);
+    const hasAccess = user.hasPermissions
+      .some(perm => perm.whiteBoard.whiteBoardId == whiteBoardId);
 
     return hasAccess;
   }
@@ -142,7 +141,6 @@ export class HasPermissionService {
         where: {
           workspaceId: workspaceId,
         },
-        relations: ['hasPermissions'],
       });
 
     /* Whiteboard not found. */
@@ -156,7 +154,7 @@ export class HasPermissionService {
         where: {
           userId: userId,
         },
-        relations: ['hasPermissions'],
+        relations: { hasPermissions: { workspace: true } },
       });
 
     /* User not found. */
@@ -170,8 +168,8 @@ export class HasPermissionService {
     /* Check if the user's permissions include access to the specified
        workspace.
        workspace.hasPermission.users.some... is needed too. */
-    const hasAccess = user.hasPermissions.workspaces &&
-      user.hasPermissions.workspaces.some(workspace => workspace.workspaceId === workspaceId);
+    const hasAccess = user.hasPermissions
+      .some(perm => perm.workspace.workspaceId === workspaceId);
 
     return hasAccess;
   }
@@ -189,6 +187,7 @@ export class HasPermissionService {
         where: {
           userId: userId,
         },
+        relations: ['hasPermissions'],
       });
 
     const whiteboard = await this.datasource
@@ -206,26 +205,39 @@ export class HasPermissionService {
       .getRepository(HasPermission)
       .findOne({
         where: {
-          users: user,
-          whiteBoards: whiteboard,
+          user: { userId: userId },
+          whiteBoard: { whiteBoardId: whiteBoardId },
         },
       });
 
-    if (hasPermission && hasPermission.users.length !== 0 &&
-      hasPermission.whiteBoards.length !== 0) {
+    if (hasPermission) {
       hasPermission.action = action;
     } else {
       hasPermission = this.datasource
         .getRepository(HasPermission)
         .create();
       hasPermission.action = action;
-      hasPermission.users = [user];
-      hasPermission.whiteBoards = [whiteboard];
-      user.hasPermissions = hasPermission;
-      whiteboard.hasPermissions = hasPermission;
+      hasPermission.user = user;
+      hasPermission.whiteBoard = whiteboard;
+
+      /* Initialize arrays. */
+      if (!user.hasPermissions)
+        user.hasPermissions = [];
+      if (!whiteboard.hasPermissions)
+        whiteboard.hasPermissions = [];
+
+      user.hasPermissions.push(hasPermission);
+      whiteboard.hasPermissions.push(hasPermission);
       await this.datasource
         .getRepository(HasPermission)
         .save(hasPermission);
+
+      await this.datasource
+        .getRepository(User)
+        .save(user);
+      await this.datasource
+        .getRepository(WhiteBoard)
+        .save(whiteboard);
     }
   }
 
@@ -254,42 +266,31 @@ export class HasPermissionService {
 
     if (user && user.hasPermissions)
       /* Check if the whiteboardId matches the associated whiteboard */
-      if (user.hasPermissions.whiteBoards.some(board => board.whiteBoardId === whiteboardId))
+      if (user.hasPermissions.some(perm => perm.whiteBoard.whiteBoardId === whiteboardId))
         /* Remove the association between user and the specific whiteboard */
-        user.hasPermissions.whiteBoards = user.hasPermissions.whiteBoards
-          .filter(board => board.whiteBoardId !== whiteboardId);
+        user.hasPermissions = user.hasPermissions
+          .filter(perm => perm.whiteBoard.whiteBoardId !== whiteboardId);
 
-    /* If there is not another permission associated to other whiteboard, remove
-       it from the hasPermission instance. */
-    if (user && user.hasPermissions) {
-      if (user.hasPermissions.whiteBoards.some(board => board.whiteBoardId ===
-        whiteboardId))
-        return;
-      else
-        if (whiteboard.hasPermissions && whiteboard.hasPermissions.users)
-          whiteboard.hasPermissions.users = whiteboard.hasPermissions.users
-            .filter(user => user.userId !== userId);
-    }
+    if (whiteboard && whiteboard.hasPermissions)
+      /* Check if the userId matches the associated user */
+      if (whiteboard.hasPermissions.some(perm => perm.user.userId === userId))
+        /* Remove the association between user and the specific whiteboard */
+        whiteboard.hasPermissions = whiteboard.hasPermissions
+          .filter(perm => perm.user.userId !== userId);
 
     const hasPermission = await this.datasource
       .getRepository(HasPermission)
       .findOne({
         where: {
-          users: { userId: userId },
-          whiteBoards: { whiteBoardId: whiteboardId }
+          user: { userId: userId },
+          whiteBoard: { whiteBoardId: whiteboardId }
         }
       });
 
     if (hasPermission) {
-      hasPermission.whiteBoards = hasPermission.whiteBoards
-        .filter(board => board.whiteBoardId !== whiteboardId);
-      hasPermission.users = hasPermission.users
-        .filter(user => user.userId !== userId);
-      if (hasPermission.users.length === 0 && hasPermission.whiteBoards.length
-        === 0 && hasPermission.idPermission !== undefined)
-        await this.datasource
-          .getRepository(HasPermission)
-          .remove(hasPermission);
+      await this.datasource
+        .getRepository(HasPermission)
+        .remove(hasPermission);
     }
   }
 
@@ -306,6 +307,7 @@ export class HasPermissionService {
         where: {
           userId: userId,
         },
+        relations: ['hasPermissions'],
       });
 
     const workspace = await this.datasource
@@ -323,26 +325,39 @@ export class HasPermissionService {
       .getRepository(HasPermission)
       .findOne({
         where: {
-          users: user,
-          workspaces: workspace,
+          user: { userId: userId },
+          workspace: { workspaceId: workspaceId },
         },
       });
 
-    if (hasPermission && hasPermission.users.length !== 0 &&
-      hasPermission.workspaces.length !== 0) {
+    if (hasPermission) {
       hasPermission.action = action;
     } else {
       hasPermission = this.datasource
         .getRepository(HasPermission)
         .create();
       hasPermission.action = action;
-      hasPermission.users = [user];
-      hasPermission.workspaces = [workspace];
-      user.hasPermissions = hasPermission;
-      workspace.hasPermissions = hasPermission;
+      hasPermission.user = user;
+      hasPermission.workspace = workspace;
+
+      /* Initialize arrays. */
+      if (!user.hasPermissions)
+        user.hasPermissions = [];
+      if (!workspace.hasPermissions)
+        workspace.hasPermissions = [];
+
+      user.hasPermissions.push(hasPermission);
+      workspace.hasPermissions.push(hasPermission);
       await this.datasource
         .getRepository(HasPermission)
         .save(hasPermission);
+
+      await this.datasource
+        .getRepository(User)
+        .save(user);
+      await this.datasource
+        .getRepository(Workspace)
+        .save(workspace);
     }
   }
 
@@ -369,45 +384,34 @@ export class HasPermissionService {
         }
       });
 
+
     if (user && user.hasPermissions)
       /* Check if the workspaceId matches the associated workspace */
-      if (user.hasPermissions.workspaces.some(workspace => workspace.workspaceId === workspaceId))
+      if (user.hasPermissions.some(perm => perm.workspace.workspaceId === workspaceId))
         /* Remove the association between user and the specific workspace */
-        user.hasPermissions.workspaces = user.hasPermissions.workspaces
-          .filter(workspace => workspace.workspaceId !== workspaceId);
+        user.hasPermissions = user.hasPermissions
+          .filter(perm => perm.workspace.workspaceId !== workspaceId);
 
-    /* If there is not another permission associated to other workspace, remove
-       it from the hasPermission instance. */
-    if (user && user.hasPermissions) {
-      if (user.hasPermissions.workspaces.some(workspace => workspace.workspaceId ===
-        workspaceId))
-        return;
-      else
-        if (workspace.hasPermissions && workspace.hasPermissions.users)
-          workspace.hasPermissions.users = workspace.hasPermissions.users
-            .filter(user => user.userId !== userId);
-    }
+    if (workspace && workspace.hasPermissions)
+      /* Check if the userId matches the associated user */
+      if (workspace.hasPermissions.some(perm => perm.user.userId === userId))
+        /* Remove the association between user and the specific workspace */
+        workspace.hasPermissions = workspace.hasPermissions
+          .filter(perm => perm.user.userId !== userId);
 
     const hasPermission = await this.datasource
       .getRepository(HasPermission)
       .findOne({
         where: {
-          users: { userId: userId },
-          workspaces: { workspaceId: workspaceId }
+          user: { userId: userId },
+          workspace: { workspaceId: workspaceId }
         }
       });
 
-
     if (hasPermission) {
-      hasPermission.workspaces = hasPermission.workspaces
-        .filter(workspace => workspace.workspaceId !== workspaceId);
-      hasPermission.users = hasPermission.users
-        .filter(user => user.userId !== userId);
-      if (hasPermission.users.length === 0 && hasPermission.workspaces.length
-        === 0 && hasPermission.idPermission !== undefined)
-        await this.datasource
-          .getRepository(HasPermission)
-          .remove(hasPermission);
+      await this.datasource
+        .getRepository(HasPermission)
+        .remove(hasPermission);
     }
   }
 
@@ -429,6 +433,10 @@ export class HasPermissionService {
       whiteboard.isPublic = isPublic;
     else
       return new HttpException('Invalid whiteboard ID', HttpStatus.NOT_FOUND);
+
+    this.datasource
+      .getRepository(WhiteBoard)
+      .save(whiteboard);
   }
 
 }
