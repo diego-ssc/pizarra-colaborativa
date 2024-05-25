@@ -14,9 +14,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@blocksuite/blocks": "^0.14.0-canary-202403231334-cf6d87c",
-    "@blocksuite/presets": "^0.14.0-canary-202403231334-cf6d87c",
-    "@blocksuite/store": "^0.14.0-canary-202403231334-cf6d87c",
+    "@blocksuite/blocks": "^0.14.0-canary-202405100201-e591bb8",
+    "@blocksuite/presets": "^0.14.0-canary-202405100201-e591bb8",
+    "@blocksuite/store": "^0.14.0-canary-202405100201-e591bb8",
     "@radix-icons/vue": "^1.0.0",
     "@vee-validate/zod": "^4.12.6",
     "@vueuse/core": "^10.9.0",
@@ -31,6 +31,7 @@
     "vee-validate": "^4.12.6",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
+    "y-protocols": "^1.0.6",
     "y-websocket": "^2.0.2",
     "zod": "^3.22.4"
   },

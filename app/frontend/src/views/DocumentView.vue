@@ -10,7 +10,7 @@ import { onMounted } from 'vue';
 const route = useRoute()
 const docID = route.params.id as string
 
-const { get, error, isLoading } = useGet(WhiteboardByIDEndpoint({ id: docID }))
+const { get, error, isLoading, data } = useGet(WhiteboardByIDEndpoint({ id: docID }))
 
 onMounted(() => get())
 </script>
@@ -18,7 +18,7 @@ onMounted(() => get())
 <template>
   <div v-if="isLoading">Cargando ...</div>
   <div v-else-if="error">El documento no existe</div>
-  <EditorProvider v-else :docID="docID">
+  <EditorProvider v-else-if="data" :docID="docID">
     <div class="h-full">
       <UndoRedoButton class="absolute bottom-6 right-6 z-[1001]"/>
       <EditorContainer class="h-full" />

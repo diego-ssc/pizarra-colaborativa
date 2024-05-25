@@ -4,6 +4,7 @@ export type LoginRequest = {
 }
 
 export type LoginResponse = {
+  id: string
   token: string
 }
 
@@ -14,6 +15,7 @@ export type CreateAccountRequest = {
 }
 
 export type CreateAccountResponse = {
+  id: string
   token: string
 }
 
@@ -33,6 +35,13 @@ export type CreateWhiteboardResponse = Whiteboard
 export type GetWhiteboardsResponse = Whiteboard[]
 
 export type GetWhiteboardByIDResponse = Whiteboard
+
+export type User = {
+  username: string,
+  email: string,
+}
+
+export type GetUserByIDResponse = User
 
 export type Endpoint = {
   readonly url: string
@@ -62,6 +71,13 @@ export const WhiteboardEndpoint: Endpoint = {
 export const WhiteboardByIDEndpoint = (req: { id: string }): Endpoint => {
   return {
     url: `whiteboard/${req.id}`,
+    requiresAuth: true
+  }
+}
+
+export const UserByIDEndpoint = (req: { id: string }): Endpoint => {
+  return {
+    url: `users/${req.id}`,
     requiresAuth: true
   }
 }

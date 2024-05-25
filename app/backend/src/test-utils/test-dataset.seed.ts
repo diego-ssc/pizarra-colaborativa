@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
-import { User } from '../../src/user/user.entity';
-import Workspace from '../../src/workspace/workspace.entity';
-import WhiteBoard from '../../src/white-board/white-board.entity';
+import { User } from 'src/user/user.entity';
+import Workspace from 'src/workspace/workspace.entity';
+import WhiteBoard from 'src/white-board/white-board.entity';
 
 const USER_1 = {
   username: 'user1',

@@ -15,7 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
+  async signUp(signUpDto: SignUpDto): Promise<{ id: string; token: string }> {
     const { username, email, password } = signUpDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,10 +33,10 @@ export class AuthService {
       yuserid: user.userId,
     });
 
-    return { token };
+    return { id: user.userId.toString(), token };
   }
 
-  async login(loginDto: LoginDto): Promise<{ token: string }> {
+  async login(loginDto: LoginDto): Promise<{ id: string; token: string }> {
     const { email, password } = loginDto;
 
     const user = await this.usersRepository.findOne({
@@ -58,6 +58,6 @@ export class AuthService {
       yuserid: user.userId,
     });
 
-    return { token };
+    return { id: user.userId.toString(), token };
   }
 }

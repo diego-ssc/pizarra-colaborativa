@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HasPermissionController } from './has-permission.controller';
-import { TestingDatabaseModule } from '../test-utils/test-utils.module';
+import { TestingDatabaseModule } from 'src/test-utils/test-utils.module';
 import { HasPermissionService } from './has-permission.service';
 
 describe('HasPermissionController', () => {

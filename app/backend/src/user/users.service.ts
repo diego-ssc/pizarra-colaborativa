@@ -1,9 +1,15 @@
-import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import User from './user.entity';
 import { CreateUserDto } from './dto/user.dto';
 import { UpdateUserDto } from './dto/update-userDto.dto';
+
 export class UsersService {
   constructor(
     @InjectRepository(User)
@@ -28,13 +34,21 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
-    const newUser = await this.usersRepository.create(createUserDto);
-    await this.usersRepository.save({
+    const emailExists = await this.usersRepository.findOne({
+      where: {
+        email: createUserDto.email,
+      },
+    });
+
+    if (emailExists) {
+      throw new BadRequestException('email already exists');
+    }
+
+    return await this.usersRepository.save({
       username: createUserDto.username,
       email: createUserDto.email,
       password: createUserDto.password,
     });
-    return newUser;
   }
 
   async deleteById(id: number) {

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WhiteBoardController } from './white-board.controller';
 import { WhiteBoardService } from './white-board.service';
-import { TestingDatabaseModule } from '../test-utils/test-utils.module';
+import { TestingDatabaseModule } from 'src/test-utils/test-utils.module';
 
 describe('WhiteBoardController', () => {
   let controller: WhiteBoardController;

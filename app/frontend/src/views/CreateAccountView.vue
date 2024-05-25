@@ -10,12 +10,14 @@ import { CardContent, CardFooter } from '../components/ui/card'
 import AuthCard from '@/components/AuthCard.vue'
 import AuthFormField from '@/components/AuthFormField.vue'
 import { useToast } from '@/components/ui/toast/use-toast'
-import { usePost } from '@/lib/api/client'
+import { useAPIClient, usePost } from '@/lib/api/client'
 import { useUserStore } from '@/stores/user'
 import {
   CreateAccountEndpoint,
+  UserByIDEndpoint,
   type CreateAccountRequest,
-  type CreateAccountResponse
+  type CreateAccountResponse,
+  type GetUserByIDResponse
 } from '@/lib/api/api'
 
 const authCardProps = {
@@ -59,12 +61,24 @@ const onSubmit = form.handleSubmit(async (values) => {
   })
 })
 
-watch(data, (value) => {
+const client = useAPIClient()
+
+watch(data, async (value) => {
   if (value) {
-    userStore.login(value.token)
+    await userStore.login(value.id, value.token, async (user) => {
+      try {
+        const res = await client.get<GetUserByIDResponse>(UserByIDEndpoint({ id: value.id }))
+        user.value.username = res.data.username
+        user.value.email = res.data.email
+      } catch (e) {
+        console.log(e)
+      }
+    })
     router.push({ name: 'home' })
   }
 })
+
+
 
 watch(error, (err) => {
   if (err) {
