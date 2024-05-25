@@ -18,7 +18,7 @@ export class WhiteBoardService {
   constructor(
     @InjectRepository(WhiteBoard)
     private whiteBoardRepository: Repository<WhiteBoard>,
-  ) {}
+  ) { }
 
   async createWhiteBoard(whiteBoard: CreateWhiteBoardDto) {
     if (!whiteBoard || !whiteBoard.title) {
@@ -29,6 +29,7 @@ export class WhiteBoardService {
     }
 
     const newWhiteBoard = this.whiteBoardRepository.create(whiteBoard);
+    newWhiteBoard.isPublic = false;
     return await this.whiteBoardRepository.save(newWhiteBoard);
   }
 

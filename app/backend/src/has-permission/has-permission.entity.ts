@@ -1,8 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import User from 'src/user/user.entity';
-import UserGroup from 'src/user-group/user-group.entity';
-import Workspace from 'src/workspace/workspace.entity';
-import WhiteBoard from 'src/white-board/white-board.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import User from '../user/user.entity';
+import UserGroup from '../user-group/user-group.entity';
+import Workspace from '../workspace/workspace.entity';
+import WhiteBoard from '../white-board/white-board.entity';
 
 /**
  * The HasPermission class. it defines the permission relation between
@@ -18,21 +18,29 @@ export class HasPermission {
   @Column()
   action: HasPermission.Action;
 
-  /* The users. */
-  @OneToMany(() => User, (user) => user.hasPermissions)
-  users: User[];
+  /* The user. */
+  @ManyToOne(() => User, (user) => user.hasPermissions, {
+    cascade: true, onDelete: "CASCADE"
+  })
+  user: User;
 
   /* The user groups. */
-  @OneToMany(() => UserGroup, (userGroup) => userGroup.hasPermissions)
-  userGroups: UserGroup[];
+  @ManyToOne(() => UserGroup, (userGroup) => userGroup.hasPermissions, {
+    cascade: true, onDelete: "CASCADE"
+  })
+  userGroup: UserGroup;
 
   /* The workspaces. */
-  @OneToMany(() => Workspace, (workspace) => workspace.hasPermissions)
-  workspaces: Workspace[];
+  @ManyToOne(() => Workspace, (workspace) => workspace.hasPermissions, {
+    cascade: true, onDelete: "CASCADE"
+  })
+  workspace: Workspace;
 
   /* The whiteBoards. */
-  @OneToMany(() => WhiteBoard, (whiteBoard) => whiteBoard.hasPermissions)
-  whiteBoards: WhiteBoard[];
+  @ManyToOne(() => WhiteBoard, (whiteBoard) => whiteBoard.hasPermissions, {
+    cascade: true, onDelete: "CASCADE"
+  })
+  whiteBoard: WhiteBoard;
 }
 
 /**

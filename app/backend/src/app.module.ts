@@ -30,9 +30,10 @@ import { HasPermissionModule } from './has-permission/has-permission.module';
     WorkspaceModule,
     UserGroupModule,
     HasPermissionModule,
+    WhiteBoardModule,
 
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -16,7 +16,7 @@ import { WhiteBoardQuery } from './dto/white-board-query';
 
 @Controller('whiteboard')
 export class WhiteBoardController {
-  constructor(private whiteBoardService: WhiteBoardService) {}
+  constructor(private whiteBoardService: WhiteBoardService) { }
 
   @Get()
   getWhiteBoards(@Query() query: WhiteBoardQuery): Promise<WhiteBoard[]> {

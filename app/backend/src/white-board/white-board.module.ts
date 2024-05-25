@@ -8,5 +8,6 @@ import { WhiteBoard } from './white-board.entity';
   imports: [TypeOrmModule.forFeature([WhiteBoard])],
   controllers: [WhiteBoardController],
   providers: [WhiteBoardService],
+  exports: [WhiteBoardService],
 })
-export class WhiteBoardModule {}
+export class WhiteBoardModule { }

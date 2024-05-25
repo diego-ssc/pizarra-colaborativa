@@ -1,6 +1,6 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import WhiteBoard from 'src/white-board/white-board.entity';
-import HasPermission from 'src/has-permission/has-permission.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import WhiteBoard from '../white-board/white-board.entity';
+import HasPermission from '../has-permission/has-permission.entity';
 
 @Entity()
 export class Workspace {
@@ -19,7 +19,7 @@ export class Workspace {
   @OneToMany(() => WhiteBoard, (WhiteBoard) => WhiteBoard.whiteBoardId)
   whiteBoards: WhiteBoard[];
 
-  @ManyToOne(() => HasPermission, (hasPermissions) => hasPermissions.workspaces)
-  hasPermissions: HasPermission;
+  @OneToMany(() => HasPermission, (hasPermissions) => hasPermissions.workspace)
+  hasPermissions: HasPermission[];
 }
 export default Workspace;

@@ -1,21 +1,15 @@
-import { Controller, Post, Body, Get, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Delete, Patch, Req } from '@nestjs/common';
 import { CreateHasPermissionDto } from './dto/create-has-permissionDto.dto';
 import { HasPermissionService } from './has-permission.service';
 import HasPermission from './has-permission.entity';
-import { UpdateHasPermissionDto } from './dto/update-has-permissionDto.dto';
 
 @Controller('has-permission')
 export class HasPermissionController {
-  constructor(private hasPermissionService: HasPermissionService) {}
+  constructor(private hasPermissionService: HasPermissionService) { }
 
   @Get()
   getHasPermissions(): Promise<HasPermission[]> {
     return this.hasPermissionService.getHasPermissions();
-  }
-
-  @Get(':id')
-  getHasPermissionById(@Param() id: string): Promise<HasPermission> {
-    return this.hasPermissionService.getHasPermissionById(Number(id));
   }
 
   @Post()
@@ -23,19 +17,31 @@ export class HasPermissionController {
     return this.hasPermissionService.createHasPermission(newHasPermission);
   }
 
+  @Get(':id')
+  async hasUserPermissionToWhiteboard(@Param('id') id: string, @Req() request) {
+    const hasPermission = await
+      this.hasPermissionService.hasUserAccessToWhiteboard(request.user.userId, id);
+    console.log(hasPermission);
+    return hasPermission;
+  }
+
+  @Post(':id')
+  AddUserPermissionToWhiteboard(@Param('id') id: string, @Body() action: {
+    action: HasPermission.Action
+  }, @Req() request) {
+    return this.hasPermissionService.addUserPermissionToWhiteboard(request.user.userId, id, action.action)
+  }
+
   @Delete(':id')
-  deleteHasPermissionById(@Param('id') id: string) {
-    this.hasPermissionService.deleteHasPermissionById(Number(id));
+  deleteHasPermissionById(@Param('id') id: string, @Req() request) {
+    this.hasPermissionService.deleteUserPermissionFromWhiteboard(request.user.userid, id);
   }
 
   @Patch(':id')
   updateHasPermission(
     @Param('id') id: string,
-    @Body() hasPermission: UpdateHasPermissionDto,
+    @Body() isPublic: { isPublic: boolean },
   ) {
-    return this.hasPermissionService.updateHasPermission(
-      Number(id),
-      hasPermission,
-    );
+    return this.hasPermissionService.changeWhiteboardDefaultPermission(id, isPublic.isPublic);
   }
 }
