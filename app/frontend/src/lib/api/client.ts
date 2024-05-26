@@ -36,19 +36,23 @@ export class APIClient {
   }
 
   async get<ResT>(e: Endpoint): Promise<HTTPResponse<ResT, any>> {
-    return this.client.get(e.url, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
+    return this.client.get(e.url, { headers: this.getHeaders(e), responseType: e.responseType ? e.responseType : undefined})
   }
 
   async post<ReqT, ResT>(e: Endpoint, data?: ReqT): Promise<HTTPResponse<ResT, ReqT>> {
-    return await this.client.post(e.url, data, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
+    return await this.client.post(e.url, data, { headers: this.getHeaders(e) })
   }
 
   async patch<ReqT, ResT>(e: Endpoint, data?: ReqT): Promise<HTTPResponse<ResT, ReqT>> {
-    return await this.client.patch(e.url, data, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
+    return await this.client.patch(e.url, data, { headers: this.getHeaders(e) })
+  }
+
+  async put<ReqT, ResT>(e: Endpoint, data?: ReqT): Promise<HTTPResponse<ResT, ReqT>> {
+    return await this.client.put(e.url, data, { headers: this.getHeaders(e) })
   }
 
   async delete<ReqT, ResT>(e: Endpoint): Promise<HTTPResponse<ResT, ReqT>> {
-    return await this.client.delete(e.url, e.requiresAuth ? {headers: this.getAuthHeader()} : {})
+    return await this.client.delete(e.url, { headers: this.getHeaders(e) })
   }
 
   async fetch<ReqT, ResT>(e: Endpoint, config: RequestConfig<ReqT>): Promise<HTTPResponse<ResT, ReqT>> {
@@ -57,7 +61,7 @@ export class APIClient {
       method: config.method,
       params: config.params,
       data: config.data,
-      headers: e.requiresAuth ? this.getAuthHeader() : {},
+      headers: this.getHeaders(e), 
     })
   }
 
@@ -65,14 +69,12 @@ export class APIClient {
     app.provide(API_CLIENT_INJECTION_KEY, this)
   }
 
-  private getAuthHeader() {
+  private getHeaders(e: Endpoint) {
     const authToken = this.getAuthToken()
-    if (authToken) {
-      return {
-          Authorization: `Bearer ${this.getAuthToken()}`
-      }
+    return {
+      Authorization: (e.requiresAuth && authToken) ? `Bearer ${this.getAuthToken()}` : undefined,
+      'Content-Type': e.contentType ? e.contentType : 'application/json',
     }
-    return {}
   }
 }
 
@@ -140,6 +142,17 @@ export function usePatch<ReqT, ResT>(e: Endpoint) {
 
   return {
     patch: (data?: ReqT) => fetchClient.fetch({method: 'PATCH', data: data}),
+    data: fetchClient.data,
+    error: fetchClient.error,
+    isLoading: fetchClient.isLoading
+  }
+}
+
+export function usePut<ReqT, ResT>(e: Endpoint) {
+  const fetchClient = useFetch<ReqT, ResT>(e)
+
+  return {
+    put: (data?: ReqT) => fetchClient.fetch({method: 'PUT', data: data}),
     data: fetchClient.data,
     error: fetchClient.error,
     isLoading: fetchClient.isLoading

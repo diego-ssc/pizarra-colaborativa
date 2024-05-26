@@ -2,9 +2,11 @@ import '@blocksuite/presets/themes/affine.css'
 import { AffineSchemas } from '@blocksuite/blocks'
 import { AffineEditorContainer } from '@blocksuite/presets'
 // eslint-disable-next-line no-unused-vars
-import { Schema, DocCollection, Doc } from '@blocksuite/store'
+import { Schema, DocCollection, Doc, createIndexeddbStorage, type BlobStorage } from '@blocksuite/store'
 import { inject, type App } from 'vue';
 import { getSpecs } from './specs';
+import { createAPIBlobStorage } from './api-blob-storage';
+import type { APIClient } from '../api/client';
 
 export interface EditorState {
   editor: AffineEditorContainer
@@ -20,14 +22,22 @@ export interface EditorState {
   createDoc: (id: string) => void
 }
 
+export function createCollection(client: APIClient) {
+  const blobStorages: ((id: string) => BlobStorage)[] = [
+    createIndexeddbStorage,
+    createAPIBlobStorage(client),
+  ];
+  const schema = new Schema().register(AffineSchemas)
+  return new DocCollection({ schema, blobStorages })
+}
+
 export class BlocksuiteEditor {
   editor: AffineEditorContainer
   collection: DocCollection
 
 
-  constructor() {
-    const schema = new Schema().register(AffineSchemas)
-    this.collection = new DocCollection({ schema })
+  constructor(collection: DocCollection) {
+    this.collection = collection
     this.editor = new AffineEditorContainer()
 
     const emptyDoc = this.collection.createDoc() // empty placeholder
@@ -62,6 +72,6 @@ export function useEditor(): EditorState {
   return inject<EditorState>(EDITOR_INJECTION_KEY)!;
 }
 
-export function createBlocksuiteEditor(): BlocksuiteEditor {
-  return new BlocksuiteEditor()
+export function createBlocksuiteEditor(collection: DocCollection): BlocksuiteEditor {
+  return new BlocksuiteEditor(collection)
 }
