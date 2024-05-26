@@ -33,6 +33,7 @@
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
+    "nestjs-minio": "^2.6.1",
     "node-gyp": "^10.0.1",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.5",

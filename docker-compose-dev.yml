@@ -27,9 +27,11 @@ services:
       - 3000:3000
     depends_on:
       - db
+      - minio
     pull_policy: build
     env_file:
       - .env.develop.local/db.env
+      - .env.develop.local/minio.env
     develop:
       watch:
         - action: sync
@@ -68,6 +70,15 @@ services:
     image: redis:7.2
     ports:
       - 6379:6379
+  minio:
+    image: bitnami/minio:2024.5.10
+    volumes:
+      - miniodata:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    env_file:
+      - .env.develop.local/minio.env
   db:
     image: postgres:16-alpine
     restart: always
@@ -80,3 +91,4 @@ services:
       - .env.develop.local/db.env
 volumes:
   dbdata:
+  miniodata:
