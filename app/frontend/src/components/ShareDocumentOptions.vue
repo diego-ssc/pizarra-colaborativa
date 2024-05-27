@@ -13,8 +13,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import Button from './ui/button/Button.vue';
-import { useToast } from './ui/toast';
-import DialogClose from './ui/dialog/DialogClose.vue';
 
 const route = useRoute(); 
 const docID = route.params.id as string;
