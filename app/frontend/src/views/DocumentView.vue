@@ -4,14 +4,14 @@ import EditorContainer from '@/components/EditorContainer.vue'
 import UndoRedoButton from '@/components/UndoRedoButton.vue';
 import { useRoute } from 'vue-router';
 import { useGet } from '@/lib/api/client';
-import { WhiteboardByIDEndpoint } from '@/lib/api/api';
+import { WhiteboardByIDEndpoint, type GetWhiteboardByIDResponse } from '@/lib/api/api';
 import { onMounted } from 'vue';
 import EditorTopBar from '@/components/EditorTopBar.vue';
 
 const route = useRoute()
 const docID = route.params.id as string
 
-const { get, error, isLoading, data } = useGet(WhiteboardByIDEndpoint({ id: docID }))
+  const { get, error, isLoading, data } = useGet<GetWhiteboardByIDResponse>(WhiteboardByIDEndpoint({ id: docID }))
 
 onMounted(() => get())
 </script>
@@ -21,8 +21,8 @@ onMounted(() => get())
   <div v-else-if="error">El documento no existe</div>
   <EditorProvider v-else-if="data" :docID="docID">
     <div class="h-full">
-      <EditorTopBar class="absolute top-1 right-6 z-[1001]"/>
-      <UndoRedoButton class="absolute bottom-6 right-6 z-[1001]"/>
+      <EditorTopBar class="absolute top-6 left-6 z-40" :title="data.title" :docID="docID"/>
+      <UndoRedoButton class="absolute bottom-6 right-6 z-40"/>
       <EditorContainer class="h-full" />
     </div>
   </EditorProvider>
