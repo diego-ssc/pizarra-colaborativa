@@ -52,6 +52,7 @@ services:
       - redis
       - backend
     pull_policy: build
+    restart: always
     env_file:
       - .env.develop.local/y-redis.env
   y-redis-worker:
@@ -63,6 +64,7 @@ services:
       - redis
       - backend
     pull_policy: build
+    restart: always
     env_file:
       - .env.develop.local/y-redis.env
 

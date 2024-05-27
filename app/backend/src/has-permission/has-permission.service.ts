@@ -60,7 +60,6 @@ export class HasPermissionService {
     /* Check if the user's permissions include access to the specified
        whiteboard.
        whiteboard.hasPermission.users.some... is needed too. */
-    console.log(user.hasPermissions);
     const hasAccess = user.hasPermissions.filter(
       (perm) => perm.whiteBoard.whiteBoardId === whiteBoardId,
     )[0];
@@ -184,6 +183,7 @@ export class HasPermissionService {
 
     if (hasPermission) {
       hasPermission.action = action;
+      await this.datasource.getRepository(HasPermission).save(hasPermission);
     } else {
       hasPermission = this.datasource.getRepository(HasPermission).create();
       hasPermission.action = action;
