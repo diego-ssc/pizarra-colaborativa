@@ -7,6 +7,7 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   docID: string
+  readonly: boolean
 }>()
 
 const editor = useEditor()
@@ -24,6 +25,7 @@ function switchDoc (id: any) {
   console.log(editor.collection.awarenessStore.awareness)
   editor.collection.awarenessStore.awareness.setLocalStateField('user', { name:  user.value.username })
   sync(editor.editor, doc, id, () => {
+    editor.collection.awarenessStore.setReadonly(editor.editor.doc.blockCollection, props.readonly)
     synced.value = true
   }, editor.collection.awarenessStore.awareness)
 }
