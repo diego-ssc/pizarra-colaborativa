@@ -47,6 +47,15 @@ export type GetUserByIDResponse = User
 
 export type PutImageRequest = ArrayBuffer
 
+export type Action = 'Denied' | 'Read' | 'Write' | 'Admin'
+
+export type AddPermissionRequest = {
+  action: Action
+  emails: string[]
+}
+
+export type HasAccessResponse = Action
+
 export type Endpoint = {
   readonly url: string
   readonly requiresAuth: boolean
@@ -94,5 +103,12 @@ export const ImageByIDEndpoint = (req: { id: string }): Endpoint => {
     requiresAuth: true,
     contentType: 'application/octet-stream',
     responseType: 'blob'
+  }
+}
+
+export const PermissionByIDEndpoint = (req: { id: string }): Endpoint => {
+  return {
+    url: `has-permission/${req.id}`,
+    requiresAuth: true,
   }
 }

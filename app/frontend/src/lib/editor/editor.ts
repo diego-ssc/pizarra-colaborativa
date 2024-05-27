@@ -7,6 +7,9 @@ import { inject, type App } from 'vue';
 import { getSpecs } from './specs';
 import { createAPIBlobStorage } from './api-blob-storage';
 import type { APIClient } from '../api/client';
+import {
+  EdgelessEditorBlockSpecs,
+} from '@blocksuite/blocks';
 
 export interface EditorState {
   editor: AffineEditorContainer
@@ -41,7 +44,7 @@ export class BlocksuiteEditor {
     this.editor = new AffineEditorContainer()
 
     const emptyDoc = this.collection.createDoc() // empty placeholder
-    const specs = getSpecs()
+    const specs = EdgelessEditorBlockSpecs
     this.editor.doc = emptyDoc
     this.editor.edgelessSpecs = specs
     this.editor.mode = 'edgeless'
