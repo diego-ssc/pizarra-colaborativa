@@ -7,9 +7,11 @@ import {
   Delete,
   Patch,
   Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { HasPermissionService } from './has-permission.service';
 import HasPermission from './has-permission.entity';
+import { AddPermissionDto } from './dto/add-permission.dto';
 
 @Controller('has-permission')
 export class HasPermissionController {
@@ -22,23 +24,30 @@ export class HasPermissionController {
         request.user.userId,
         id,
       );
-    console.log(hasPermission);
     return hasPermission;
   }
 
   @Post(':id')
-  AddUserPermissionToWhiteboard(
-    @Param('id') id: string,
-    @Body()
-    action: {
-      action: HasPermission.Action;
-    },
+  async AddUserPermissionToWhiteboard(
+    @Param('id') whiteBoardID: string,
+    @Body() body: AddPermissionDto,
     @Req() request,
   ) {
-    return this.hasPermissionService.addUserPermissionToWhiteboard(
-      request.user.userId,
-      id,
-      action.action,
+    const permission =
+      await this.hasPermissionService.hasUserAccessToWhiteboard(
+        request.user.userId,
+        whiteBoardID,
+      );
+
+    if (permission !== HasPermission.Action.ADMIN) {
+      throw new UnauthorizedException(
+        'User not authorized to change permissions',
+      );
+    }
+
+    await this.hasPermissionService.addBulkUserPermissionToWhiteboard(
+      whiteBoardID,
+      body,
     );
   }
 

@@ -34,23 +34,20 @@ export class WhiteBoardService {
       );
     }
 
-    const newWhiteBoard = this.whiteBoardRepository.create(whiteBoard);
+    let newWhiteBoard = this.whiteBoardRepository.create(whiteBoard);
     newWhiteBoard.isPublic = false;
+    newWhiteBoard = await this.datasource
+      .getRepository(WhiteBoard)
+      .save(newWhiteBoard);
 
     /* Permission linked with the whiteboard creator. */
     const permission = this.datasource.getRepository(HasPermission).create();
     permission.action = HasPermission.Action.ADMIN;
     permission.user = user;
     permission.whiteBoard = newWhiteBoard;
-
-    /* Initialize arrays. */
-    if (!user.hasPermissions) user.hasPermissions = [];
-
-    user.hasPermissions.push(permission);
-
     await this.datasource.getRepository(HasPermission).save(permission);
 
-    return await this.datasource.getRepository(WhiteBoard).save(newWhiteBoard);
+    return newWhiteBoard;
   }
 
   async getWhiteBoards(query: WhiteBoardQuery, userId: number) {

@@ -1,20 +1,23 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HasPermission } from './has-permission.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { DataSource } from 'typeorm';
-import { CreateHasPermissionDto } from './dto/create-has-permissionDto.dto';
-import { NotFoundException } from '@nestjs/common';
-import { UpdateHasPermissionDto } from './dto/update-has-permissionDto.dto';
 import { User } from '../user/user.entity';
 import WhiteBoard from '../white-board/white-board.entity';
 import Workspace from '../workspace/workspace.entity';
+import { AddPermissionDto } from './dto/add-permission.dto';
 
 @Injectable()
 export class HasPermissionService {
   constructor(
-    @InjectRepository(HasPermission)
-    private hasPermissionRepository: Repository<HasPermission>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private datasource: DataSource,
   ) {}
 
@@ -57,6 +60,7 @@ export class HasPermissionService {
     /* Check if the user's permissions include access to the specified
        whiteboard.
        whiteboard.hasPermission.users.some... is needed too. */
+    console.log(user.hasPermissions);
     const hasAccess = user.hasPermissions.filter(
       (perm) => perm.whiteBoard.whiteBoardId === whiteBoardId,
     )[0];
@@ -112,6 +116,34 @@ export class HasPermissionService {
   }
 
   /**
+   * Adds permission for multiple users to a certain whiteboard.
+   * @param {string} whiteBoardId - The id of the whiteboard.
+   * @param {HasPermission.Acion} action - The permission action.
+   */
+  async addBulkUserPermissionToWhiteboard(
+    whiteBoardID: string,
+    permissionDto: AddPermissionDto,
+  ) {
+    const users = await this.userRepository.find({
+      where: { email: In(permissionDto.emails) },
+    });
+
+    if (users.length !== permissionDto.emails.length) {
+      throw new NotFoundException('An email was not found');
+    }
+
+    return Promise.all(
+      users.map((user) =>
+        this.addUserPermissionToWhiteboard(
+          user.userId,
+          whiteBoardID,
+          permissionDto.action,
+        ),
+      ),
+    );
+  }
+
+  /**
    * Adds a user permission to a certain whiteboard.
    * @param {number} userId - The id of the user.
    * @param {string} whiteBoardId - The id of the whiteboard.
@@ -136,7 +168,7 @@ export class HasPermissionService {
     });
 
     if (!user || !whiteboard)
-      return new HttpException(
+      throw new HttpException(
         'Invalid user or whiteboard ID',
         HttpStatus.NOT_FOUND,
       );
@@ -158,16 +190,7 @@ export class HasPermissionService {
       hasPermission.user = user;
       hasPermission.whiteBoard = whiteboard;
 
-      /* Initialize arrays. */
-      if (!user.hasPermissions) user.hasPermissions = [];
-      if (!whiteboard.hasPermissions) whiteboard.hasPermissions = [];
-
-      user.hasPermissions.push(hasPermission);
-      whiteboard.hasPermissions.push(hasPermission);
       await this.datasource.getRepository(HasPermission).save(hasPermission);
-
-      await this.datasource.getRepository(User).save(user);
-      await this.datasource.getRepository(WhiteBoard).save(whiteboard);
     }
   }
 
