@@ -23,9 +23,9 @@ async function saveNewName(boardId: string) {
 
 <template>
     <div class="flex justify-center items-center w-fit rounded-2xl border bg-card shadow p-2">
-        <a class="flex h-10 ml-5 mr-5" href="/">
+        <RouterLink class="flex h-10 ml-5 mr-5" to="/">
             <img class="w-10 h-10" src="../../public/pizarra.png">
-        </a>
+        </RouterLink>
 
         <input class="mx-2 outline-none focus:border focus:border-blue-500 rounded-l text-2xl font-semibold tracking-tight" type="text" id="title-input" v-model="name" @blur="saveNewName(props.docID)"/>
 
