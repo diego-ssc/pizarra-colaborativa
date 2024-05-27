@@ -3,10 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Workspace from '../workspace/workspace.entity';
-import HasPermission from 'src/has-permission/has-permission.entity';
+import HasPermission from '../has-permission/has-permission.entity';
 
 @Entity({ name: 'whiteBoard' })
 export class WhiteBoard {
@@ -16,17 +17,21 @@ export class WhiteBoard {
   @Column()
   title: string;
 
+  @Column()
+  isPublic: boolean;
+
   @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @ManyToOne(() => Workspace)
+  @ManyToOne(() => Workspace, { cascade: true, onDelete: "CASCADE" })
   @JoinColumn()
   workspace: Workspace;
 
-  @ManyToOne(() => HasPermission, (hasPermissions) => hasPermissions.whiteBoards)
-  hasPermissions: HasPermission;
+  @OneToMany(() => HasPermission, (hasPermissions) =>
+    hasPermissions.whiteBoard)
+  hasPermissions: HasPermission[];
 }
 export default WhiteBoard;

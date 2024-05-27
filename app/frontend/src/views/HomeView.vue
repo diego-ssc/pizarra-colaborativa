@@ -183,7 +183,7 @@ function onEnter() {
 
           <transition>
             <div class="modal" v-if="showModal">
-              <h1>Nuevo nombre de la pizarra: </h1>
+              <h1 class="flex justify-center font-bold">Nuevo nombre de la pizarra: </h1>
                 <input class="border border-black rounded m-2" type="text" v-model="newName">
                   <button class="border border-black p-1 rounded hover:bg-green-400"@click="saveNewName(selectedBoardID)"> Guardar</button>
                   <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
@@ -220,6 +220,8 @@ function onEnter() {
   border-radius: 15px;
   box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
   z-index: 98;
+  border: 2px solid black;
+
 }
 </style>
 

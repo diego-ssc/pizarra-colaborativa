@@ -7,5 +7,6 @@ import HasPermission from './has-permission.entity';
   imports: [TypeOrmModule.forFeature([HasPermission])],
   providers: [HasPermissionService],
   controllers: [HasPermissionController],
+  exports: [HasPermissionService],
 })
-export class HasPermissionModule {}
+export class HasPermissionModule { }

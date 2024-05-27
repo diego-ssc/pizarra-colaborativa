@@ -3,11 +3,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserGroup } from '../user-group/user-group.entity';
-import HasPermission from 'src/has-permission/has-permission.entity';
+import HasPermission from '../has-permission/has-permission.entity';
 
 @Entity()
 export class User {
@@ -42,8 +42,8 @@ export class User {
   @JoinTable()
   userGroups: UserGroup[];
 
-  @ManyToOne(() => HasPermission, (hasPermission) => hasPermission.users)
-  hasPermissions: HasPermission;
+  @OneToMany(() => HasPermission, (hasPermission) => hasPermission.user)
+  hasPermissions: HasPermission[];
 }
 
 export default User;
