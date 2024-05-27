@@ -10,11 +10,18 @@ import { WhiteBoardModule } from './white-board/white-board.module';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { UserGroupModule } from './user-group/user-group.module';
 import { HasPermissionModule } from './has-permission/has-permission.module';
+import { MinioModule } from './minio/minio.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
+        MINIO_HOST: Joi.string().required(),
+        MINIO_PORT: Joi.number().required(),
+        MINIO_USE_SSL: Joi.boolean().required(),
+        MINIO_ROOT_USER: Joi.string().required(),
+        MINIO_ROOT_PASSWORD: Joi.string().required(),
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
         POSTGRES_USER: Joi.string().required(),
@@ -30,8 +37,8 @@ import { HasPermissionModule } from './has-permission/has-permission.module';
     WorkspaceModule,
     UserGroupModule,
     HasPermissionModule,
-    WhiteBoardModule,
-
+    MinioModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,3 +1,5 @@
+import type { ResponseType } from "axios"
+
 export type LoginRequest = {
   email: string
   password: string
@@ -43,9 +45,13 @@ export type User = {
 
 export type GetUserByIDResponse = User
 
+export type PutImageRequest = ArrayBuffer
+
 export type Endpoint = {
   readonly url: string
   readonly requiresAuth: boolean
+  readonly contentType?: string
+  readonly responseType?: ResponseType
 }
 
 export const LoginEndpoint: Endpoint = {
@@ -79,5 +85,14 @@ export const UserByIDEndpoint = (req: { id: string }): Endpoint => {
   return {
     url: `users/${req.id}`,
     requiresAuth: true
+  }
+}
+
+export const ImageByIDEndpoint = (req: { id: string }): Endpoint => {
+  return {
+    url: `image/${req.id}`,
+    requiresAuth: true,
+    contentType: 'application/octet-stream',
+    responseType: 'blob'
   }
 }
