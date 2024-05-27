@@ -3,7 +3,7 @@ import { useEditor, } from '@/lib/editor/editor'
 import { sync } from '@/lib/editor/sync'
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue'
+import { onBeforeUnmount, onUnmounted, ref } from 'vue'
 
 const props = defineProps<{
   docID: string
@@ -15,6 +15,11 @@ const synced = ref(false)
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+
+onBeforeUnmount(() => {
+  console.log('onawawrenes')
+  editor.collection.awarenessStore.awareness.setLocalState(null)
+})
 
 function switchDoc (id: any) {
   synced.value = false
