@@ -23,8 +23,8 @@ export class WhiteBoardService {
     @InjectRepository(WhiteBoard)
     private whiteBoardRepository: Repository<WhiteBoard>,
     private hasPermissionService: HasPermissionService,
-    private datasource: DataSource
-  ) { }
+    private datasource: DataSource,
+  ) {}
 
   async createWhiteBoard(whiteBoard: CreateWhiteBoardDto, user: User) {
     if (!whiteBoard || !whiteBoard.title) {
@@ -44,18 +44,13 @@ export class WhiteBoardService {
     permission.whiteBoard = newWhiteBoard;
 
     /* Initialize arrays. */
-    if (!user.hasPermissions)
-      user.hasPermissions = [];
+    if (!user.hasPermissions) user.hasPermissions = [];
 
     user.hasPermissions.push(permission);
 
-    await this.datasource
-      .getRepository(HasPermission)
-      .save(permission);
+    await this.datasource.getRepository(HasPermission).save(permission);
 
-    return await this.datasource
-      .getRepository(WhiteBoard)
-      .save(newWhiteBoard);
+    return await this.datasource.getRepository(WhiteBoard).save(newWhiteBoard);
   }
 
   async getWhiteBoards(query: WhiteBoardQuery, userId: number) {
@@ -91,14 +86,16 @@ export class WhiteBoardService {
     const whiteboards = await queryBuilder.getMany();
 
     const permitted = async (whiteboard) =>
-      this.hasPermissionService.hasUserAccessToWhiteboard(userId,
-        whiteboard.whiteBoardId);
+      this.hasPermissionService.hasUserAccessToWhiteboard(
+        userId,
+        whiteboard.whiteBoardId,
+      );
 
     const filteredWhiteboards = [];
 
     for (let i = 0; i < whiteboards.length; i++) {
       const whiteboard = whiteboards[i];
-      if (await permitted(whiteboard) !== HasPermission.Action.DENIED)
+      if ((await permitted(whiteboard)) !== HasPermission.Action.DENIED)
         filteredWhiteboards.push(whiteboard);
     }
 
@@ -115,16 +112,19 @@ export class WhiteBoardService {
       },
     });
 
-    if (!whiteboard)
-      throw new NotFoundException('whiteboard not found');
+    if (!whiteboard) throw new NotFoundException('whiteboard not found');
 
-    const hasPermission = await this.hasPermissionService.hasUserAccessToWhiteboard(userId,
-      whiteboard.whiteBoardId);
+    const hasPermission =
+      await this.hasPermissionService.hasUserAccessToWhiteboard(
+        userId,
+        whiteboard.whiteBoardId,
+      );
 
-    if (hasPermission !== HasPermission.Action.DENIED)
+    if (hasPermission !== HasPermission.Action.DENIED) {
       return whiteboard;
-    else
-      return new HttpException('Unauthorized user', HttpStatus.UNAUTHORIZED);
+    } else {
+      throw new HttpException('Unauthorized user', HttpStatus.UNAUTHORIZED);
+    }
   }
 
   async deleteWhiteBoardById(id: string, userId: number) {
@@ -140,8 +140,11 @@ export class WhiteBoardService {
     if (!whiteboard)
       return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
 
-    const hasPermission = await this.hasPermissionService.hasUserAccessToWhiteboard(userId,
-      whiteboard.whiteBoardId);
+    const hasPermission =
+      await this.hasPermissionService.hasUserAccessToWhiteboard(
+        userId,
+        whiteboard.whiteBoardId,
+      );
 
     if (hasPermission !== HasPermission.Action.ADMIN)
       return new HttpException('Unauthorized user', HttpStatus.UNAUTHORIZED);
@@ -150,7 +153,11 @@ export class WhiteBoardService {
     return whiteboard;
   }
 
-  async updateWhiteBoard(id: string, whiteBoard: UpdateWhiteBoardDto, userId: number) {
+  async updateWhiteBoard(
+    id: string,
+    whiteBoard: UpdateWhiteBoardDto,
+    userId: number,
+  ) {
     if (!isUUID(id)) {
       return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
     }
@@ -163,8 +170,11 @@ export class WhiteBoardService {
     if (!whiteboardFound)
       return new HttpException('Whiteboard not found', HttpStatus.NOT_FOUND);
 
-    const hasPermission = await this.hasPermissionService.hasUserAccessToWhiteboard(userId,
-      whiteboardFound.whiteBoardId);
+    const hasPermission =
+      await this.hasPermissionService.hasUserAccessToWhiteboard(
+        userId,
+        whiteboardFound.whiteBoardId,
+      );
 
     if (hasPermission !== HasPermission.Action.ADMIN)
       return new HttpException('Unauthorized user', HttpStatus.UNAUTHORIZED);
