@@ -83,7 +83,7 @@ export class HasPermissionService {
    * @param {number} userId - The id of the user.
    * @param {string} whiteBoardId - The id of the the whiteboard.
    */
-  async hasUserAccessToWhiteboard(userId: number, whiteBoardId: string): Promise<boolean> {
+  async hasUserAccessToWhiteboard(userId: number, whiteBoardId: string): Promise<HasPermission.Action> {
     /* Find the whiteboard by id. */
     const whiteboard = await this.datasource
       .getRepository(WhiteBoard)
@@ -95,11 +95,11 @@ export class HasPermissionService {
 
     /* Whiteboard not found. */
     if (!whiteboard)
-      return false;
+      return HasPermission.Action.DENIED;
 
     /* Public Access. */
     if (whiteboard.isPublic)
-      return true;
+      return HasPermission.Action.WRITE;
 
     /* Find the user and their associated permissions */
     const user = await this.datasource
@@ -113,19 +113,22 @@ export class HasPermissionService {
 
     /* User not found. */
     if (!user)
-      return false;
+      return HasPermission.Action.DENIED;
 
     /* User has no permissions. */
     if (!user.hasPermissions)
-      return false;
+      return HasPermission.Action.DENIED;
 
     /* Check if the user's permissions include access to the specified
        whiteboard.
        whiteboard.hasPermission.users.some... is needed too. */
     const hasAccess = user.hasPermissions
-      .some(perm => perm.whiteBoard.whiteBoardId == whiteBoardId);
+      .filter(perm => perm.whiteBoard.whiteBoardId === whiteBoardId)[0];
 
-    return hasAccess;
+    if (!hasAccess)
+      return HasPermission.Action.DENIED;
+
+    return hasAccess.action;
   }
 
   /**
@@ -133,7 +136,7 @@ export class HasPermissionService {
    * @param {number} userId - The id of the user.
    * @param {number} workspaceId - The id of the the workspace.
    */
-  async hasUserAccessToWorkspace(userId: number, workspaceId: number): Promise<boolean> {
+  async hasUserAccessToWorkspace(userId: number, workspaceId: number): Promise<HasPermission.Action> {
     /* Find the workspace by id. */
     const workspace = await this.datasource
       .getRepository(Workspace)
@@ -145,7 +148,7 @@ export class HasPermissionService {
 
     /* Whiteboard not found. */
     if (!workspace)
-      return false;
+      return HasPermission.Action.DENIED;
 
     /* Find the user and their associated permissions */
     const user = await this.datasource
@@ -159,19 +162,22 @@ export class HasPermissionService {
 
     /* User not found. */
     if (!user)
-      return false;
+      return HasPermission.Action.DENIED;
 
     /* User has no permissions. */
     if (!user.hasPermissions)
-      return false;
+      return HasPermission.Action.DENIED;
 
     /* Check if the user's permissions include access to the specified
        workspace.
        workspace.hasPermission.users.some... is needed too. */
     const hasAccess = user.hasPermissions
-      .some(perm => perm.workspace.workspaceId === workspaceId);
+      .filter(perm => perm.workspace.workspaceId === workspaceId)[0];
 
-    return hasAccess;
+    if (!hasAccess)
+      return HasPermission.Action.DENIED;
+
+    return hasAccess.action;
   }
 
   /**

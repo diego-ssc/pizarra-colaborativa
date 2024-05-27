@@ -48,6 +48,8 @@ export class HasPermission {
  */
 export namespace HasPermission {
   export enum Action {
+    /* The user cannot access the document. */
+    DENIED = "Denied",
     /* The user can read the document. */
     READ = "Read",
     /* The user can write on the document. */
