@@ -97,6 +97,9 @@ function onEnter() {
       <div class="flex grow justify-center">
         <Input v-model="searchQuery" v-on:keyup.enter="onEnter" type="search" placeholder="Buscar..." class="md:w-[250px] lg:w-[450px]"/>
       </div>
+      <RouterLink to="/editprofile" class="mr-3">
+        <Button> Editar perfil </Button>
+      </RouterLink>
       <Button class="justify-self-end mr-5" @click="logout"> Cerrar sesión </Button>
     </div>
   </TopBar>

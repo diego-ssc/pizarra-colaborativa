@@ -7,6 +7,7 @@ import PageNotFound from '../views/PageNotFound.vue'
 import CreateAccountView from '@/views/CreateAccountView.vue'
 import NewDocumentView from '@/views/NewDocumentView.vue'
 import Landing from '@/views/Landing.vue'
+import EditProfile from '@/views/EditProfile.vue'
 
 const DocumentView = () => import('../views/DocumentView.vue')
 
@@ -59,6 +60,14 @@ const router = createRouter({
       name: 'newdoc',
       component: NewDocumentView,
       meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path:'/editprofile',
+      name: 'editprofile',
+      component: EditProfile,
+      meta:{
         requiresAuth: true
       }
     },

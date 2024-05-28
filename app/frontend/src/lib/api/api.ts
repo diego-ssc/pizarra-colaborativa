@@ -21,9 +21,6 @@ export type CreateAccountResponse = {
   token: string
 }
 
-export type CreateWhiteboardRequest = {
-  title: string
-}
 
 export type Whiteboard = {
   whiteBoardId: string
@@ -44,6 +41,7 @@ export type User = {
 }
 
 export type GetUserByIDResponse = User
+export type GetUsersResponse = User[]
 
 export type PutImageRequest = ArrayBuffer
 
@@ -80,6 +78,11 @@ export const HomeEndpoint: Endpoint = {
 
 export const WhiteboardEndpoint: Endpoint = {
   url: 'whiteboard',
+  requiresAuth: true
+}
+
+export const UserEndpoint: Endpoint = {
+  url: 'editprofile',
   requiresAuth: true
 }
 

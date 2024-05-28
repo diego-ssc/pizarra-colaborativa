@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { Card, CardHeader, CardTitle } from '../components/ui/card'
+import TopBar from '@/components/TopBar.vue';
+const userStore = useUserStore()
 </script>
 
+
 <template>
+  <TopBar></TopBar>
     <div class="flex justify-center h-screen items-start mt-32">
       <div class="w-full max-w-md p-6 bg-white">
         <Card class="shadow-lg">

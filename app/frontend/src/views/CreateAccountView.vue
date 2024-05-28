@@ -101,7 +101,7 @@ watch(error, (err) => {
         <AuthFormField name="confirmPassword" label="Confirmar contraseña" type="password" />
       </CardContent>
       <CardFooter>
-        <Button type="submit" class="w-full"> Regístrarse </Button>
+        <Button type="submit" class="w-full"> Registrarse </Button>
       </CardFooter>
     </form>
   </AuthCard>
