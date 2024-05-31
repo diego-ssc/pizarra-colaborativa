@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 test('register and then login', async ({ page }) => {
   const userSuffix = new Date().getTime().toString()
 
-  const username = `e2e-${userSuffix}`
-  const email = `e2e-${userSuffix}@mail.com`
+  const username = `auth-${userSuffix}`
+  const email = `auth-${userSuffix}@mail.com`
 
   await page.goto('http://localhost:8080/');
   await page.getByRole('button', { name: 'Regístrate' }).click();
