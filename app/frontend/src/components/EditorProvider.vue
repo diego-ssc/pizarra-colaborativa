@@ -31,7 +31,6 @@ function switchDoc (id: any) {
   }
   console.log(collection.collection.awarenessStore.awareness)
   collection.collection.awarenessStore.awareness.setLocalStateField('user', { name:  user.value.username })
-  //console.log(useEditor())
   editor.doc = doc
   sync(editor, doc, id, () => {
     collection.collection.awarenessStore.setReadonly(editor.doc.blockCollection, props.readonly)
