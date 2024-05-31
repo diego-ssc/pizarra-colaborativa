@@ -2,7 +2,7 @@
 import { useEditor } from '@/lib/editor/editor';
 import { onMounted, ref } from 'vue'
 
-const { editor } = useEditor();
+const editor = useEditor();
 const editorContainerRef = ref<HTMLDivElement>()
 
 onMounted(() => {
