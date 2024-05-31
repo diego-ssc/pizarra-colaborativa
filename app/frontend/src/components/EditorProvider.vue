@@ -3,7 +3,7 @@ import { EDITOR_INJECTION_KEY, createEditor, provideEditor, useCollection, useEd
 import { sync } from '@/lib/editor/sync'
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { inject, onBeforeUnmount, onUnmounted, provide, ref } from 'vue'
+import { inject, onBeforeUnmount, onMounted, onUnmounted, provide, ref } from 'vue'
 
 const props = defineProps<{
   docID: string
@@ -19,17 +19,9 @@ const { user } = storeToRefs(userStore)
 const editor = createEditor()
 provide(EDITOR_INJECTION_KEY, editor)
 
-onBeforeUnmount(() => {
-  collection.collection.awarenessStore.awareness.setLocalState(null)
-})
-
 function switchDoc (id: any) {
   synced.value = false
-  let doc = collection.collection.getDoc(id)
-  if (!doc) {
-    doc = collection.loadDoc(id)
-  }
-  console.log(collection.collection.awarenessStore.awareness)
+  let doc = collection.loadDoc(id)
   collection.collection.awarenessStore.awareness.setLocalStateField('user', { name:  user.value.username })
   editor.doc = doc
   sync(editor, doc, id, () => {
@@ -38,7 +30,9 @@ function switchDoc (id: any) {
   }, collection.collection.awarenessStore.awareness)
 }
 
-switchDoc(props.docID)
+onMounted(() => {
+  switchDoc(props.docID)
+})
 </script>
 
 <template>
