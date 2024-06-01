@@ -7,7 +7,7 @@ import UndoIcon from '@/components/icons/UndoIcon.vue';
 import RedoIcon from '@/components/icons/RedoIcon.vue';
 
 
-const { editor } = useEditor()
+const editor = useEditor()
 
 const canUndo = ref(false)
 const canRedo = ref(false)
