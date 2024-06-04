@@ -13,6 +13,9 @@ import { useToast } from './ui/toast';
 import { useRoute } from 'vue-router';
 import { useGet } from '@/lib/api/client';
 import { PermissionByIDEndpoint, type HasAccessResponse } from '@/lib/api/api';
+import DialogFooter from './ui/dialog/DialogFooter.vue';
+import DialogClose from './ui/dialog/DialogClose.vue';
+import LinkIcon from './icons/LinkIcon.vue';
 
 const open = ref(false)
 
@@ -31,6 +34,10 @@ const { get, data, error, isLoading } = useGet<HasAccessResponse>(PermissionByID
 onMounted(() => {
   get()
 })
+
+async function copyLink() {
+  await navigator.clipboard.writeText(window.location.href);
+}
 </script>
 
 <template>
@@ -55,6 +62,16 @@ onMounted(() => {
       <div v-else>
         Solo los administradores pueden cambiar el acceso
       </div>
+      <DialogFooter>
+        <div class="flex justify-between w-full">
+          <Button variant="link" class="p-0 text-blue-500" @click="copyLink">
+            <LinkIcon class="fill-blue-500 mr-1"/> Copiar enlace
+          </Button>
+          <DialogClose as-child>
+            <Button variant="default">Listo</Button>
+          </DialogClose>
+        </div>
+      </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>
