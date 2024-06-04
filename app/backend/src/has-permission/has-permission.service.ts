@@ -19,7 +19,7 @@ export class HasPermissionService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private datasource: DataSource,
-  ) {}
+  ) { }
 
   /**
    * Returns true if the user has access to the whiteboard; false, otherwise.
@@ -190,7 +190,16 @@ export class HasPermissionService {
       hasPermission.user = user;
       hasPermission.whiteBoard = whiteboard;
 
+      /* Initialize arrays. */
+      if (!user.hasPermissions) user.hasPermissions = [];
+      if (!whiteboard.hasPermissions) whiteboard.hasPermissions = [];
+
+      user.hasPermissions.push(hasPermission);
+      whiteboard.hasPermissions.push(hasPermission);
       await this.datasource.getRepository(HasPermission).save(hasPermission);
+
+      await this.datasource.getRepository(User).save(user);
+      await this.datasource.getRepository(WhiteBoard).save(whiteboard);
     }
   }
 
