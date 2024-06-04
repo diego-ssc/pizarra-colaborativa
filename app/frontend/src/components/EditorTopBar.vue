@@ -2,7 +2,7 @@
 import { WhiteboardByIDEndpoint } from '@/lib/api/api';
 import { ref } from 'vue';
 import { useAPIClient } from '@/lib/api/client';
-import ShareDocument from './ShareDocument.vue';
+import ShareDocumentDialog from './ShareDocumentDialog.vue';
 
 const props = defineProps<{
     docID: string
@@ -29,6 +29,6 @@ async function saveNewName(boardId: string) {
 
         <input class="mx-2 outline-none focus:border focus:border-blue-500 rounded-l text-2xl font-semibold tracking-tight" type="text" id="title-input" v-model="name" @blur="saveNewName(props.docID)"/>
 
-        <ShareDocument/>
+        <ShareDocumentDialog/>
     </div>
 </template>
