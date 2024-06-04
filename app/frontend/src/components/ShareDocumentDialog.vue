@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import ShareDocumentOptions from './ShareDocumentOptions.vue'
+import ShareByEmailForm from './ShareByEmailForm.vue'
 import { ref } from 'vue';
 import { useToast } from './ui/toast';
 
@@ -34,7 +34,7 @@ function onShared() {
       <DialogHeader>
         <DialogTitle>Compartir pizarra</DialogTitle>
       </DialogHeader>
-      <ShareDocumentOptions @shared="onShared"/>
+      <ShareByEmailForm @shared="onShared"/>
     </DialogContent>
   </Dialog>
 </template>
