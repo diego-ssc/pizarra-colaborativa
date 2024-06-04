@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { type HasAccessResponse, PermissionByIDEndpoint, type Action, type AddPermissionRequest } from '@/lib/api/api';
-import { useAPIClient, useGet, usePost } from '@/lib/api/client';
-import { ref, onMounted } from 'vue';
+import { useGet, usePost } from '@/lib/api/client';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { Loader2 } from 'lucide-vue-next'
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input'
 import {
   Select,
@@ -13,6 +14,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import Button from './ui/button/Button.vue';
+
+const emit = defineEmits(['shared'])
 
 const route = useRoute(); 
 const docID = route.params.id as string;
@@ -30,6 +33,14 @@ function shareDoc() {
     emails: emails.value
   })
 }
+
+watch(postClient.data, (value) => {
+  // If request is in progress or there is an error value is null.
+  // Only emit event when doc was shared successfully. 
+  if (value === '') {
+    emit('shared')
+  }
+})
 </script>
 
 <template>
@@ -70,6 +81,12 @@ function shareDoc() {
 
       <div v-if="emails.length === 0">
         <Button disabled @click="shareDoc">Compartir</Button>
+      </div>
+      <div v-else-if="postClient.isLoading.value">
+          <Button disabled>
+            <Loader2 class="w-4 h-4 mr-2 animate-spin" />
+            Compartiendo
+          </Button>
       </div>
       <div v-else>
         <Button @click="shareDoc">Compartir</Button>
