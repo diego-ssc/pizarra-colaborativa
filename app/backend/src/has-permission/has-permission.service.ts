@@ -19,7 +19,7 @@ export class HasPermissionService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private datasource: DataSource,
-  ) { }
+  ) {}
 
   /**
    * Returns true if the user has access to the whiteboard; false, otherwise.
@@ -41,9 +41,6 @@ export class HasPermissionService {
     /* Whiteboard not found. */
     if (!whiteboard) return HasPermission.Action.DENIED;
 
-    /* Public Access. */
-    if (whiteboard.isPublic) return HasPermission.Action.WRITE;
-
     /* Find the user and their associated permissions */
     const user = await this.datasource.getRepository(User).findOne({
       where: {
@@ -56,7 +53,11 @@ export class HasPermissionService {
     if (!user) return HasPermission.Action.DENIED;
 
     /* User has no permissions. */
-    if (!user.hasPermissions) return HasPermission.Action.DENIED;
+    if (!user.hasPermissions) {
+      return whiteboard.isPublic
+        ? HasPermission.Action.WRITE
+        : HasPermission.Action.DENIED;
+    }
 
     /* Check if the user's permissions include access to the specified
        whiteboard. */
@@ -65,35 +66,79 @@ export class HasPermissionService {
     )[0];
 
     if (!whiteboard.workspace) {
-      if (!hasAccess) return HasPermission.Action.DENIED;
+      if (!hasAccess) {
+        return whiteboard.isPublic
+          ? HasPermission.Action.WRITE
+          : HasPermission.Action.DENIED;
+      }
+
+      if (hasAccess.action === HasPermission.Action.ADMIN) {
+        return hasAccess.action;
+      }
+
+      if (whiteboard.isPublic) {
+        return HasPermission.Action.WRITE;
+      }
 
       return hasAccess.action;
     }
+
     /* Check if the user's permissions include access to the associated workspace. */
     const hasAccessWorkspace = user.hasPermissions.filter(
       (perm) => perm.workspace.workspaceId === whiteboard.workspace.workspaceId,
     )[0];
 
     if (!hasAccessWorkspace) {
-      if (!hasAccess) return HasPermission.Action.DENIED;
+      if (!hasAccess) {
+        return whiteboard.isPublic
+          ? HasPermission.Action.WRITE
+          : HasPermission.Action.DENIED;
+      }
+
+      if (hasAccess.action === HasPermission.Action.ADMIN) {
+        return hasAccess.action;
+      }
+
+      if (whiteboard.isPublic) {
+        return HasPermission.Action.WRITE;
+      }
 
       return hasAccess.action;
     }
 
-    if (!hasAccess)
+    if (!hasAccess) {
+      if (hasAccessWorkspace.action === HasPermission.Action.ADMIN) {
+        return hasAccessWorkspace.action;
+      }
+
+      if (whiteboard.isPublic) {
+        return HasPermission.Action.WRITE;
+      }
+
       return hasAccessWorkspace.action;
+    }
 
-    if (hasAccess.action === HasPermission.Action.ADMIN ||
-      hasAccessWorkspace.action === HasPermission.Action.ADMIN)
+    if (
+      hasAccess.action === HasPermission.Action.ADMIN ||
+      hasAccessWorkspace.action === HasPermission.Action.ADMIN
+    ) {
       return HasPermission.Action.ADMIN;
+    }
 
-    if (hasAccess.action === HasPermission.Action.WRITE ||
-      hasAccessWorkspace.action === HasPermission.Action.WRITE)
+    if (
+      hasAccess.action === HasPermission.Action.WRITE ||
+      hasAccessWorkspace.action === HasPermission.Action.WRITE ||
+      whiteboard.isPublic
+    ) {
       return HasPermission.Action.WRITE;
+    }
 
-    if (hasAccess.action === HasPermission.Action.READ ||
-      hasAccessWorkspace.action === HasPermission.Action.READ)
+    if (
+      hasAccess.action === HasPermission.Action.READ ||
+      hasAccessWorkspace.action === HasPermission.Action.READ
+    ) {
       return HasPermission.Action.READ;
+    }
 
     return HasPermission.Action.DENIED;
   }
