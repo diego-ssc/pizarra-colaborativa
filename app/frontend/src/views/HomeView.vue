@@ -91,9 +91,6 @@ function onEnter() {
       <div class="flex grow justify-center">
         <Input v-model="searchQuery" v-on:keyup.enter="onEnter" type="search" placeholder="Buscar..." class="md:w-[250px] lg:w-[450px]"/>
       </div>
-      <RouterLink to="/editprofile" class="mr-3">
-        <Button> Editar perfil </Button>
-      </RouterLink>
       <Button class="justify-self-end mr-5" @click="logout"> Cerrar sesión </Button>
     </div>
   </TopBar>
@@ -136,12 +133,12 @@ function onEnter() {
               </RouterLink>   
               <div class="text-right mt-1"> 
 
-                <button class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="openModal(board.whiteBoardId)">
+                <button v-if="board.role === 'Admin'" class="border border-black p-0.5 rounded hover:bg-blue-400 mr-1" @click="openModal(board.whiteBoardId)">
                   <img src="../../public/editBoard.png" alt="editWhiteboard" style="width: 20px; height: auto;">
                 </button>
 
 
-                <button class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard(board.whiteBoardId)" >
+                <button v-if="board.role === 'Admin'" class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard(board.whiteBoardId)" >
                   <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
                 </button>
               </div>

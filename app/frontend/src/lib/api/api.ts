@@ -26,12 +26,15 @@ export type CreateWhiteboardRequest = {
 }
 
 
+export type Action = 'Denied' | 'Read' | 'Write' | 'Admin'
+
 export type Whiteboard = {
   whiteBoardId: string
   title: string
   createdAt: string
   updatedAt: string
   isPublic: boolean
+  role: Action
 }
 
 export type CreateWhiteboardResponse = Whiteboard
@@ -50,7 +53,6 @@ export type GetUsersResponse = User[]
 
 export type PutImageRequest = ArrayBuffer
 
-export type Action = 'Denied' | 'Read' | 'Write' | 'Admin'
 
 export type AddPermissionRequest = {
   action: Action

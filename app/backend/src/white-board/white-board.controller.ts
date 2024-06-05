@@ -17,10 +17,10 @@ import { WhiteBoardQuery } from './dto/white-board-query';
 
 @Controller('whiteboard')
 export class WhiteBoardController {
-  constructor(private whiteBoardService: WhiteBoardService) { }
+  constructor(private whiteBoardService: WhiteBoardService) {}
 
   @Get()
-  getWhiteBoards(@Query() query: WhiteBoardQuery, @Req() request): Promise<WhiteBoard[]> {
+  getWhiteBoards(@Query() query: WhiteBoardQuery, @Req() request) {
     return this.whiteBoardService.getWhiteBoards(query, request.user.userId);
   }
 
@@ -43,7 +43,12 @@ export class WhiteBoardController {
   updateWhiteBoard(
     @Param('id') id: string,
     @Body() whiteBoard: UpdateWhiteBoardDto,
-    @Req() request) {
-    return this.whiteBoardService.updateWhiteBoard(id, whiteBoard, request.user.userId);
+    @Req() request,
+  ) {
+    return this.whiteBoardService.updateWhiteBoard(
+      id,
+      whiteBoard,
+      request.user.userId,
+    );
   }
 }
