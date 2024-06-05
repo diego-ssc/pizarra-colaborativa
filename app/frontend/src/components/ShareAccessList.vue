@@ -34,9 +34,9 @@ async function updateList(removedID: number) {
   <div v-else-if="isLoading">
     Cargando...
   </div>
-    <TransitionGroup name="list" tag="ul" class="max-h-48 overflow-scroll">
+    <ul class="max-h-48 overflow-scroll">
       <ShareAccessListItem v-for="user in userList" v-bind="user" @removedAccess="updateList" :key="user.userID"/>
-    </TransitionGroup>
+    </ul>
 </template>
 
 <style>
