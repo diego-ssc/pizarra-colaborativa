@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import { PermissionByIDEndpoint, type Action, type AddPermissionRequest } from '@/lib/api/api';
-import { usePost } from '@/lib/api/client';
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { Loader2 } from 'lucide-vue-next'
+import { type Action } from '@/lib/api/api';
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input'
 import {
   Select,
@@ -13,36 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import Button from './ui/button/Button.vue';
 
-const emit = defineEmits(['shared'])
-
-const route = useRoute(); 
-const docID = route.params.id as string;
-
-const emails = ref<string[]>([])
-const selectedAction = ref<Action>('Read')
-const postClient = usePost<AddPermissionRequest, unknown>(PermissionByIDEndpoint({id: docID}))
-function shareDoc() {
-  postClient.post({
-    action: selectedAction.value,
-    emails: emails.value
-  })
-}
-
-watch(postClient.data, (value) => {
-  // If request is in progress or there is an error value is null.
-  // Only emit event when doc was shared successfully. 
-  if (value === '') {
-    emit('shared')
-  }
-})
+const emails = defineModel<string[]>('emails', { default: [] })
+const selectedAction = defineModel<Action>('action')
 </script>
 
 <template>
-  <div v-if="postClient.error.value" class="text-red-500">
-    Los correos introducidos no corresponden a usuarios registrados
-  </div>
   <div v-if="emails.length === 0">
     Introduzca un correo y presione enter
   </div>
@@ -67,20 +39,5 @@ watch(postClient.data, (value) => {
         </SelectGroup>
       </SelectContent>
     </Select>
-  </div>
-
-  <div class="flex justify-between my-4">
-    <div v-if="emails.length === 0">
-      <Button disabled @click="shareDoc">Compartir</Button>
-    </div>
-    <div v-else-if="postClient.isLoading.value">
-      <Button disabled>
-        <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-        Compartiendo
-      </Button>
-    </div>
-    <div v-else>
-      <Button @click="shareDoc">Compartir</Button>
-    </div>
   </div>
 </template>

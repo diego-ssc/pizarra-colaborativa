@@ -8,11 +8,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import ShareByEmailForm from './ShareByEmailForm.vue'
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import { useToast } from './ui/toast';
 import { useRoute } from 'vue-router';
-import { useGet } from '@/lib/api/client';
-import { PermissionByIDEndpoint, type HasAccessResponse } from '@/lib/api/api';
+import { useGet, usePost } from '@/lib/api/client';
+import { PermissionByIDEndpoint, type HasAccessResponse, type Action, type AddPermissionRequest } from '@/lib/api/api';
+import { Loader2 } from 'lucide-vue-next'
 import ShareByLinkOptions from './ShareByLinkOptions.vue';
 import DialogFooter from './ui/dialog/DialogFooter.vue';
 import DialogClose from './ui/dialog/DialogClose.vue';
@@ -23,13 +24,6 @@ const open = ref(false)
 
 const { toast } = useToast()
 
-function onShared() {
-  open.value = false
-  toast({
-    description: 'Pizarra Compartida',
-  })
-}
-
 const route = useRoute(); 
 const docID = route.params.id as string;
 const { get, data, error, isLoading } = useGet<HasAccessResponse>(PermissionByIDEndpoint({ id: docID }))
@@ -37,13 +31,36 @@ onMounted(() => {
   get()
 })
 
+const emails = ref<string[]>([])
+const selectedAction = ref<Action>('Read')
+const postClient = usePost<AddPermissionRequest, unknown>(PermissionByIDEndpoint({id: docID}))
+async function shareDoc() {
+  await postClient.post({
+    action: selectedAction.value,
+    emails: emails.value
+  })
+  if (!postClient.error.value && postClient.data.value === '') {
+    open.value = false
+    toast({
+      description: 'Pizarra Compartida',
+    })
+  }
+}
+
 async function copyLink() {
   await navigator.clipboard.writeText(window.location.href);
+}
+
+function resetState(opened: boolean) {
+  if (opened) {
+    emails.value = []
+    selectedAction.value = 'Read'
+  }
 }
 </script>
 
 <template>
-  <Dialog v-model:open="open">
+  <Dialog v-model:open="open" @update:open="resetState">
     <DialogTrigger as-child>
       <Button variant="outline" @click="get">
         Compartir
@@ -60,9 +77,11 @@ async function copyLink() {
         Cargando...
       </div>
       <div v-else-if="data === 'Admin'">
-        <ShareByEmailForm @shared="onShared"/>
-        <ShareAccessList>
-        </ShareAccessList>
+        <div v-if="postClient.error.value" class="text-red-500">
+          Los correos introducidos no corresponden a usuarios registrados
+        </div>
+        <ShareByEmailForm v-model:emails="emails" v-model:action="selectedAction"/>
+        <ShareAccessList/>
         <ShareByLinkOptions/>
       </div>
       <div v-else>
@@ -73,7 +92,14 @@ async function copyLink() {
           <Button variant="link" class="p-0 text-blue-500" @click="copyLink">
             <LinkIcon class="fill-blue-500 mr-1"/> Copiar enlace
           </Button>
-          <DialogClose as-child>
+          <Button v-if="emails.length > 0" @click="shareDoc">Compartir</Button>
+          <div v-else-if="postClient.isLoading.value">
+            <Button disabled>
+              <Loader2 class="w-4 h-4 mr-2 animate-spin" />
+              Compartiendo
+            </Button>
+          </div>
+          <DialogClose v-else as-child>
             <Button variant="default">Listo</Button>
           </DialogClose>
         </div>
