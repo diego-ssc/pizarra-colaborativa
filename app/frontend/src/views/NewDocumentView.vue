@@ -41,7 +41,7 @@ async function addDoc (boardName: string) {
     <div class="bg-white p-6 border border-black rounded-xl shadow-lg relative" style="width: 500px; margin-top: -50px;">
       <h1 class="flex justify-center font-bold mb-6 text-2xl">Nombre de la pizarra nueva:</h1>
       <input class="border border-black rounded m-2 w-full text-lg p-2" type="text" v-model="newBoardName">
-      <h1 class="flex justify-center font-bold mb-6 text-2xl">Selecciona un espacio de trabajo para la nueva pizarra:</h1>
+      <h1 class="flex justify-center font-bold mt-6 mb-6 text-2xl">Selecciona un espacio de trabajo para la nueva pizarra:</h1>
       <div class="flex justify-center mb-4">
         <select class="border border-black rounded m-2 text-lg p-2" v-model="selectedWorkspace">
           <option v-for="workspace in workspaces" :key="workspace.id" :value="workspace.id">{{ workspace.name }}</option>
