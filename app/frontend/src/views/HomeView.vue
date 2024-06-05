@@ -14,6 +14,7 @@ import { useRouter } from 'vue-router';
 import ShareIcon from '@/components/icons/ShareIcon.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 import { Input } from '@/components/ui/input'
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue';
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -146,6 +147,7 @@ function onEnter() {
 
 
       
+      <ScrollArea class="w-full h-full">
       <div class="bg-white w-full p-4">
         <div class="flex flex-wrap -mx-3 mb-6">
 
@@ -199,16 +201,13 @@ function onEnter() {
           
         </div>
       </div>
-
+      </ScrollArea>
       
     </div>
   </div>
 
 </div>
 
-    <footer style="background-color:black; position: absolute; bottom: 0px; width: 100%;">
-        <p style=" color:white;font-size: xx-small;">Proyecto desarrollado por el equipo 1</p>
-    </footer>
 </div>
 </template>
 
