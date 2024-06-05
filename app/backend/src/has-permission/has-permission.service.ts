@@ -79,6 +79,9 @@ export class HasPermissionService {
       return hasAccess.action;
     }
 
+    if (!hasAccess)
+      return hasAccessWorkspace.action;
+
     if (hasAccess.action === HasPermission.Action.ADMIN ||
       hasAccessWorkspace.action === HasPermission.Action.ADMIN)
       return HasPermission.Action.ADMIN;
