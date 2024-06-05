@@ -19,8 +19,6 @@ const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 const client = useAPIClient()
 
-const selectedUserID = ref('')
-
 const showModalUser = ref(false)
 const showModalEmail = ref(false)
 const showModalPassword = ref(false)
@@ -29,27 +27,23 @@ const newUsername = ref('')
 const newEmail = ref('')
 const newPassword = ref('')
 
-const username = ref('Emiliano')
-const email = ref('correoooo')
+const username = user.value.username
+const email = user.value.email
 
 const { get, data } = useGet<GetUsersResponse>(UserEndpoint)
 
 function openModal(): void {
   showModalUser.value = true;
-  newUsername.value = data.value!.find(user => user.userId === user.value.id)?.username || ''
-  selectedUserID.value = user.value.id
 }
 
 function modalEmail(): void{
-    showModalEmail.value = true;
-    newEmail.value = data.value!.find(user=> user.userId === user.value.id)?.email || ''
-    selectedUserID.value = user.value.id
+  showModalEmail.value = true;
+  newEmail.value = data.value!.find(user=> user.userId === user.value.id)?.email || ''
 }
 
 function modalPassword(): void{
-    showModalPassword.value = true;
-    newPassword.value = data.value!.find(user=> user.userId === user.value.id)?.password || ''
-    selectedUserID.value = user.value.id
+  showModalPassword.value = true;
+  newPassword.value = data.value!.find(user=> user.userId === user.value.id)?.password || ''
 }
 
 function closeModal(): void {
@@ -81,7 +75,6 @@ async function saveNewMail() {
     closeModalEmail()
   } catch (error) {
     console.error('Error al guardar el nuevo correo electrónico:', error)
-    closeModalEmail()
   }
 }
 
@@ -92,7 +85,6 @@ async function saveNewPassword() {
     closeModalPassword()
   } catch (error) {
     console.error('Error al guardar el nuevo correo electrónico:', error)
-    closeModalPassword()
   }
 }
 
@@ -143,8 +135,8 @@ function logout() {
             <div class="modal" v-if="showModalUser">
               <h1>Nuevo nombre de usuario: </h1>
                 <input class="border border-black rounded m-2" type="text" v-model="newUsername">
-                  <button class="border border-black p-1 rounded hover:bg-gray-400"@click="saveNewName()"> Guardar</button>
-                  <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
+                <button class="border border-black p-1 rounded hover:bg-gray-400"@click="saveNewName()"> Guardar</button>
+                <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
             </div>
                 
         </transition>
@@ -153,8 +145,8 @@ function logout() {
             <div class="modal" v-if="showModalEmail">
               <h1>Nuevo correo electrónico: </h1>
                 <input class="border border-black rounded m-2" type="text" v-model="newEmail">
-                  <button class="border border-black p-1 rounded hover:bg-gray-400"@click="saveNewMail()"> Guardar</button>
-                  <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModalEmail">&times;</button>
+                <button class="border border-black p-1 rounded hover:bg-gray-400"@click="saveNewMail()"> Guardar</button>
+                <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModalEmail">&times;</button>
             </div>
         </transition>
 
@@ -162,8 +154,8 @@ function logout() {
             <div class="modal" v-if="showModalPassword">
               <h1>Nueva contraseña: </h1>
                 <input class="border border-black rounded m-2" type="text" v-model="newPassword">
-                  <button class="border border-black p-1 rounded hover:bg-gray-400"@click="saveNewPassword()"> Guardar</button>
-                  <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModalPassword">&times;</button>
+                <button class="border border-black p-1 rounded hover:bg-gray-400"@click="saveNewPassword()"> Guardar</button>
+                <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModalPassword">&times;</button>
             </div>
         </transition>
 

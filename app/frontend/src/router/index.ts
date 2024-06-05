@@ -73,6 +73,7 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
+      name: 'pagenotfound',
       component: PageNotFound,
       meta: {
         requiresAtuh: false
