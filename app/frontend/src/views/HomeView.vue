@@ -21,6 +21,8 @@ const router = useRouter()
 const showModal = ref(false)
 const newName = ref('')
 const selectedBoardID = ref('')
+const showNewBoardModal = ref(false) 
+const newBoardName = ref('')
 
 const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 const client = useAPIClient()
@@ -35,6 +37,18 @@ async function saveNewName(boardId: string) {
   }
 }
 
+async function createNewBoard() {
+  try {
+    
+    const response = await client.post(WhiteboardEndpoint, { title: newBoardName.value })
+    const newBoardId = response.data.whiteBoardId 
+    get()
+    closeNewBoardModal()
+    router.push({ path: `d/${newBoardId}` }) 
+  } catch (error) {
+    console.error('Error al crear nueva pizarra:', error)
+  }
+}
 
 
 function openModal(boardId: string): void {
@@ -45,6 +59,15 @@ function openModal(boardId: string): void {
 
 function closeModal(): void {
   showModal.value = false;
+}
+
+function openNewBoardModal(): void {
+  showNewBoardModal.value = true;
+}
+
+function closeNewBoardModal(): void {
+  showNewBoardModal.value = false;
+  newBoardName.value = false
 }
 
 
@@ -69,9 +92,6 @@ async function deleteWhiteboard(boardId: string) {
   }
 }
 
-function favouriteWhiteboard() {
-  console.log('Favorito')
-}
 
 
 const searchQuery = ref<string | number>('');
@@ -148,14 +168,14 @@ function onEnter() {
 
           <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
-              <RouterLink to="/new">
-              <div class="flex items-center justify-center mb-2">
+              <div class="flex items-center justify-center mb-2 cursor-pointer" @click="openNewBoardModal">
                 <PlusIcon/>
               </div>
               <h2 class="text-sm font-italic text-black text-center">Nueva pizarra</h2>
-              </RouterLink>
             </div>
           </div>
+
+          
 
           <div v-for="board in data" class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               
@@ -170,9 +190,6 @@ function onEnter() {
                   <img src="../../public/editBoard.png" alt="editWhiteboard" style="width: 20px; height: auto;">
                 </button>
 
-                <button class="border border-black p-0.5 rounded hover:bg-yellow-400 mr-1" @click="favouriteWhiteboard">
-                  <img src="../../public/favouriteWhiteboard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
-                </button>
 
                 <button class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard(board.whiteBoardId)" >
                   <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
@@ -182,14 +199,39 @@ function onEnter() {
           </div>
 
           <transition>
-            <div class="modal" v-if="showModal">
-              <h1 class="flex justify-center font-bold">Nuevo nombre de la pizarra: </h1>
+            <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50" v-if="showModal">
+              <div class="bg-white p-6 border border-black rounded-xl shadow-lg relative">
+                <h1 class="flex justify-center font-bold">Nuevo nombre de la pizarra: </h1>
                 <input class="border border-black rounded m-2" type="text" v-model="newName">
-                  <button class="border border-black p-1 rounded hover:bg-green-400"@click="saveNewName(selectedBoardID)"> Guardar</button>
-                  <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
+                <button class="border border-black p-1 rounded hover:bg-green-400" @click="saveNewName(selectedBoardID)"> Guardar</button>
+                <button class="text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
+              </div>
             </div>
-                
           </transition>
+
+
+          <transition>
+            <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50" v-if="showNewBoardModal">
+              <div class="bg-white p-6 border border-black rounded-xl shadow-lg relative">
+                <button class="text-xl font-bold absolute top-1 right-2" @click="closeNewBoardModal">&times;</button>
+                <h1 class="flex justify-center font-bold mb-4">Nombre de la pizarra nueva:</h1>
+                <input class="border border-black rounded m-2 w-full" type="text" v-model="newBoardName">
+                <h1 class="flex justify-center font-bold mb-4">Selecciona un espacio de trabajo para la nueva pizarra:</h1>
+                <div class="flex justify-center mb-4">
+                  <select class="border border-black rounded m-2" v-model="selectedWorkspace">
+                    <option v-for="workspace in workspaces" :key="workspace.id" :value="workspace.id">{{ workspace.name }}</option>
+                  </select>
+                </div>
+                <div class="flex justify-center">
+                  <RouterLink to="/new">
+                    <button class="border border-black p-2 rounded hover:bg-green-400" @click="createNewBoard">Crear Pizarra</button>
+                  </RouterLink>
+                </div>
+              </div>
+            </div>
+          </transition>
+
+          
 
 
 

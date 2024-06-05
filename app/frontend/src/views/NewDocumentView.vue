@@ -12,7 +12,7 @@ const client = useAPIClient()
 async function addDoc () {
   const res = await client.post<CreateWhiteboardRequest, CreateWhiteboardResponse>(
     WhiteboardEndpoint,
-    { title: 'Pizarra sin título' },
+    { title: 'Pizarra sin titulo' },
   )
   const id = res.data.whiteBoardId
   collection.createDoc(id)
