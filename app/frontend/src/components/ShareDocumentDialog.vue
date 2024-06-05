@@ -62,7 +62,7 @@ function resetState(opened: boolean) {
 <template>
   <Dialog v-model:open="open" @update:open="resetState">
     <DialogTrigger as-child>
-      <Button variant="outline" @click="get">
+      <Button variant="default" @click="get">
         Compartir
       </Button>
     </DialogTrigger>

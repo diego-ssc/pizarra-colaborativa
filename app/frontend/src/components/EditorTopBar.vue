@@ -22,12 +22,12 @@ async function saveNewName(boardId: string) {
 </script>
 
 <template>
-    <div class="flex justify-center items-center w-fit rounded-2xl border bg-card shadow p-2">
-        <RouterLink class="flex h-10 ml-5 mr-5" to="/">
-            <img class="w-10 h-10" src="../../public/pizarra.png">
+    <div class="flex justify-center items-center w-fit rounded-lg border bg-card shadow py-1.5 px-2.5">
+        <RouterLink class="flex h-9 w-9" to="/">
+            <img class="w-9 h-9" src="../../public/pizarra.png">
         </RouterLink>
 
-        <input class="mx-2 outline-none focus:border focus:border-blue-500 rounded-l text-2xl font-semibold tracking-tight" type="text" id="title-input" v-model="name" @blur="saveNewName(props.docID)"/>
+        <input class="mx-2 outline-none focus:border focus:border-blue-500 rounded-l max-w-48 scroll-m-20 text-xl font-semibold tracking-tight" type="text" id="title-input" v-model="name" @blur="saveNewName(props.docID)"/>
 
         <ShareDocumentDialog/>
     </div>
