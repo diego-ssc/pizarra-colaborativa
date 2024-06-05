@@ -64,14 +64,6 @@ const router = createRouter({
       }
     },
     {
-      path:'/editprofile',
-      name: 'editprofile',
-      component: EditProfile,
-      meta:{
-        requiresAuth: true
-      }
-    },
-    {
       path: '/:pathMatch(.*)*',
       name: 'pagenotfound',
       component: PageNotFound,
