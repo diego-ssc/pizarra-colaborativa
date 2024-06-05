@@ -73,7 +73,7 @@ export class UsersService {
     });
 
     if (!userFound) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     const updateUser = Object.assign(userFound, user);
     return this.usersRepository.save(updateUser);
