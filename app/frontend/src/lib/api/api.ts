@@ -21,6 +21,10 @@ export type CreateAccountResponse = {
   token: string
 }
 
+export type CreateWhiteboardRequest = {
+  title: string
+}
+
 
 export type Whiteboard = {
   whiteBoardId: string
