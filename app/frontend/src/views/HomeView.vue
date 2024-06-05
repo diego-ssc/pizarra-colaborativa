@@ -92,8 +92,6 @@ async function deleteWhiteboard(boardId: string) {
   }
 }
 
-
-
 const searchQuery = ref<string | number>('');
 
 onMounted(() => {
@@ -230,19 +228,11 @@ function onEnter() {
               </div>
             </div>
           </transition>
-
-          
-
-
-
-          
+  
         </div>
-      </div>
-
-      
+      </div>     
     </div>
   </div>
-
 </div>
 
     <footer style="background-color:black; position: absolute; bottom: 0px; width: 100%;">
@@ -252,22 +242,6 @@ function onEnter() {
 </template>
 
 <style>
-.modal{
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
-  z-index: 98;
-  border: 2px solid black;
-
-}
-</style>
-
-
 
 
 
