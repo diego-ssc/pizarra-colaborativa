@@ -22,6 +22,7 @@ const showModal = ref(false)
 const newName = ref('')
 const selectedBoardID = ref('')
 
+
 const { get, data } = useGet<GetWhiteboardsResponse>(WhiteboardEndpoint)
 const client = useAPIClient()
 
@@ -35,8 +36,6 @@ async function saveNewName(boardId: string) {
   }
 }
 
-
-
 function openModal(boardId: string): void {
   showModal.value = true;
   newName.value = data.value!.find(board => board.whiteBoardId === boardId)?.title || ''
@@ -46,7 +45,6 @@ function openModal(boardId: string): void {
 function closeModal(): void {
   showModal.value = false;
 }
-
 
 function logout() {
   userStore.logout()
@@ -68,11 +66,6 @@ async function deleteWhiteboard(boardId: string) {
     console.error('Error al guardar el nuevo nombre:', error)
   }
 }
-
-function favouriteWhiteboard() {
-  console.log('Favorito')
-}
-
 
 const searchQuery = ref<string | number>('');
 
@@ -151,14 +144,16 @@ function onEnter() {
 
           <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <div class="border border-black border-t-1 border-b-4 border-x-1 p-3 rounded flex flex-col justify-content-flex-end hover:bg-gray-300">
-              <RouterLink to="/new">
-              <div class="flex items-center justify-center mb-2">
+            <RouterLink to="/new">  
+              <div class="flex items-center justify-center mb-2 cursor-pointer" @click="openNewBoardModal">
                 <PlusIcon/>
               </div>
               <h2 class="text-sm font-italic text-black text-center">Nueva pizarra</h2>
-              </RouterLink>
+            </RouterLink>
             </div>
           </div>
+
+          
 
           <div v-for="board in data" class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               
@@ -173,9 +168,6 @@ function onEnter() {
                   <img src="../../public/editBoard.png" alt="editWhiteboard" style="width: 20px; height: auto;">
                 </button>
 
-                <button class="border border-black p-0.5 rounded hover:bg-yellow-400 mr-1" @click="favouriteWhiteboard">
-                  <img src="../../public/favouriteWhiteboard.png" alt="favouriteWhiteboard" style="width: 20px; height: auto;">
-                </button>
 
                 <button class="border border-black p-0.5 rounded hover:bg-red-500 mr-1" @click="confirmDeleteWhiteboard(board.whiteBoardId)" >
                   <img src="../../public/deleteWhiteboard.png" alt="deleteWhiteboard" style="width: 20px; height: auto;">
@@ -185,25 +177,20 @@ function onEnter() {
           </div>
 
           <transition>
-            <div class="modal" v-if="showModal">
-              <h1 class="flex justify-center font-bold">Nuevo nombre de la pizarra: </h1>
+            <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50" v-if="showModal">
+              <div class="bg-white p-6 border border-black rounded-xl shadow-lg relative">
+                <h1 class="flex justify-center font-bold">Nuevo nombre de la pizarra: </h1>
                 <input class="border border-black rounded m-2" type="text" v-model="newName">
-                  <button class="border border-black p-1 rounded hover:bg-green-400"@click="saveNewName(selectedBoardID)"> Guardar</button>
-                  <button class=" text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
+                <button class="border border-black p-1 rounded hover:bg-green-400" @click="saveNewName(selectedBoardID)"> Guardar</button>
+                <button class="text-xl font-bold absolute top-1 right-2" @click="closeModal">&times;</button>
+              </div>
             </div>
-                
           </transition>
-
-
-
           
         </div>
-      </div>
-
-      
+      </div>     
     </div>
   </div>
-
 </div>
 
     <footer style="background-color:black; position: absolute; bottom: 0px; width: 100%;">
@@ -211,22 +198,6 @@ function onEnter() {
     </footer>
 </div>
 </template>
-
-<style>
-.modal{
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
-  z-index: 98;
-  border: 2px solid black;
-
-}
-</style>
 
 
 
