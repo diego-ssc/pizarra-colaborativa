@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  UnauthorizedException,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -11,11 +12,15 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { Public } from './public.decorator';
+import { HasPermissionService } from 'src/has-permission/has-permission.service';
 
 @Public()
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private hasPermissionService: HasPermissionService,
+  ) {}
 
   @Post('/register')
   signUp(@Body() signUpDto: SignUpDto): Promise<{ id: string; token: string }> {
@@ -28,15 +33,25 @@ export class AuthController {
   }
 
   @Get('/perm/:docid/:userid')
-  hasPermission(@Param() params: any): {
+  async hasPermission(@Param() params: any): Promise<{
     yroom: string;
     yaccess: string;
     yuserid: string;
-  } {
-    // TODO: Check if user has permision to access document.
+  }> {
+    const action = await this.hasPermissionService.hasUserAccessToWhiteboard(
+      Number(params.userid),
+      params.docid,
+    );
+
+    if (action === 'Denied') {
+      throw new UnauthorizedException();
+    }
+
+    const yaccess = action === 'Read' ? 'r' : 'rw';
+
     return {
       yroom: params.docid,
-      yaccess: 'rw',
+      yaccess: yaccess,
       yuserid: params.userid,
     };
   }

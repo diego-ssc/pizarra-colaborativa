@@ -10,6 +10,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { Public } from './public.decorator';
+import { HasPermissionModule } from 'src/has-permission/has-permission.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { Public } from './public.decorator';
     }),
     TypeOrmModule.forFeature([User]),
     ConfigModule,
+    HasPermissionModule,
   ],
   controllers: [AuthController],
   providers: [
