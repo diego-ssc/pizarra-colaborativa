@@ -3,7 +3,7 @@ import { WhiteboardEndpoint, type CreateWhiteboardRequest, type CreateWhiteboard
 import { useAPIClient } from '@/lib/api/client';
 import { useCollection } from '@/lib/editor/editor';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 
 const collection = useCollection()
@@ -16,22 +16,30 @@ const selectedWorkspace = ref('')
 
 async function loadWorkspaces() {
   try {
-    const response = await client.get('/workspaces')
+    const response = await client.get('/')
     workspaces.value = response.data 
   } catch (error) {
     console.error('Error loading workspaces:', error)
   }
 }
 
-async function addDoc (boardName: string) {
-  const res = await client.post<CreateWhiteboardRequest, CreateWhiteboardResponse>(
-    WhiteboardEndpoint,
-    { title: boardName },
-  )
-  const id = res.data.whiteBoardId
-  collection.createDoc(id)
-  router.push({ path: `/d/${id}` })
+async function addDoc(boardName: string) {
+  try {
+    const res = await client.post<CreateWhiteboardRequest, CreateWhiteboardResponse>(
+      WhiteboardEndpoint,
+      { title: boardName }
+    );
+    const id = res.data.whiteBoardId;
+    collection.createDoc(id);
+    router.push({ path: `/d/${id}` });
+  } catch (error) {
+    console.error('Error creating whiteboard:', error);
+  }
 }
+
+onMounted(() => {
+  loadWorkspaces();
+});
 
 </script>
 
