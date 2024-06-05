@@ -9,8 +9,19 @@ import { ref } from 'vue';
 const collection = useCollection()
 const router = useRouter()
 const client = useAPIClient()
-
 const newBoardName = ref('')
+
+const workspaces = ref([]) 
+const selectedWorkspace = ref('') 
+
+async function loadWorkspaces() {
+  try {
+    const response = await client.get('/workspaces')
+    workspaces.value = response.data 
+  } catch (error) {
+    console.error('Error loading workspaces:', error)
+  }
+}
 
 async function addDoc (boardName: string) {
   const res = await client.post<CreateWhiteboardRequest, CreateWhiteboardResponse>(
@@ -26,18 +37,18 @@ async function addDoc (boardName: string) {
 
 <template>
   
-  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50" >
-    <div class="bg-white p-6 border border-black rounded-xl shadow-lg relative">
-      <h1 class="flex justify-center font-bold mb-4">Nombre de la pizarra nueva:</h1>
-      <input class="border border-black rounded m-2 w-full" type="text" v-model="newBoardName">
-      <h1 class="flex justify-center font-bold mb-4">Selecciona un espacio de trabajo para la nueva pizarra:</h1>
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+    <div class="bg-white p-6 border border-black rounded-xl shadow-lg relative" style="width: 500px; margin-top: -50px;">
+      <h1 class="flex justify-center font-bold mb-6 text-2xl">Nombre de la pizarra nueva:</h1>
+      <input class="border border-black rounded m-2 w-full text-lg p-2" type="text" v-model="newBoardName">
+      <h1 class="flex justify-center font-bold mb-6 text-2xl">Selecciona un espacio de trabajo para la nueva pizarra:</h1>
       <div class="flex justify-center mb-4">
-        <select class="border border-black rounded m-2" v-model="selectedWorkspace">
+        <select class="border border-black rounded m-2 text-lg p-2" v-model="selectedWorkspace">
           <option v-for="workspace in workspaces" :key="workspace.id" :value="workspace.id">{{ workspace.name }}</option>
         </select>
       </div>
       <div class="flex justify-center">        
-        <button class="border border-black p-2 rounded hover:bg-green-400" @click="addDoc(newBoardName)">Crear Pizarra</button>              
+        <button class="border border-black p-2 rounded hover:bg-green-400 text-lg " @click="addDoc(newBoardName)">Crear Pizarra</button>              
       </div>
     </div>
   </div>
