@@ -109,36 +109,6 @@ function onEnter() {
     <div class="flex flex-col h-screen">
 
     <div class="flex flex-row h-full">
-      <SideBar>
-        <ul>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <WorldIcon/>
-              <span class="block text-sm">Todas las pizarras</span>
-            </a>
-          </li>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <ClockIcon/>
-              <span class="text-sm">Pizarras recientes</span>
-            </a>
-          </li>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <StarIcon/>
-              <span class="block text-sm">Pizarras favoritas</span>
-            </a>
-          </li>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <ShareIcon/>
-              <span class="block text-sm">Pizarras compartidas</span>
-            </a>
-          </li>
-        </ul>
-      </SideBar>
-
-
       
       <ScrollArea class="w-full h-full">
       <div class="bg-white w-full p-4">
