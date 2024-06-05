@@ -49,7 +49,7 @@ async function copyLink() {
         Compartir
       </Button>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-md z-[1010]">
+    <DialogContent class="w-2/3 z-[1010]">
       <DialogHeader>
         <DialogTitle class="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Compartir pizarra</DialogTitle>
       </DialogHeader>
