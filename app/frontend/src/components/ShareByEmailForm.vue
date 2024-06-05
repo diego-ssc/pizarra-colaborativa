@@ -46,16 +46,17 @@ watch(postClient.data, (value) => {
   <div v-if="emails.length === 0">
     Introduzca un correo y presione enter
   </div>
-  <TagsInput v-model="emails" class="my-4">
-    <TagsInputItem v-for="item in emails" :key="item" :value="item">
-      <TagsInputItemText />
-      <TagsInputItemDelete />
-    </TagsInputItem>
-    <TagsInputInput placeholder="ejemplo@correo.com" />
-  </TagsInput>
-  <div class="flex justify-between my-4">
-    <Select v-model="selectedAction">
-      <SelectTrigger class="w-[180px]">
+  <div class="flex">
+    <TagsInput v-model="emails" class="my-4 w-full">
+      <TagsInputItem v-for="item in emails" :key="item" :value="item">
+        <TagsInputItemText />
+        <TagsInputItemDelete />
+      </TagsInputItem>
+      <TagsInputInput placeholder="ejemplo@correo.com" />
+    </TagsInput>
+
+    <Select v-if="emails.length !== 0" v-model="selectedAction">
+      <SelectTrigger class="w-fit my-4 ml-2">
         <SelectValue placeholder="Lector" />
       </SelectTrigger>
       <SelectContent>
@@ -66,7 +67,9 @@ watch(postClient.data, (value) => {
         </SelectGroup>
       </SelectContent>
     </Select>
+  </div>
 
+  <div class="flex justify-between my-4">
     <div v-if="emails.length === 0">
       <Button disabled @click="shareDoc">Compartir</Button>
     </div>
