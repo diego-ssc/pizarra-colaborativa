@@ -17,6 +17,7 @@ import ShareByLinkOptions from './ShareByLinkOptions.vue';
 import DialogFooter from './ui/dialog/DialogFooter.vue';
 import DialogClose from './ui/dialog/DialogClose.vue';
 import LinkIcon from './icons/LinkIcon.vue';
+import ShareAccessList from './ShareAccessList.vue';
 
 const open = ref(false)
 
@@ -53,17 +54,20 @@ async function copyLink() {
         <DialogTitle class="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Compartir pizarra</DialogTitle>
       </DialogHeader>
       <div v-if="error" class="text-red-500">
+        Ha ocurrido un error
       </div>
       <div v-else-if="isLoading">
         Cargando...
       </div>
       <div v-else-if="data === 'Admin'">
         <ShareByEmailForm @shared="onShared"/>
+        <ShareAccessList>
+        </ShareAccessList>
+        <ShareByLinkOptions/>
       </div>
       <div v-else>
         Solo los administradores pueden cambiar el acceso
       </div>
-      <ShareByLinkOptions/>
       <DialogFooter>
         <div class="flex justify-between w-full">
           <Button variant="link" class="p-0 text-blue-500" @click="copyLink">
