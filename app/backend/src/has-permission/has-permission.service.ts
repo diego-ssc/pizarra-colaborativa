@@ -35,6 +35,7 @@ export class HasPermissionService {
       where: {
         whiteBoardId: whiteBoardId,
       },
+      relations: { workspace: true },
     });
 
     /* Whiteboard not found. */
@@ -48,7 +49,7 @@ export class HasPermissionService {
       where: {
         userId: userId,
       },
-      relations: { hasPermissions: { whiteBoard: true } },
+      relations: { hasPermissions: { whiteBoard: true, workspace: true } },
     });
 
     /* User not found. */
