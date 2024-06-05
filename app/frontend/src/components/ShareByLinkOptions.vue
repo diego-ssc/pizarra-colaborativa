@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import LockIcon from './icons/LockIcon.vue';
 
 import {
@@ -12,8 +12,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import EarthIcon from './icons/EarthIcon.vue';
-import { usePatch } from '@/lib/api/client';
-import { PermissionByIDEndpoint, type UpdateDefaultPermissionRequest } from '@/lib/api/api';
+import { useGet, usePatch } from '@/lib/api/client';
+import { PermissionByIDEndpoint, WhiteboardByIDEndpoint, type UpdateDefaultPermissionRequest, type GetWhiteboardByIDResponse } from '@/lib/api/api';
 import { useRoute } from 'vue-router';
 
 const selectedAccess = ref<'public' | 'restricted'>('restricted')
@@ -26,6 +26,15 @@ async function updateDefaultAccess(access: string) {
   const isPublic = access === 'public' ? true : false
   await patch({ isPublic })
 }
+
+const { get, data } = useGet<GetWhiteboardByIDResponse>(WhiteboardByIDEndpoint({ id: docID }))
+
+onBeforeMount(async () => {
+  await get()
+  if (data.value?.isPublic) {
+    selectedAccess.value = 'public'
+  }
+})
 </script>
 
 <template>

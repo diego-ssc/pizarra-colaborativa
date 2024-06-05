@@ -27,6 +27,7 @@ export type Whiteboard = {
   title: string
   createdAt: string
   updatedAt: string
+  isPublic: boolean
 }
 
 export type CreateWhiteboardResponse = Whiteboard
