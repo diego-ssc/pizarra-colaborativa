@@ -4,7 +4,6 @@ import ShareAccessListItem from './ShareAccessListItem.vue';
 import { ListPermissionEndpoint, type UsersWithAccessResponse } from '@/lib/api/api';
 import { useRoute } from 'vue-router';
 import { useGet } from '@/lib/api/client';
-import ScrollArea from './ui/scroll-area/ScrollArea.vue';
 
 const route = useRoute(); 
 const docID = route.params.id as string;
@@ -35,11 +34,9 @@ async function updateList(removedID: number) {
   <div v-else-if="isLoading">
     Cargando...
   </div>
-  <ScrollArea v-else-if="userList" class="w-full max-h-48">
-    <TransitionGroup name="list" tag="ul">
+    <TransitionGroup name="list" tag="ul" class="max-h-48 overflow-scroll">
       <ShareAccessListItem v-for="user in userList" v-bind="user" @removedAccess="updateList" :key="user.userID"/>
     </TransitionGroup>
-  </ScrollArea>
 </template>
 
 <style>
