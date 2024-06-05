@@ -27,6 +27,23 @@ export class HasPermissionController {
     return hasPermission;
   }
 
+  @Get('list/:id')
+  async getUsersWithAccess(@Param('id') id: string, @Req() request) {
+    const permission =
+      await this.hasPermissionService.hasUserAccessToWhiteboard(
+        request.user.userId,
+        id,
+      );
+
+    if (permission !== HasPermission.Action.ADMIN) {
+      throw new UnauthorizedException(
+        'User not authorized to change permissions',
+      );
+    }
+
+    return await this.hasPermissionService.getUsersWithAccessToWhiteboard(id);
+  }
+
   @Post(':id')
   async AddUserPermissionToWhiteboard(
     @Param('id') whiteBoardID: string,

@@ -14,6 +14,7 @@ import { useRouter } from 'vue-router';
 import ShareIcon from '@/components/icons/ShareIcon.vue';
 import PlusIcon from '@/components/icons/PlusIcon.vue';
 import { Input } from '@/components/ui/input'
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue';
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -108,37 +109,8 @@ function onEnter() {
     <div class="flex flex-col h-screen">
 
     <div class="flex flex-row h-full">
-      <SideBar>
-        <ul>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <WorldIcon/>
-              <span class="block text-sm">Todas las pizarras</span>
-            </a>
-          </li>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <ClockIcon/>
-              <span class="text-sm">Pizarras recientes</span>
-            </a>
-          </li>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <StarIcon/>
-              <span class="block text-sm">Pizarras favoritas</span>
-            </a>
-          </li>
-          <li class="mb-2">
-            <a href="#" class="flex items-center text-white hover:text-gray-10 hover:bg-gray-100 p-2 rounded">
-              <ShareIcon/>
-              <span class="block text-sm">Pizarras compartidas</span>
-            </a>
-          </li>
-        </ul>
-      </SideBar>
-
-
       
+      <ScrollArea class="w-full h-full">
       <div class="bg-white w-full p-4">
         <div class="flex flex-wrap -mx-3 mb-6">
 
@@ -188,14 +160,16 @@ function onEnter() {
           </transition>
           
         </div>
+<<<<<<< linaresd/editor-improvements
+      </div>
+      </ScrollArea>
+=======
       </div>     
+>>>>>>> develop
     </div>
   </div>
 </div>
 
-    <footer style="background-color:black; position: absolute; bottom: 0px; width: 100%;">
-        <p style=" color:white;font-size: xx-small;">Proyecto desarrollado por el equipo 1</p>
-    </footer>
 </div>
 </template>
 

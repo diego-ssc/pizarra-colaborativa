@@ -16,9 +16,10 @@ test('test', async ({ page }) => {
   await page.getByLabel('Contraseña', { exact: true }).fill('12345678');
   await page.getByLabel('Confirmar contraseña').click();
   await page.getByLabel('Confirmar contraseña').fill('12345678');
-  await page.getByRole('button', { name: 'Regístrarse' }).click();
+  await page.getByRole('button', { name: 'Registrarse' }).click();
   await expect(page.getByRole('link', { name: 'Nueva pizarra' })).toBeVisible();
   await page.getByRole('link', { name: 'Nueva pizarra' }).click();
+  await page.getByRole('button', { name: 'Crear pizarra' }).click();
   await expect(page.getByText('Select V Straight C Frame F Present Note N Pen P Eraser E Shape S Text T Image')).toBeVisible();
   await page.getByRole('link').click();
   await page.getByRole('link', { name: 'Pizarra sin título Fecha' }).click();

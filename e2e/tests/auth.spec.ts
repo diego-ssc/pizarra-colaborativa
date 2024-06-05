@@ -16,7 +16,7 @@ test('register and then login', async ({ page }) => {
   await page.getByLabel('Contraseña', { exact: true }).fill('12345678');
   await page.getByLabel('Confirmar contraseña').click();
   await page.getByLabel('Confirmar contraseña').fill('12345678');
-  await page.getByRole('button', { name: 'Regístrarse' }).click();
+  await page.getByRole('button', { name: 'Registrarse' }).click();
   await expect(page.getByRole('link', { name: 'Nueva pizarra' })).toBeVisible();
   await page.getByRole('button', { name: 'Cerrar sesión' }).click();
   await page.getByRole('button', { name: 'Iniciar sesión' }).click();
