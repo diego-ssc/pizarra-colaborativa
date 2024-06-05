@@ -59,6 +59,13 @@ export type UpdateDefaultPermissionRequest = {
   isPublic: boolean
 }
 
+export type UsersWithAccessResponse = {
+  userID: number
+  username: string
+  email: string
+  role: Action
+}[]
+
 export type Endpoint = {
   readonly url: string
   readonly requiresAuth: boolean
@@ -117,6 +124,13 @@ export const ImageByIDEndpoint = (req: { id: string }): Endpoint => {
 export const PermissionByIDEndpoint = (req: { id: string }): Endpoint => {
   return {
     url: `has-permission/${req.id}`,
+    requiresAuth: true,
+  }
+}
+
+export const ListPermissionEndpoint = (req: { id: string }): Endpoint => {
+  return {
+    url: `has-permission/list/${req.id}`,
     requiresAuth: true,
   }
 }

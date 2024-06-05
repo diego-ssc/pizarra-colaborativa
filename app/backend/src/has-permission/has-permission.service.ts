@@ -143,6 +143,35 @@ export class HasPermissionService {
     return HasPermission.Action.DENIED;
   }
 
+  async getUsersWithAccessToWhiteboard(whiteBoardId: string): Promise<
+    {
+      userID: number;
+      username: string;
+      email: string;
+      role: HasPermission.Action;
+    }[]
+  > {
+    /* Find the whiteboard by id. */
+    const whiteboard = await this.datasource.getRepository(WhiteBoard).findOne({
+      where: {
+        whiteBoardId: whiteBoardId,
+      },
+      relations: { hasPermissions: { user: true } },
+    });
+
+    /* Whiteboard not found. */
+    if (!whiteboard || !whiteboard.hasPermissions) {
+      return [];
+    }
+
+    return whiteboard.hasPermissions.map((perm) => ({
+      userID: perm.user.userId,
+      username: perm.user.username,
+      email: perm.user.email,
+      role: perm.action,
+    }));
+  }
+
   /**
    * Returns true if the user has access to the workspace; false, otherwise.
    * @param {number} userId - The id of the user.
@@ -255,7 +284,9 @@ export class HasPermissionService {
         },
       });
 
-    if (hasPermission) {
+    if (action === HasPermission.Action.DENIED && hasPermission) {
+      await this.datasource.getRepository(HasPermission).remove(hasPermission);
+    } else if (hasPermission) {
       hasPermission.action = action;
       await this.datasource.getRepository(HasPermission).save(hasPermission);
     } else {
