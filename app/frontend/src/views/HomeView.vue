@@ -157,12 +157,8 @@ function onEnter() {
           </transition>
           
         </div>
-<<<<<<< linaresd/editor-improvements
       </div>
       </ScrollArea>
-=======
-      </div>     
->>>>>>> develop
     </div>
   </div>
 </div>
