@@ -88,12 +88,14 @@ export class WhiteBoardService {
         whiteboard.whiteBoardId,
       );
 
-    const filteredWhiteboards = [];
+    const filteredWhiteboards: Partial<WhiteBoard> &
+      { role: HasPermission.Action }[] = [];
 
     for (let i = 0; i < whiteboards.length; i++) {
       const whiteboard = whiteboards[i];
-      if ((await permitted(whiteboard)) !== HasPermission.Action.DENIED)
-        filteredWhiteboards.push(whiteboard);
+      const action = await permitted(whiteboard);
+      if (action !== HasPermission.Action.DENIED)
+        filteredWhiteboards.push({ ...whiteboard, role: action });
     }
 
     return filteredWhiteboards;
