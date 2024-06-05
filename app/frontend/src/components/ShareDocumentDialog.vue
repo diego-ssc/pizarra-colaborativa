@@ -13,6 +13,7 @@ import { useToast } from './ui/toast';
 import { useRoute } from 'vue-router';
 import { useGet } from '@/lib/api/client';
 import { PermissionByIDEndpoint, type HasAccessResponse } from '@/lib/api/api';
+import ShareByLinkOptions from './ShareByLinkOptions.vue';
 import DialogFooter from './ui/dialog/DialogFooter.vue';
 import DialogClose from './ui/dialog/DialogClose.vue';
 import LinkIcon from './icons/LinkIcon.vue';
@@ -49,7 +50,7 @@ async function copyLink() {
     </DialogTrigger>
     <DialogContent class="sm:max-w-md z-[1010]">
       <DialogHeader>
-        <DialogTitle>Compartir pizarra</DialogTitle>
+        <DialogTitle class="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Compartir pizarra</DialogTitle>
       </DialogHeader>
       <div v-if="error" class="text-red-500">
       </div>
@@ -62,6 +63,7 @@ async function copyLink() {
       <div v-else>
         Solo los administradores pueden cambiar el acceso
       </div>
+      <ShareByLinkOptions/>
       <DialogFooter>
         <div class="flex justify-between w-full">
           <Button variant="link" class="p-0 text-blue-500" @click="copyLink">

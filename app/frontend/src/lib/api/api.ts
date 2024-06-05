@@ -54,6 +54,10 @@ export type AddPermissionRequest = {
 
 export type HasAccessResponse = Action
 
+export type UpdateDefaultPermissionRequest = {
+  isPublic: boolean
+}
+
 export type Endpoint = {
   readonly url: string
   readonly requiresAuth: boolean
