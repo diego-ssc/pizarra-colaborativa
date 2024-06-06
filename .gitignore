@@ -317,6 +317,5 @@ node_modules/
 
 # Secrets
 .env
-.env*
 .secrets
 .secrets*
